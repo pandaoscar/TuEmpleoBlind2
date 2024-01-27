@@ -116,7 +116,7 @@
                     android:layout_width="380dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
-                    android:text="@string/log_in"
+                    android:text="@string/sign_in"
                     android:textColor="@color/normal_color"
                     android:textSize="24sp"
                     android:textStyle="bold"

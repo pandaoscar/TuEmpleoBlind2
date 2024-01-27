@@ -13,6 +13,12 @@
         android:theme="@style/Theme.TuEmpleoBlind"
         tools:targetApi="31">
         <activity
+            android:name=".companyHome"
+            android:exported="false" />
+        <activity
+            android:name=".SignUpCForm"
+            android:exported="false" />
+        <activity
             android:name=".SignUpC"
             android:exported="false" />
         <activity
