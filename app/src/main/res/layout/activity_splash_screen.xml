@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SplashScreen">
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:layout_centerInParent="true"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/glasees_animation" />
+    <TextView
+        android:id="@+id/text_animation1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="@string/app_name"
+        android:textSize="52dp"
+        android:textStyle="bold"
+        android:textColor="@color/strong_color"
+        android:layout_above="@id/lottie"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-70dp"/>
+    <TextView
+        android:id="@+id/text_animation2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="@string/app_name"
+        android:textSize="28dp"
+        android:textStyle="bold"
+        android:textColor="@color/normal_color"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="70dp"/>
+    <TextView
+        android:id="@+id/text_animation3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="@string/app_name"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:layout_above="@id/text_animation2"
+        android:textColor="@color/litle_color"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"/>
+</RelativeLayout>

@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name" translatable="false">TuEmpleoBlind</string>
+    <string name="name_user"> Nombre de Usuario</string>
+    <string name="profetion_user">Profesion</string>
+    <string name="find_job">Encuentra Empleo</string>
+    <string name="welcome">Bienvenido a</string>
+    <string name="identification" translatable="false">Identificate</string>
+    <string name="want_job_question" translatable="false">¿Buscas empleo?</string>
+    <string name="want_employ_question" translatable="false">¿Quieres Contratar?</string>
+    <string name="already_aconunt_question" translatable="false">¿Ya tienes una cuenta?</string>
+    <string name="log_in">Inciar Sesión</string>
+    <string name="job_aplications">Mis Trabajos Aplicados</string>
+</resources>
