@@ -16,6 +16,9 @@
             android:name=".SignUpC"
             android:exported="false" />
         <activity
+            android:name=".SignUpBlind"
+            android:exported="false" />
+        <activity
             android:name=".HomePageBlind"
             android:exported="false" />
         <activity

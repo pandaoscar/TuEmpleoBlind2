@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "356707712158",
+    "project_id": "tu-empleo-blind",
+    "storage_bucket": "tu-empleo-blind.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:356707712158:android:e1357ce3a7d4fb3e3f4f8f",
+        "android_client_info": {
+          "package_name": "com.example.tuempleoblind"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIUrOyjmGdARldhB3hHI8ZX0Cn2Nt-b6U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
