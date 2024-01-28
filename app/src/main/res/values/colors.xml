@@ -10,8 +10,15 @@
     <color name="strong_color">#1D39D6</color>
     <color name="normal_color">#000000</color>
     <color name="litle_color">#5A5858</color>
-    <color name="app_color">#E3571F</color>
-    <color name="gray">#AFAFAF</color>
-    <color name="green">#1A7C03</color>
+    <color name="app_color">#EA7241</color>
+    <color name="gray">#CFC6C6</color>
+    <color name="green">#1E8D04</color>
+    <color name="ghost_white">#FFFAFF</color>
+    <color name="pursian_blue">#003459</color>
+    <color name="rich_black">#00171F</color>
+    <color name="federal_blue">#0F084B</color>
+    <color name="marinian_blue">#26408B</color>
+    <color name="lavender_blush">#F6E8E9</color>
+    <color name="lapis_lazuli">#4B6A96</color>
 
 </resources>

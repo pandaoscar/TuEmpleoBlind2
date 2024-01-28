@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -14,8 +15,8 @@ public class SplashScreen extends AppCompatActivity {
     TextView tx_animation1;
     TextView tx_animation2;
     TextView tx_animation3;
-
-
+    RelativeLayout animationTop;
+    RelativeLayout animationBottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +37,11 @@ public class SplashScreen extends AppCompatActivity {
         tx_animation3=findViewById(R.id.text_animation3);
         tx_animation3.animate().translationY(2000).setDuration(500).setStartDelay(1900);
 
+        animationTop = findViewById(R.id.animation_top);
+        animationTop.animate().translationY(-2000).setDuration(500).setStartDelay(1900);
 
-
-
+        animationBottom = findViewById(R.id.animation_bottom);
+        animationBottom.animate().translationY(2000).setDuration(500).setStartDelay(1900);
 
 
         new Handler().postDelayed(new Runnable() {
