@@ -19,6 +19,9 @@
             android:name=".SignUpCForm"
             android:exported="false" />
         <activity
+            android:name=".ActivityFormSignUpBlind"
+            android:exported="false" />
+        <activity
             android:name=".SignUpC"
             android:exported="false" />
         <activity

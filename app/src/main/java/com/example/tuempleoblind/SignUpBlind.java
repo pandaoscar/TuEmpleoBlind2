@@ -44,7 +44,7 @@ public class SignUpBlind extends AppCompatActivity {
                 String password1 = campTextPasswordSignUp1.getText().toString();
                 String password2 = campTextPasswordSignUp2.getText().toString();
 
-                if(username.isEmpty() && password1.isEmpty() && password2.isEmpty()){
+                if(username.isEmpty() || password1.isEmpty() || password2.isEmpty()){
                     Toast.makeText(getApplicationContext(), "Completa todos los datos correspondientes", Toast.LENGTH_SHORT).show();
                 }
                 else{
