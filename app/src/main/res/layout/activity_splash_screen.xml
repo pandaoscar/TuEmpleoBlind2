@@ -51,7 +51,7 @@
         android:text="@string/ucun"
         android:textSize="28sp"
         android:textStyle="bold"
-        android:textColor="@color/green"
+        android:textColor="@color/indian_green"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="70dp"/>

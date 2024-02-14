@@ -11,8 +11,13 @@
     <color name="normal_color">#000000</color>
     <color name="litle_color">#5A5858</color>
     <color name="app_color">#EA7241</color>
+    <color name="orange">#ff7d00</color>
+    <color name="darck_orange">#bb3e03</color>
     <color name="gray">#CFC6C6</color>
-    <color name="green">#1E8D04</color>
+    <color name="indian_green">#1E8D04</color>
+    <color name="light_green">#588157</color>
+    <color name="green">#3a5a40</color>
+    <color name="dark_green">#344e41</color>
     <color name="ghost_white">#FFFAFF</color>
     <color name="pursian_blue">#003459</color>
     <color name="rich_black">#00171F</color>
@@ -20,5 +25,6 @@
     <color name="marinian_blue">#26408B</color>
     <color name="lavender_blush">#F6E8E9</color>
     <color name="lapis_lazuli">#4B6A96</color>
+
 
 </resources>
