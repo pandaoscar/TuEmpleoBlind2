@@ -4,5 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomePageBlind"/>
+    tools:context=".HomePageBlind">
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="36dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listaP"
+        android:layout_width="409dp"
+        android:layout_height="645dp"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="85dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 
