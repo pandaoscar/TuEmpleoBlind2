@@ -32,4 +32,25 @@
     <string name="new_oferts">Crear Una Nueva Oferta</string>
     <string name="ucun">Universidad De Cundinamarca</string>
     <string name="desing_by">Desde</string>
+
+    <string name="ofer_info">Información básica de la oferta:</string>
+    <string name="ofer_title">Título del trabajo</string>
+    <string name="ofer_categori">Catergoría o industria del trabajo</string>
+    <string name="ofer_description">Descripción del trabajo</string>
+    <string name="ofer_tipe">Tipo de empleo</string>
+    <string name="ofer_requi">Requisitos del candidato</string>
+    <string name="ofer_level_requi">Nivel educativo requerido</string>
+    <string name="ofer_experence">Experiencia laboral necesaria</string>
+    <string name="ofer_habilites">Habilidades especificas</string>
+    <string name="ofer_detail_compani">Detalles de la empresa</string>
+    <string name="ofer_location_job">Ubicación del puesto de trabajo</string>
+    <string name="ofer_benefits">Benficios y compensación</string>
+    <string name="ofer_salary">Salario o rango salarial</string>
+    <string name="ofer_benefits_plus">Beneficios adicionales</string>
+    <string name="select">Seleccionar</string>
+    <string-array name="lista">
+        <item>Tiempo Completo</item>
+        <item>Medio Tiempo</item>
+        <item>Tiempo Parcial</item>
+    </string-array>
 </resources>
