@@ -32,10 +32,10 @@ public class SignUpBlind extends AppCompatActivity {
 
         mfirestore = FirebaseFirestore.getInstance();
 
-        btnSignUpSend = findViewById(R.id.buttonSignUpSend);
-        campTextSignUpUsername = findViewById(R.id.editTextSignUpUsername);
-        campTextPasswordSignUp1 = findViewById(R.id.editTextPasswordSignUp1);
-        campTextPasswordSignUp2 = findViewById(R.id.editTextPasswordSignUp2);
+        btnSignUpSend = findViewById(R.id.buttonSignUpSendBlind);
+        campTextSignUpUsername = findViewById(R.id.editTextSignUpUsernameBlind);
+        campTextPasswordSignUp1 = findViewById(R.id.editTextPasswordSignUpBlind1);
+        campTextPasswordSignUp2 = findViewById(R.id.editTextPasswordSignUpBlind2);
 
         btnSignUpSend.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -103,7 +103,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
-                    android:id="@+id/button"
+                    android:id="@+id/buttonFindHire"
                     android:layout_width="380dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
@@ -149,13 +149,13 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
-                    android:id="@+id/button3"
+                    android:id="@+id/buttonLogIn"
                     android:layout_width="380dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
                     android:text="@string/sign_in"
                     android:textColor="@color/ghost_white"
-                    android:background="@drawable/btn_green"
+                    android:background="@drawable/btn_blue"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"

@@ -31,7 +31,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/editTextText"
+                    android:id="@+id/editTextNameCompanyFormC"
                     android:layout_width="380dp"
                     android:layout_height="wrap_content"
                     android:autofillHints="name"
@@ -53,10 +53,10 @@
                     android:textSize="26sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextText" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTextNameCompanyFormC" />
 
                 <EditText
-                    android:id="@+id/editTextText2"
+                    android:id="@+id/editTextCompanyTypeFormC"
                     android:layout_width="380dp"
                     android:layout_height="wrap_content"
                     android:autofillHints="name"
@@ -78,10 +78,10 @@
                     android:textSize="26sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextText2" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTextCompanyTypeFormC" />
 
                 <EditText
-                    android:id="@+id/editTextText3"
+                    android:id="@+id/editTextLocationFormC"
                     android:layout_width="380dp"
                     android:layout_height="wrap_content"
                     android:autofillHints="name"
@@ -94,44 +94,18 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
                 <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="380sp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
-                    android:text="@string/sign_up_c_email"
-                    android:textColor="@color/normal_color"
-                    android:textSize="26sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextText3" />
-
-                <EditText
-                    android:id="@+id/editTextText4"
-                    android:layout_width="380dp"
-                    android:layout_height="wrap_content"
-                    android:autofillHints="name"
-                    android:ems="10"
-                    android:hint="@string/sign_up_c_email"
-                    android:inputType="text"
-                    android:textSize="24sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-                <TextView
                     android:id="@+id/textView5"
                     android:layout_width="380sp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
                     android:text="@string/sign_up_c_webpage"
                     android:textColor="@color/normal_color"
                     android:textSize="26sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextText4" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTextLocationFormC" />
 
                 <EditText
-                    android:id="@+id/editTextText5"
+                    android:id="@+id/editTextWebPagFormC"
                     android:layout_width="380dp"
                     android:layout_height="wrap_content"
                     android:autofillHints="name"
@@ -149,7 +123,7 @@
                 android:layout_height="match_parent">
 
                 <Button
-                    android:id="@+id/button4"
+                    android:id="@+id/buttonContinueFormC"
                     android:layout_width="380dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
@@ -160,15 +134,16 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
-                    android:id="@+id/button5"
+                    android:id="@+id/buttonBackFormC"
                     android:layout_width="380dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="16dp"
                     android:text="@string/cancel"
                     android:textSize="28dp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.516"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/button4" />
+                    app:layout_constraintTop_toBottomOf="@+id/buttonContinueFormC" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
