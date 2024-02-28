@@ -1,10 +1,14 @@
 package com.example.tuempleoblind;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -13,6 +17,7 @@ import android.view.ViewGroup;
  *
  */
 public class ProfileCFragment extends Fragment {
+    Button btn_exit;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -57,7 +62,28 @@ public class ProfileCFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_profile_c, container, false);
+        btn_exit = view.findViewById(R.id.signOff);
+        btn_exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signOut();
+            }
+        });
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile_c, container, false);
+        return view;
+    }
+
+    private void signOut() {
+        try {
+            FirebaseAuth.getInstance().signOut();
+            // Cerrar sesión correctamente, luego iniciar el nuevo Activity
+            Intent intent = new Intent(getActivity(), MainActivity.class); // Reemplaza "NuevoActivity" con el nombre de tu Activity de destino
+            startActivity(intent);
+            getActivity().finish(); // Opcionalmente, puedes finalizar el Activity actual
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Manejar la excepción aquí, como mostrar un mensaje de error al usuario
+        }
     }
 }
