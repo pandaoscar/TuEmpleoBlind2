@@ -33,6 +33,11 @@
     <string name="ucun">Universidad De Cundinamarca</string>
     <string name="desing_by">Desde</string>
 
+    <string name="bottom_c_profile">Perfil</string>
+    <string name="bottom_c_config">Configuración</string>
+    <string name="bottom_c_home">Inicio</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    
     <string name="create_ofer">Crear nueva oferta</string>
     <string name="create_ofer2">llene la siguiente información</string>
     <string name="ofer_info">Información básica de la oferta</string>

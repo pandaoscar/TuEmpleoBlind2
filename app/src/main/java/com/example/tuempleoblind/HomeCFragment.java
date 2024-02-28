@@ -67,7 +67,7 @@ public class HomeCFragment extends Fragment {
         newJob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), HomePageBlind.class);
+                Intent intent = new Intent(getActivity(), NewJob.class);
                 startActivity(intent);
             }
         });

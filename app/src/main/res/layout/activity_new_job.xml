@@ -327,7 +327,7 @@
                     />
 
                 <Button
-                    android:id="@+id/button6"
+                    android:id="@+id/tbn_back_home_c"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/back"

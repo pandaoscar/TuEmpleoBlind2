@@ -3,11 +3,14 @@ package com.example.tuempleoblind;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -49,10 +52,21 @@ public class SignUpC extends AppCompatActivity {
     }
 
     private void actionContinue() {
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SignUpC.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
         btnContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = campTextName.getText().toString();
+                ProgressDialog progressDialog = ProgressDialog.show(SignUpC.this, "", "Registrando usuario...", true);
+                progressDialog.setCancelable(false);
+
+                final String name = campTextName.getText().toString();
                 final String username = campTextUserName.getText().toString();
                 final String email = campTextEmail.getText().toString();
                 final String password1 = campTextPassword1.getText().toString();
@@ -60,10 +74,12 @@ public class SignUpC extends AppCompatActivity {
 
                 if(username.isEmpty() || email.isEmpty() || password1.isEmpty() || password2.isEmpty()){
                     Toast.makeText(getApplicationContext(), "Completa todos los datos correspondientes", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                 }
                 else{
                     if(!password1.equals(password2)){
                         Toast.makeText(getApplicationContext(), "Las contraseñas deben coincidir, por favor verifica nuevamente", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
                     }
                     else{
                         // Registrar usuario en Firebase Authentication
@@ -75,12 +91,17 @@ public class SignUpC extends AppCompatActivity {
                                             // Registro exitoso, obtener el ID único del usuario
                                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                             String userID = user.getUid();
-
                                             // Guardar datos adicionales del usuario en Firestore
                                             postUserNameBlind(name, username, email, userID);
                                         } else {
                                             Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                         }
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                progressDialog.dismiss();
+                                            }
+                                        },2000);
                                     }
                                 });
                     }
@@ -105,6 +126,7 @@ public class SignUpC extends AppCompatActivity {
                                 Intent intent = new Intent(getApplicationContext(), SignUpCForm.class);
                                 intent.putExtra("userID", userID);
                                 startActivity(intent);
+                                finish();
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
