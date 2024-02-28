@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_c"
+    app:startDestination="@id/homeCFragment">
+
+    <fragment
+        android:id="@+id/homeCFragment"
+        android:name="com.example.tuempleoblind.HomeCFragment"
+        android:label="fragment_home_c"
+        tools:layout="@layout/fragment_home_c" />
+    <fragment
+        android:id="@+id/profileCFragment"
+        android:name="com.example.tuempleoblind.ProfileCFragment"
+        android:label="fragment_profile_c"
+        tools:layout="@layout/fragment_profile_c" />
+    <fragment
+        android:id="@+id/configCFragment"
+        android:name="com.example.tuempleoblind.ConfigCFragment"
+        android:label="fragment_config_c"
+        tools:layout="@layout/fragment_config_c" />
+</navigation>

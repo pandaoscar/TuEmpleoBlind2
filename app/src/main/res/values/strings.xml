@@ -32,4 +32,10 @@
     <string name="new_oferts">Crear Una Nueva Oferta</string>
     <string name="ucun">Universidad De Cundinamarca</string>
     <string name="desing_by">Desde</string>
+
+    <string name="bottom_c_profile">Perfil</string>
+    <string name="bottom_c_config">Configuración</string>
+    <string name="bottom_c_home">Inicio</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
