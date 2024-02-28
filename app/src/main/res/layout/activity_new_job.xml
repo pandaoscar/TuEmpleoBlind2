@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NewJob">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/app_color">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/textViewCreateJob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="@string/create_ofer"
+                android:textSize="42dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@color/ghost_white"
+                android:textAllCaps="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textViewCreateJob2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/create_ofer2"
+                android:gravity="center"
+                android:textSize="18dp"
+                android:textColor="@color/pale_dogwood"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewCreateJob" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/slide_up"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="20dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:background="@drawable/btn_beta"
+                    >
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ofer_info"
+                    android:textColor="@color/marinian_blue"
+                    android:layout_marginTop="20dp"
+                    android:textSize="26dp"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    />
+
+                <EditText
+                    android:id="@+id/editTextText7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/ofer_title"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/text23"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/ofer_categori"
+                    android:textColor="@color/rich_black"
+                    android:textSize="20dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/a_c_category"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/style_spiner"
+                        />
+                </LinearLayout>
+
+
+                <EditText
+                    android:id="@+id/editTextTextMultiLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:hint="@string/ofer_description"
+                    android:inputType="textMultiLine"
+                    android:background="@drawable/btn_beta"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/text22"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="27dp"
+                        android:text="@string/ofer_tipe"
+                        android:textColor="@color/rich_black"
+                        android:textSize="20dp" />
+
+                    <Spinner
+                        android:id="@+id/a_c_type_compani"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/style_spiner" />
+
+                </LinearLayout>
+                </LinearLayout>
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="vertical"
+                   android:layout_marginTop="8dp"
+                   android:background="@drawable/btn_beta">
+                <TextView
+                    android:id="@+id/textView13"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ofer_requi"
+                    android:textColor="@color/marinian_blue"
+                    android:textSize="22dp"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"/>
+
+                <EditText
+                    android:id="@+id/editTextText11"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/ofer_level_requi"
+                    android:inputType="text"
+                    android:textSize="20dp" />
+
+                <EditText
+                    android:id="@+id/editTextText12"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/ofer_experence"
+                    android:inputType="text"
+                    android:textSize="20dp" />
+
+                <EditText
+                    android:id="@+id/editTextText13"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:ems="10"
+                    android:hint="@string/ofer_habilites"
+                    android:inputType="text"
+                    android:textSize="20dp"
+                    android:layout_marginBottom="16dp"/>
+               </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/btn_beta"
+                    android:layout_marginTop="8dp">
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ofer_benefits"
+                    android:textColor="@color/marinian_blue"
+                    android:textSize="22dp"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"/>
+
+                <EditText
+                    android:id="@+id/editTextText15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/ofer_salary"
+                    android:inputType="text"
+                    android:textSize="20dp" />
+
+                <EditText
+                    android:id="@+id/editTextText16"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/ofer_benefits_plus"
+                    android:inputType="text"
+                    android:textSize="20dp"
+                    android:layout_marginBottom="16dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/btn_beta"
+                    android:layout_marginTop="8dp">
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ofer_detail_compani"
+                    android:textColor="@color/marinian_blue"
+                    android:textSize="22dp"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"/>
+
+                <EditText
+                    android:id="@+id/editTextText14"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/ofer_location_job"
+                    android:inputType="text"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/textView18"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/ofer_q_elevator"
+                    android:textColor="@color/rich_black"
+                    android:textSize="20dp"
+                    android:layout_marginTop="8dp"/>
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <RadioButton
+                        android:id="@+id/radioButon1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ofer_afirmation"
+                        android:textSize="20dp"/>
+                    <RadioButton
+                        android:id="@+id/radioButon2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ofer_negative"
+                        android:textSize="20dp"/>
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/textView19"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/ofer_q_ramp"
+                    android:textColor="@color/rich_black"
+                    android:textSize="20dp"
+                    android:layout_marginTop="8dp"/>
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <RadioButton
+                        android:id="@+id/radioButon3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ofer_afirmation"
+                        android:textSize="20dp"/>
+                    <RadioButton
+                        android:id="@+id/radioButon4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ofer_negative"
+                        android:textSize="20dp"
+                        android:layout_marginBottom="18dp"/>
+                </RadioGroup>
+                </LinearLayout>
+                <Button
+                    android:id="@+id/button2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/public_ofer"
+                    android:layout_marginTop="16dp"
+                    android:textColor="@color/ghost_white"
+                    android:background="@drawable/btn_orange"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    />
+
+                <Button
+                    android:id="@+id/button6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/back"
+                    android:layout_marginTop="16dp"
+                    android:textColor="@color/ghost_white"
+                    android:background="@drawable/btn_blue"
+                    android:textSize="24sp"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

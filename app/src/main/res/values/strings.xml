@@ -33,9 +33,44 @@
     <string name="ucun">Universidad De Cundinamarca</string>
     <string name="desing_by">Desde</string>
 
-    <string name="bottom_c_profile">Perfil</string>
-    <string name="bottom_c_config">Configuración</string>
-    <string name="bottom_c_home">Inicio</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="create_ofer">Crear nueva oferta</string>
+    <string name="create_ofer2">llene la siguiente información</string>
+    <string name="ofer_info">Información básica de la oferta</string>
+    <string name="ofer_title">Título del trabajo</string>
+    <string name="ofer_categori">Catergoría o industria del trabajo</string>
+    <string name="ofer_description">Descripción del trabajo</string>
+    <string name="ofer_tipe">Tipo de empleo</string>
+    <string name="ofer_requi">Requisitos del candidato</string>
+    <string name="ofer_level_requi">Nivel educativo requerido</string>
+    <string name="ofer_experence">Experiencia laboral necesaria</string>
+    <string name="ofer_habilites">Habilidades especificas</string>
+    <string name="ofer_detail_compani">Detalles de la empresa</string>
+    <string name="ofer_location_job">Ubicación del puesto de trabajo</string>
+    <string name="ofer_q_elevator">¿El lugar de trabajo cuenta con ascensores o elevadores?</string>
+    <string name="ofer_afirmation">Si</string>
+    <string name="ofer_negative">No</string>
+    <string name="ofer_q_ramp">¿Disponen de rampas para acceder a las instalaciones?</string>
+    <string name="ofer_benefits">Benficios y compensación</string>
+    <string name="ofer_salary">Salario o rango salarial</string>
+    <string name="ofer_benefits_plus">Beneficios adicionales</string>
+    <string name="public_ofer">Publicar Oferta</string>
+    <string name="select">Seleccionar</string>
+    <string-array name="lista_typo_empleo">
+        <item>Tiempo Completo</item>
+        <item>Medio Tiempo</item>
+        <item>Tiempo Parcial</item>
+    </string-array>
+    <string-array name="lista_categoria_empleo">
+        <item>Tecnología</item>
+        <item>Finanzas</item>
+        <item>Salud y bienestar</item>
+        <item>Salud y bienestar</item>
+        <item>Marketing y publicidad</item>
+        <item>Ventas y atención al cliente</item>
+        <item>Arte y entretenimiento</item>
+        <item>Ingeniería y manufactura</item>
+        <item>Recursos humanos y reclutamiento</item>
+        <item>Ciencia y tecnología</item>
+        <item>Otro</item>
+    </string-array>
 </resources>
