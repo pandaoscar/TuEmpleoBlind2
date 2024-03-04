@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -92,7 +91,7 @@ public class SignUpC extends AppCompatActivity {
                                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                             String userID = user.getUid();
                                             // Guardar datos adicionales del usuario en Firestore
-                                            postUserNameBlind(name, username, email, userID);
+                                            postUserNameC(name, username, email, userID);
                                         } else {
                                             Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                         }
@@ -108,7 +107,7 @@ public class SignUpC extends AppCompatActivity {
                 }
             }
 
-            private void postUserNameBlind(String name, String username, String email, String userID) {
+            private void postUserNameC(String name, String username, String email, String userID) {
                 // Guardar datos adicionales del usuario en Firestore
                 Map<String, Object> userData = new HashMap<>();
                 userData.put("Nombre", name);
@@ -132,7 +131,7 @@ public class SignUpC extends AppCompatActivity {
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getApplicationContext(), "Error al guardar datos del usuario en Firestore", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
             }

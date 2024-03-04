@@ -94,7 +94,7 @@
                     />
 
                 <EditText
-                    android:id="@+id/editTextText7"
+                    android:id="@+id/editTextTittleNewJobC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -117,7 +117,7 @@
                     android:orientation="horizontal">
 
                     <Spinner
-                        android:id="@+id/a_c_category"
+                        android:id="@+id/spinnerCategoryNewJobC"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/style_spiner"
@@ -126,7 +126,7 @@
 
 
                 <EditText
-                    android:id="@+id/editTextTextMultiLine"
+                    android:id="@+id/editTextMultiDescripNewJobC"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:ems="10"
@@ -150,7 +150,7 @@
                         android:textSize="20dp" />
 
                     <Spinner
-                        android:id="@+id/a_c_type_compani"
+                        android:id="@+id/spinnerTypeJobNewJobC"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/style_spiner" />
@@ -174,7 +174,7 @@
                     android:textStyle="bold"/>
 
                 <EditText
-                    android:id="@+id/editTextText11"
+                    android:id="@+id/editTextLevelEduNewJobC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -183,7 +183,7 @@
                     android:textSize="20dp" />
 
                 <EditText
-                    android:id="@+id/editTextText12"
+                    android:id="@+id/editTextExperienceNewJobC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -192,7 +192,7 @@
                     android:textSize="20dp" />
 
                 <EditText
-                    android:id="@+id/editTextText13"
+                    android:id="@+id/editTextHabilitiesNewJobC"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:ems="10"
@@ -218,7 +218,7 @@
                     android:textStyle="bold"/>
 
                 <EditText
-                    android:id="@+id/editTextText15"
+                    android:id="@+id/editTextSalaryNewJobC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -227,7 +227,7 @@
                     android:textSize="20dp" />
 
                 <EditText
-                    android:id="@+id/editTextText16"
+                    android:id="@+id/editTextBenefitsNewJobC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -253,7 +253,7 @@
                     android:textStyle="bold"/>
 
                 <EditText
-                    android:id="@+id/editTextText14"
+                    android:id="@+id/editTextLocationNewJobC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -270,22 +270,26 @@
                     android:textColor="@color/rich_black"
                     android:textSize="20dp"
                     android:layout_marginTop="8dp"/>
-                <RadioGroup
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <RadioButton
-                        android:id="@+id/radioButon1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ofer_afirmation"
-                        android:textSize="20dp"/>
-                    <RadioButton
-                        android:id="@+id/radioButon2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ofer_negative"
-                        android:textSize="20dp"/>
-                </RadioGroup>
+
+                    <RadioGroup
+                        android:id="@+id/groupElevatorNewJobC"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <RadioButton
+                            android:id="@+id/trueElevatorNewJobC"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/ofer_afirmation"
+                            android:textSize="20dp" />
+
+                        <RadioButton
+                            android:id="@+id/falseElevatorNewJobC"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/ofer_negative"
+                            android:textSize="20dp" />
+                    </RadioGroup>
 
                 <TextView
                     android:id="@+id/textView19"
@@ -296,26 +300,30 @@
                     android:textColor="@color/rich_black"
                     android:textSize="20dp"
                     android:layout_marginTop="8dp"/>
-                <RadioGroup
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <RadioButton
-                        android:id="@+id/radioButon3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ofer_afirmation"
-                        android:textSize="20dp"/>
-                    <RadioButton
-                        android:id="@+id/radioButon4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ofer_negative"
-                        android:textSize="20dp"
-                        android:layout_marginBottom="18dp"/>
-                </RadioGroup>
+
+                    <RadioGroup
+                        android:id="@+id/groupRampNewJobC"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <RadioButton
+                            android:id="@+id/trueRampNewJobC"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/ofer_afirmation"
+                            android:textSize="20dp" />
+
+                        <RadioButton
+                            android:id="@+id/falseRampNewJobC"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="18dp"
+                            android:text="@string/ofer_negative"
+                            android:textSize="20dp" />
+                    </RadioGroup>
                 </LinearLayout>
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/buttonPublishNewJobC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/public_ofer"
@@ -327,7 +335,7 @@
                     />
 
                 <Button
-                    android:id="@+id/tbn_back_home_c"
+                    android:id="@+id/buttonBackNewJobC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/back"
