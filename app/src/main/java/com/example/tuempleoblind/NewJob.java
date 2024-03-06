@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -86,7 +87,9 @@ public class NewJob extends AppCompatActivity {
             public void onClick(View v) {
                 ProgressDialog progressDialog = ProgressDialog.show(NewJob.this, "", "Registrando usuario...", true);
                 progressDialog.setCancelable(false);
-                final String title, description, levelEducation, experienceLab, habilities, salary, benefits, location, category, typeJob;
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                final String companyPublishId,title, description, levelEducation, experienceLab, habilities, salary, benefits, location, category, typeJob;
+                companyPublishId=currentUser.getUid().toString();
                 title = campTextTitle.getText().toString();
                 description = campTextMultiDescription.getText().toString();
                 levelEducation = campTextLevelEducation.getText().toString();
@@ -114,7 +117,7 @@ public class NewJob extends AppCompatActivity {
                     progressDialog.dismiss();
                 }
                 else{
-                    postNewJob(title, description, levelEducation, experienceLab, habilities, salary, benefits, location, category,
+                    postNewJob(companyPublishId,title, description, levelEducation, experienceLab, habilities, salary, benefits, location, category,
                             typeJob, checkElevator, checkRamp);
 
                     new Handler().postDelayed(new Runnable() {
@@ -127,8 +130,9 @@ public class NewJob extends AppCompatActivity {
 
             }
 
-            private void postNewJob(String title, String description, String levelEducation, String experienceLab, String habilities, String salary, String benefits, String location, String category, String typeJob, boolean checkElevator, boolean checkRamp) {
+            private void postNewJob(String companyPublishId, String title, String description, String levelEducation, String experienceLab, String habilities, String salary, String benefits, String location, String category, String typeJob, boolean checkElevator, boolean checkRamp) {
                 Map<String, Object> jobPublish = new HashMap<>();
+                jobPublish.put("companyPublishId", companyPublishId);
                 jobPublish.put("title", title);
                 jobPublish.put("description", description);
                 jobPublish.put("levelEducation", levelEducation);
@@ -144,15 +148,16 @@ public class NewJob extends AppCompatActivity {
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String userID = user.getUid();
-                mFirestore.collection("Trabajos publicados").document(userID).set(jobPublish).addOnSuccessListener(new OnSuccessListener<Void>() {
+                mFirestore.collection("TrabajosPublicados").add(jobPublish).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
-                    public void onSuccess(Void unused) {
+                    public void onSuccess(DocumentReference documentReference) {
                         Toast.makeText(getApplicationContext(), "Trabajo publicado correctamente", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), companyHome.class);
                         intent.putExtra("userID", userID);
                         startActivity(intent);
                         finish();
                     }
+
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {

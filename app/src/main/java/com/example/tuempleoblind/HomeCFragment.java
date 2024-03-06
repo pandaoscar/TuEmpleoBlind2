@@ -1,14 +1,23 @@
 package com.example.tuempleoblind;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.example.tuempleoblind.adapter.TrabajosPublicadosAdapter;
+import com.example.tuempleoblind.model.TrabajosPublicados;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,7 +26,9 @@ import android.widget.Button;
  */
 public class HomeCFragment extends Fragment {
     Button newJob;
-
+    RecyclerView cRecycleView;
+    TrabajosPublicadosAdapter cAdapter;
+    FirebaseFirestore cFirestore;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -58,12 +69,22 @@ public class HomeCFragment extends Fragment {
         }
     }
 
+    @SuppressLint("WrongViewCast")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        cFirestore= FirebaseFirestore.getInstance();
         View view = inflater.inflate(R.layout.fragment_home_c, container, false);
         newJob = view.findViewById(R.id.btn_new_job);
+        cRecycleView= view.findViewById(R.id.recycleViewJobsOfCompany);
+        cRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        Query query= cFirestore.collection("TrabajosPublicados");
+        FirestoreRecyclerOptions<TrabajosPublicados> firestoreRecyclerOptions= new FirestoreRecyclerOptions.Builder<TrabajosPublicados>().setQuery(query,TrabajosPublicados.class).build();
+        cAdapter= new TrabajosPublicadosAdapter(firestoreRecyclerOptions);
+        cAdapter.notifyDataSetChanged();
+        cRecycleView.setAdapter(cAdapter);
+
         newJob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,4 +95,15 @@ public class HomeCFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        cAdapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        cAdapter.stopListening();
+    }
 }
