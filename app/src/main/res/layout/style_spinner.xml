@@ -6,6 +6,4 @@
     android:textSize="20sp"
     android:textColor="@color/rich_black"
     android:textAlignment="center">
-
-
 </TextView>

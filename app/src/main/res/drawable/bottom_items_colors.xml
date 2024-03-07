@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Icono cuando está seleccionado -->
+    <item android:color="@color/ghost_white" android:state_checked="true"/>
+    <!-- Icono cuando no está seleccionado -->
+    <item android:color="@color/gray"/>
+</selector>
