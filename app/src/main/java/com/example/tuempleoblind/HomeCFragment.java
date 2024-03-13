@@ -104,6 +104,6 @@ public class HomeCFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        
+        cAdapter.stopListening();
     }
 }
