@@ -14,7 +14,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btnFindJob, btnFindHire;
+    Button btnFindJob, btnFindHire, btnLogIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +23,19 @@ public class MainActivity extends AppCompatActivity {
 
         btnFindJob = findViewById(R.id.buttonFindJob);
         btnFindHire = findViewById(R.id.buttonFindHire);
-
+        btnLogIn = findViewById(R.id.buttonLogIn);
+        login();
         hire();
         job();
+    }
+
+    private void login() {
+        btnLogIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(),HomePageBlind.class));
+            }
+        });
     }
 
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_blind"
+    app:startDestination="@id/homeBlindFragment">
+
+    <fragment
+        android:id="@+id/homeBlindFragment"
+        android:name="com.example.tuempleoblind.HomeBlindFragment"
+        android:label="fragment_home_blind"
+        tools:layout="@layout/fragment_home_blind" />
+    <fragment
+        android:id="@+id/profileBlindFragment"
+        android:name="com.example.tuempleoblind.ProfileBlindFragment"
+        android:label="fragment_profile_blind"
+        tools:layout="@layout/fragment_profile_blind" />
+    <fragment
+        android:id="@+id/configBlindFragment"
+        android:name="com.example.tuempleoblind.ConfigBlindFragment"
+        android:label="fragment_config_blind"
+        tools:layout="@layout/fragment_config_blind" />
+</navigation>

@@ -36,6 +36,10 @@
     <string name="bottom_c_profile">Perfil</string>
     <string name="bottom_c_config">Configuración</string>
     <string name="bottom_c_home">Inicio</string>
+    <string name="bottom_blind_profile">Perfil</string>
+    <string name="bottom_blind_config">Configuración</string>
+    <string name="bottom_blind_home">Inicio</string>
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="your_oferts">Tus publicaciones:</string>
     <string name="ofer_evelator">Cuenta con Elevador</string>
