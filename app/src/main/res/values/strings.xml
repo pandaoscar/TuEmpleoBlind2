@@ -40,6 +40,10 @@
     <string name="bottom_c_profile">Perfil</string>
     <string name="bottom_c_config">Configuración</string>
     <string name="bottom_c_home">Inicio</string>
+    <string name="bottom_blind_profile">Perfil</string>
+    <string name="bottom_blind_config">Configuración</string>
+    <string name="bottom_blind_home">Inicio</string>
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="your_oferts">Tus publicaciones:</string>
     <string name="ofer_evelator">Cuenta con Elevador</string>
@@ -67,6 +71,7 @@
     <string name="ofer_benefits_plus">Beneficios adicionales</string>
     <string name="public_ofer">Publicar Oferta</string>
     <string name="select">Seleccionar</string>
+    <string name="delete">Eliminar</string>
     <string-array name="lista_typo_empleo">
         <item>Tiempo Completo</item>
         <item>Medio Tiempo</item>

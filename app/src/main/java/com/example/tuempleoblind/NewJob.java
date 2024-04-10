@@ -156,6 +156,7 @@ public class NewJob extends AppCompatActivity {
                         intent.putExtra("userID", userID);
                         startActivity(intent);
                         finish();
+
                     }
 
                 }).addOnFailureListener(new OnFailureListener() {

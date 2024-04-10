@@ -16,11 +16,14 @@
             android:background="@color/app_color">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@drawable/btn_beta"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginTop="12dp">
 
                 <ImageView
                     android:id="@+id/imageView"
@@ -96,6 +99,8 @@
                 android:textColor="@color/rich_black"
                 android:gravity="center"
                 android:background="@drawable/btn_beta"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
                 />
 
             <ScrollView
@@ -108,9 +113,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="22dp"
-                    android:layout_marginBottom="22dp"
-                    android:background="@drawable/btn_beta"/>
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/slide_up"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"/>
+
             </ScrollView>
+
             </LinearLayout>
 
 
