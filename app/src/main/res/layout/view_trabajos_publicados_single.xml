@@ -33,8 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:orientation="vertical"
-                android:background="@drawable/style_spiner">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/RecycleViewJobsTitle"
@@ -43,8 +42,7 @@
                     android:text="TITULO"
                     android:textColor="@color/rich_black"
                     android:textSize="28dp"
-                    android:textStyle="bold"
-                    android:layout_marginStart="15sp"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/RecycleViewJobsCategory"
@@ -54,8 +52,7 @@
                     android:text="Categoria"
                     android:textColor="@color/rich_black"
                     android:textSize="18dp"
-                    android:textStyle="italic"
-                    android:layout_marginStart="10sp"/>
+                    android:textStyle="italic" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -68,8 +65,7 @@
                         android:layout_height="wrap_content"
                         android:text=" $ "
                         android:textColor="@color/rich_black"
-                        android:textSize="18dp"
-                        android:layout_marginStart="10sp"/>
+                        android:textSize="18dp" />
 
                     <TextView
                         android:id="@+id/RecycleViewJobsSalary"
@@ -92,8 +88,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/ofer_evelator"
                         android:textColor="@color/rich_black"
-                        android:textSize="18dp"
-                        android:layout_marginStart="10sp"/>
+                        android:textSize="18dp" />
 
                     <TextView
                         android:id="@+id/RecycleViewJobsElevator"
@@ -117,8 +112,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/ofer_ramp"
                         android:textColor="@color/rich_black"
-                        android:textSize="18dp"
-                        android:layout_marginStart="10sp"/>
+                        android:textSize="18dp" />
 
                     <TextView
                         android:id="@+id/RecycleViewJobsRamp"
@@ -149,14 +143,11 @@
                 android:text="Button" />
 
             <Button
-                android:id="@+id/buttonDeleteJob"
+                android:id="@+id/button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/delete"
-                android:textStyle="bold"
-                android:textColor="@color/ghost_white"
-                android:background="@drawable/btn_delete"/>
+                android:text="Button" />
         </LinearLayout>
 
     </LinearLayout>

@@ -81,7 +81,7 @@ public class HomeCFragment extends Fragment {
         cRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
         Query query= cFirestore.collection("TrabajosPublicados");
         FirestoreRecyclerOptions<TrabajosPublicados> firestoreRecyclerOptions= new FirestoreRecyclerOptions.Builder<TrabajosPublicados>().setQuery(query,TrabajosPublicados.class).build();
-        cAdapter= new TrabajosPublicadosAdapter(firestoreRecyclerOptions, this);
+        cAdapter= new TrabajosPublicadosAdapter(firestoreRecyclerOptions);
         cAdapter.notifyDataSetChanged();
         cRecycleView.setAdapter(cAdapter);
 
@@ -104,11 +104,6 @@ public class HomeCFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        cAdapter.startListening();
+        cAdapter.stopListening();
     }
 }

@@ -1,26 +1,18 @@
 package com.example.tuempleoblind.adapter;
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.tuempleoblind.HomeCFragment;
 import com.example.tuempleoblind.R;
 import com.example.tuempleoblind.model.TrabajosPublicados;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class TrabajosPublicadosAdapter extends FirestoreRecyclerAdapter<TrabajosPublicados, TrabajosPublicadosAdapter.viewHolder> {
@@ -31,13 +23,8 @@ public class TrabajosPublicadosAdapter extends FirestoreRecyclerAdapter<Trabajos
      * @param options
      */
     String companyPublishId;
-    private FirebaseFirestore mFiestore=FirebaseFirestore.getInstance();
-
-    Fragment fragment;
-
-    public TrabajosPublicadosAdapter(@NonNull FirestoreRecyclerOptions<TrabajosPublicados> options, Fragment fragment) {
+    public TrabajosPublicadosAdapter(@NonNull FirestoreRecyclerOptions<TrabajosPublicados> options) {
         super(options);
-        this.fragment=fragment;
     }
 
     @Override
@@ -45,39 +32,17 @@ public class TrabajosPublicadosAdapter extends FirestoreRecyclerAdapter<Trabajos
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         companyPublishId=currentUser.getUid().toString();
         if (TrabajosPublicados.getCompanyPublishId().equals(companyPublishId)) {
-            DocumentSnapshot documentSnapshot= getSnapshots().getSnapshot(holder.getAdapterPosition());
-            final String id=documentSnapshot.getId();
             holder.title.setText(TrabajosPublicados.getTitle());
             holder.category.setText(TrabajosPublicados.getCategory());
             holder.salary.setText(TrabajosPublicados.getSalary());
             holder.checkElevator.setText(TrabajosPublicados.getCheckElevator() ? "Sí" : "No");
             holder.checkRamp.setText(TrabajosPublicados.getCheckRamp() ? "Sí" : "No");
-            holder.btn_delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    deleteJob(id);
-
-                }
-            });
         } else {
             // Si no coincide, ocultar la vista del trabajo
             holder.itemView.setVisibility(View.GONE);
             holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0)); // Opcionalmente, puedes establecer el ancho y la altura de la vista a cero para evitar problemas de diseño
         }
 
-    }
-
-    private void deleteJob(String id) {
-        mFiestore.collection("TrabajosPublicados").document(id).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-            }
-        });
     }
 
     @NonNull
@@ -90,7 +55,6 @@ public class TrabajosPublicadosAdapter extends FirestoreRecyclerAdapter<Trabajos
     public class viewHolder extends RecyclerView.ViewHolder {
 
         TextView title, category, salary, checkElevator, checkRamp;
-        Button btn_delete;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             title=itemView.findViewById(R.id.RecycleViewJobsTitle);
@@ -98,7 +62,6 @@ public class TrabajosPublicadosAdapter extends FirestoreRecyclerAdapter<Trabajos
             salary=itemView.findViewById(R.id.RecycleViewJobsSalary);
             checkElevator=itemView.findViewById(R.id.RecycleViewJobsElevator);
             checkRamp=itemView.findViewById(R.id.RecycleViewJobsRamp);
-            btn_delete=itemView.findViewById(R.id.buttonDeleteJob);
         }
     }
 }
