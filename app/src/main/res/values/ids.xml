@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="editTextUserEmailSignUpBlind" type="id" />
+    <item name="buttonBackSignUpBlind" type="id" />
+    <item name="editTextNameSignUpBlind" type="id" />
+</resources>
