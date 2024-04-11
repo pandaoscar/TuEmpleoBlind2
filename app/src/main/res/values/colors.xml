@@ -34,5 +34,9 @@
     <color name="fire_brick">#C1121F</color>
     <color name="barn_red">#780000</color>
 
+    <color name="colorPrimary">#FBB034</color>
+    <color name="colorPrimaryDark">#FFDD00</color>
+    <color name="colorAccent">#FBB034</color>
+    <color name="colorText">#504F60</color>
 
 </resources>

@@ -157,6 +157,7 @@ public class NewJob extends AppCompatActivity {
                         startActivity(intent);
                         finish();
 
+
                     }
 
                 }).addOnFailureListener(new OnFailureListener() {

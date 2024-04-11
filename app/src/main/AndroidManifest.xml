@@ -34,6 +34,9 @@
             android:name=".HomePageBlind"
             android:exported="false" />
         <activity
+            android:name=".LogIn"
+            android:exported="false" />
+        <activity
             android:name=".SplashScreen"
             android:exported="true">
             <intent-filter>

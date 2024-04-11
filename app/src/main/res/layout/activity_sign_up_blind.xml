@@ -8,32 +8,100 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/lavanderBlush">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="125dp">
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_beta"
+                android:layout_marginTop="22dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp">
 
                 <TextView
                     android:id="@+id/textView3"
                     android:layout_width="380dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="12dp"
                     android:text="@string/UsernameSignUpBlindLabel"
-                    android:textAlignment="center"
                     android:textColor="@color/normal_color"
                     android:textSize="28sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.516"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.602" />
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/editTextNameSignUpBlind"
+                    android:layout_width="380dp"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="name"
+                    android:ems="10"
+                    android:hint="@string/sign_up_c_name"
+                    android:inputType="text"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+                <EditText
+                    android:id="@+id/editTextSignUpUsernameBlind"
+                    android:layout_width="380dp"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="name"
+                    android:ems="10"
+                    android:hint="@string/name_user"
+                    android:inputType="text"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editTextNameSignUpBlind" />
+
+                <EditText
+                    android:id="@+id/editTextUserEmailSignUpBlind"
+                    android:layout_width="380dp"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="name"
+                    android:ems="10"
+                    android:hint="@string/sign_up_c_email"
+                    android:inputType="text"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editTextSignUpUsernameBlind" />
+
+                <EditText
+                    android:id="@+id/editTextPasswordSignUpBlind1"
+                    android:layout_width="380dp"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="name"
+                    android:ems="10"
+                    android:hint="@string/sign_up_c_password"
+                    android:inputType="textPassword"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editTextUserEmailSignUpBlind" />
+
+                <EditText
+                    android:id="@+id/editTextPasswordSignUpBlind2"
+                    android:layout_width="380dp"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="name"
+                    android:ems="10"
+                    android:hint="@string/sign_up_c_password2"
+                    android:inputType="textPassword"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editTextPasswordSignUpBlind1" />
+
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -41,52 +109,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <EditText
-                    android:id="@+id/editTextSignUpUsernameBlind"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/name_user"
-                    android:inputType="text"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    tools:layout_editor_absoluteY="27dp"
-                    tools:ignore="MissingConstraints" />
 
-                <EditText
-                    android:id="@+id/editTextPasswordSignUpBlind1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="44dp"
-                    android:ems="10"
-                    android:hint="Contraseña"
-                    android:inputType="textPassword"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.502"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/editTextSignUpUsernameBlind" />
-
-                <EditText
-                    android:id="@+id/editTextPasswordSignUpBlind2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="Confirmar contraseña"
-                    android:inputType="textPassword"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextPasswordSignUpBlind1" />
 
                 <Button
                     android:id="@+id/buttonSignUpSendBlind"
-                    android:layout_width="0dp"
+                    android:layout_width="380dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="64dp"
-                    android:text="@string/SignUpButtonSend"
+                    android:layout_marginTop="18dp"
+                    android:text="@string/conti"
+                    android:textColor="@color/ghost_white"
+                    android:background="@drawable/btn_orange"
+                    android:textSize="28dp"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextPasswordSignUpBlind2" />
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/buttonBackSignUpBlind"
+                    android:layout_width="380dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="@string/back"
+                    android:textColor="@color/ghost_white"
+                    android:background="@drawable/btn_blue"
+                    android:textStyle="bold"
+                    android:textSize="28dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/buttonSignUpSendBlind" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>

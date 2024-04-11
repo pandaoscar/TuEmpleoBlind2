@@ -72,6 +72,7 @@ public class TrabajosPublicadosAdapter extends FirestoreRecyclerAdapter<Trabajos
             @Override
             public void onSuccess(Void unused) {
 
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

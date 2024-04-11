@@ -12,8 +12,6 @@
     <string name="job_aplications">Mis Trabajos Aplicados</string>
 
 
-    <string name="UsernameSignUpBlindLabel">Para empezar crea un nombre de usuario y una contraseña:</string>
-    <string name="SignUpButtonSend">Enviar</string>
 
     <string name="sign_in">Inciar Sesión</string>
     <string name="sign_up_c_name_c">Nombre De La Compañia</string>
@@ -44,6 +42,13 @@
     <string name="your_oferts">Tus publicaciones:</string>
     <string name="ofer_evelator">Cuenta con Elevador</string>
     <string name="ofer_ramp">Cuenta con Rampas</string>
+
+    <string name="UsernameSignUpBlindLabel">Para empezar llena los suiguientes datos:</string>
+    <string name="SignUpButtonSend">Enviar</string>
+    <string name="signUpFormBlindLevel">Nivel de ceguera</string>
+    <string name="signUpFormBlindProfession">Introduzca su profesión, enfoque y especialización (ejemplo: Psicólogo clínico, Terapia cognitivo-conductual)</string>
+    <string name="signUpFormBlindAddress">Escribe pais, provincia y barrio</string>
+    <string name="Phone">Numero de telefono</string>
 
     <string name="create_ofer">Crear nueva oferta</string>
     <string name="create_ofer2">llene la siguiente información</string>
