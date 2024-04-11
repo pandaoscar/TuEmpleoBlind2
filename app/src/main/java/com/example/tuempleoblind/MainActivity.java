@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         btnLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(),HomePageBlind.class));
+                startActivity(new Intent(getApplicationContext(),SignUpBlindForm.class));
             }
         });
     }
