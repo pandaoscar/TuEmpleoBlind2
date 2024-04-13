@@ -18,7 +18,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/btn_beta"
                 android:layout_marginTop="22dp"
                 android:layout_marginStart="8dp"
@@ -38,7 +38,7 @@
 
                 <EditText
                     android:id="@+id/editTextNameSignUpBlind"
-                    android:layout_width="380dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="name"
                     android:ems="10"
@@ -51,7 +51,7 @@
 
                 <EditText
                     android:id="@+id/editTextSignUpUsernameBlind"
-                    android:layout_width="380dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="name"
                     android:ems="10"
@@ -64,7 +64,7 @@
 
                 <EditText
                     android:id="@+id/editTextUserEmailSignUpBlind"
-                    android:layout_width="380dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="name"
                     android:ems="10"
@@ -77,7 +77,7 @@
 
                 <EditText
                     android:id="@+id/editTextPasswordSignUpBlind1"
-                    android:layout_width="380dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="name"
                     android:ems="10"
@@ -90,7 +90,7 @@
 
                 <EditText
                     android:id="@+id/editTextPasswordSignUpBlind2"
-                    android:layout_width="380dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="name"
                     android:ems="10"
@@ -113,7 +113,7 @@
 
                 <Button
                     android:id="@+id/buttonSignUpSendBlind"
-                    android:layout_width="380dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
                     android:text="@string/conti"
@@ -127,7 +127,7 @@
 
                 <Button
                     android:id="@+id/buttonBackSignUpBlind"
-                    android:layout_width="380dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
                     android:text="@string/back"

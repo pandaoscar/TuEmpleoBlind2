@@ -73,6 +73,7 @@
     <string name="public_ofer">Publicar Oferta</string>
     <string name="select">Seleccionar</string>
     <string name="delete">Eliminar</string>
+    <string name="view_more">Ver detalles de la oferta</string>
     <string-array name="lista_typo_empleo">
         <item>Tiempo Completo</item>
         <item>Medio Tiempo</item>

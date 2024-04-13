@@ -1,5 +1,7 @@
 package com.example.tuempleoblind;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +9,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,7 +19,7 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class ProfileBlindFragment extends Fragment {
-
+    Button btn_exit;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -55,10 +60,32 @@ public class ProfileBlindFragment extends Fragment {
         }
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile_blind, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile_blind, container, false);
+        btn_exit = view.findViewById(R.id.signOffBlind);
+        btn_exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signOut();
+            }
+        });
+        // Inflate the layout for this fragment
+        return view;
+    }
+    private void signOut() {
+        try {
+            FirebaseAuth.getInstance().signOut();
+            // Cerrar sesión correctamente, luego iniciar el nuevo Activity
+            Intent intent = new Intent(getActivity(), MainActivity.class); // Reemplaza "NuevoActivity" con el nombre de tu Activity de destino
+            startActivity(intent);
+            getActivity().finish(); // Opcionalmente, puedes finalizar el Activity actual
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Manejar la excepción aquí, como mostrar un mensaje de error al usuario
+        }
     }
 }
