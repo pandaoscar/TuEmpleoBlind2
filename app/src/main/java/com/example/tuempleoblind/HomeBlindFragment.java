@@ -1,5 +1,6 @@
 package com.example.tuempleoblind;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import com.example.tuempleoblind.adapter.JobsAvailableAdapter;
 import com.example.tuempleoblind.model.JobsAvailable;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -21,7 +23,7 @@ import com.google.firebase.firestore.Query;
  * Use the {@link HomeBlindFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeBlindFragment extends Fragment {
+public class HomeBlindFragment extends Fragment implements JobsAvailableAdapter.OnViewMoreClickListener{
 
     RecyclerView mRecicle;
     JobsAvailableAdapter mAdapter;
@@ -79,10 +81,26 @@ public class HomeBlindFragment extends Fragment {
         mAdapter=new JobsAvailableAdapter(firestoreRecyclerOptions);
         mAdapter.notifyDataSetChanged();
         mRecicle.setAdapter(mAdapter);
+        mAdapter.setOnViewMoreClickListener(this);
         // Inflate the layout for this fragment
         return view;
     }
-
+    public void onViewMoreClick(int position){
+        DocumentSnapshot snapshot= mAdapter.getSnapshots().getSnapshot(position);
+        JobsAvailable job=snapshot.toObject(JobsAvailable.class);
+        Intent intent= new Intent(getActivity(),JobDetails.class);
+        intent.putExtra("title",job.getTitle());
+        intent.putExtra("category",job.getCategory());
+        intent.putExtra("salary",job.getSalary());
+        intent.putExtra("typeJob",job.getTypeJob());
+        intent.putExtra("description",job.getDescription());
+        intent.putExtra("levelEducation",job.getLevelEducation());
+        intent.putExtra("experienceLab",job.getExperienceLab());
+        intent.putExtra("location",job.getLocation());
+        intent.putExtra("habilities",job.getHabilities());
+        intent.putExtra("checkRamp",job.getCheckRamp());
+        startActivity(intent);
+    }
     @Override
     public void onStart() {
         super.onStart();

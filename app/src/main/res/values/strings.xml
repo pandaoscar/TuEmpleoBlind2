@@ -12,7 +12,6 @@
     <string name="job_aplications">Mis Trabajos Aplicados</string>
 
 
-
     <string name="sign_in">Inciar Sesión</string>
     <string name="sign_up_c_name_c">Nombre De La Compañia</string>
     <string name="sign_up_c_type">Tipo De Empresa</string>
@@ -41,6 +40,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="your_oferts">Tus publicaciones:</string>
     <string name="ofer_evelator">Cuenta con Elevador</string>
+    <string name="ofer_elevator">Cuenta con Elevador</string>
     <string name="ofer_ramp">Cuenta con Rampas</string>
 
     <string name="UsernameSignUpBlindLabel">Para empezar llena los suiguientes datos:</string>
@@ -63,6 +63,7 @@
     <string name="ofer_habilites">Habilidades especificas</string>
     <string name="ofer_detail_compani">Detalles de la empresa</string>
     <string name="ofer_location_job">Ubicación del puesto de trabajo</string>
+    <string name="ofer_location">Ubicación </string>
     <string name="ofer_q_elevator">¿El lugar de trabajo cuenta con ascensores o elevadores?</string>
     <string name="ofer_afirmation">Si</string>
     <string name="ofer_negative">No</string>
@@ -74,6 +75,7 @@
     <string name="select">Seleccionar</string>
     <string name="delete">Eliminar</string>
     <string name="view_more">Ver detalles de la oferta</string>
+    <string name="jobDetail">Detalles de la Oferta</string>
     <string-array name="lista_typo_empleo">
         <item>Tiempo Completo</item>
         <item>Medio Tiempo</item>

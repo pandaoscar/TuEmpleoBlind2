@@ -1,5 +1,6 @@
 package com.example.tuempleoblind.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ public class JobsAvailableAdapter extends FirestoreRecyclerAdapter<JobsAvailable
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull JobsAvailable model) {
+    protected void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull JobsAvailable model) {
         holder.title.setText(model.getTitle());
         holder.category.setText(model.getCategory());
         holder.salary.setText(model.getSalary());
@@ -35,9 +36,20 @@ public class JobsAvailableAdapter extends FirestoreRecyclerAdapter<JobsAvailable
         holder.btn_view_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(listener!=null){
+                    listener.onViewMoreClick(position);
+                }
             }
         });
 
+    }
+    public interface OnViewMoreClickListener {
+        void onViewMoreClick(int position);
+    }
+    private OnViewMoreClickListener listener;
+
+    public void setOnViewMoreClickListener(OnViewMoreClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
