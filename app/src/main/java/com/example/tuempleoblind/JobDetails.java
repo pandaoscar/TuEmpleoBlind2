@@ -1,18 +1,49 @@
 package com.example.tuempleoblind;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.w3c.dom.Document;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class JobDetails extends AppCompatActivity {
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_details);
+        if (getIntent().hasExtra("jobID")) {
+            // Si se ha pasado el extra "jobID", obtener su valor
+            String jobID = getIntent().getStringExtra("jobID");
+
+            // Aquí puedes hacer lo que necesites con el ID del trabajo (jobID)
+            // Por ejemplo, puedes utilizarlo para obtener los detalles del trabajo desde Firestore
+        } else {
+            // Si no se ha pasado el extra "jobID", mostrar un mensaje de error o tomar alguna acción
+            Toast.makeText(this, "No se ha proporcionado el ID del trabajo.", Toast.LENGTH_SHORT).show();
+            finish(); // Finalizar la actividad si no se proporciona el ID del trabajo
+        }
+
+        db=FirebaseFirestore.getInstance();
+        mAuth= FirebaseAuth.getInstance();
         // Obtener los datos de la intención
         String title=getIntent().getStringExtra("title");
         TextView jobDetailTitle=findViewById(R.id.jobDetailsTitle);
@@ -73,6 +104,55 @@ public class JobDetails extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+        Button buttonPostulate=findViewById(R.id.buttonPostulate);
+        buttonPostulate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                String userID = user.getUid();
+
+                String userBlindEmail = user.getEmail();
+
+                String jobID = getIntent().getStringExtra("jobID");
+
+                // Realizar consulta para obtener los datos del usuario actual
+                FirebaseFirestore.getInstance().collection("UsernameBlind").document(userID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.exists()){
+                            String userBlindPhone=documentSnapshot.getString("Numero de Teléfono");
+                            String userBlindName=documentSnapshot.getString("Nombre");
+
+                            Map<String, Object> userBlindData = new HashMap<>();
+                            userBlindData.put("userBlindName",userBlindName);
+                            userBlindData.put("userEmail", userBlindEmail);
+                            userBlindData.put("userBlindPhone", userBlindPhone);
+                            // Añadir el ID del usuario a la subcolección "postulantes" del documento del empleo
+                            DocumentReference jobRef = db.collection("TrabajosPublicados").document(jobID);
+                            jobRef.collection("Postulates").document(userID).set(userBlindData)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Toast.makeText(JobDetails.this, "Te has postulado al empleo.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(JobDetails.this, "Error al postularse al empleo.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }else {
+                            Toast.makeText(JobDetails.this, "No se encontraron datos de usuario.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(JobDetails.this, "Error al obtener datos de usuario: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }

@@ -151,9 +151,11 @@ public class NewJob extends AppCompatActivity {
                 mFirestore.collection("TrabajosPublicados").add(jobPublish).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
+                        String jobId = documentReference.getId();
                         Toast.makeText(getApplicationContext(), "Trabajo publicado correctamente", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), companyHome.class);
                         intent.putExtra("userID", userID);
+                        intent.putExtra("jobID", jobId);
                         startActivity(intent);
                         finish();
 

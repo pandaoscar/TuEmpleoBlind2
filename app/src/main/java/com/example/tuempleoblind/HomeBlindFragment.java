@@ -87,8 +87,10 @@ public class HomeBlindFragment extends Fragment implements JobsAvailableAdapter.
     }
     public void onViewMoreClick(int position){
         DocumentSnapshot snapshot= mAdapter.getSnapshots().getSnapshot(position);
+        String jobId = snapshot.getId();
         JobsAvailable job=snapshot.toObject(JobsAvailable.class);
         Intent intent= new Intent(getActivity(),JobDetails.class);
+        intent.putExtra("jobID", jobId);
         intent.putExtra("title",job.getTitle());
         intent.putExtra("category",job.getCategory());
         intent.putExtra("salary",job.getSalary());
