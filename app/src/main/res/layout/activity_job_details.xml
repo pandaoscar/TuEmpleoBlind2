@@ -308,7 +308,7 @@
                         android:id="@+id/buttonPostulate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Button"
+                        android:text="@string/postulateToOfer"
                         android:background="@drawable/btn_green"
                         android:textStyle="bold"
                         android:textColor="@color/ghost_white"

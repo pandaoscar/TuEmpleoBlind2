@@ -73,9 +73,13 @@
     <string name="ofer_benefits_plus">Beneficios adicionales</string>
     <string name="public_ofer">Publicar Oferta</string>
     <string name="select">Seleccionar</string>
+    <string name="postulateToOfer">Postularse al Empleo</string>
     <string name="delete">Eliminar</string>
     <string name="view_more">Ver detalles de la oferta</string>
     <string name="jobDetail">Detalles de la Oferta</string>
+    <string name="discardPostulate">Descartar Postulado</string>
+    <string name="applicantsPostulateFor">Aspirantes Postulados Para</string>
+    <string name="viewPostulateCurriculum">Ver Hoja De Vida</string>
     <string-array name="lista_typo_empleo">
         <item>Tiempo Completo</item>
         <item>Medio Tiempo</item>

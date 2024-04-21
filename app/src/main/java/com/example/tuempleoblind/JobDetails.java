@@ -153,6 +153,7 @@ public class JobDetails extends AppCompatActivity {
                         Toast.makeText(JobDetails.this, "Error al obtener datos de usuario: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+                finish();
             }
         });
     }

@@ -16,6 +16,7 @@ import android.widget.Button;
 import com.example.tuempleoblind.adapter.TrabajosPublicadosAdapter;
 import com.example.tuempleoblind.model.TrabajosPublicados;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -24,10 +25,10 @@ import com.google.firebase.firestore.Query;
  * Use the {@link HomeCFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeCFragment extends Fragment {
+public class HomeCFragment extends Fragment implements TrabajosPublicadosAdapter.OnViewPostulatesClickListener {
     Button newJob;
     RecyclerView cRecycleView;
-    TrabajosPublicadosAdapter cAdapter;
+    TrabajosPublicadosAdapter mAdapter;
     FirebaseFirestore cFirestore;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -81,9 +82,10 @@ public class HomeCFragment extends Fragment {
         cRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
         Query query= cFirestore.collection("TrabajosPublicados");
         FirestoreRecyclerOptions<TrabajosPublicados> firestoreRecyclerOptions= new FirestoreRecyclerOptions.Builder<TrabajosPublicados>().setQuery(query,TrabajosPublicados.class).build();
-        cAdapter= new TrabajosPublicadosAdapter(firestoreRecyclerOptions, this);
-        cAdapter.notifyDataSetChanged();
-        cRecycleView.setAdapter(cAdapter);
+        mAdapter= new TrabajosPublicadosAdapter(firestoreRecyclerOptions, this);
+        mAdapter.notifyDataSetChanged();
+        cRecycleView.setAdapter(mAdapter);
+        mAdapter.setOnViewPostulatesClick(this);
 
         newJob.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +100,7 @@ public class HomeCFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        cAdapter.startListening();
+        mAdapter.startListening();
     }
 
     @Override
@@ -109,6 +111,16 @@ public class HomeCFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        cAdapter.startListening();
+        mAdapter.startListening();
+    }
+
+    @Override
+    public void onViewPostulatesClick(int position) {
+        DocumentSnapshot snapshot= mAdapter.getSnapshots().getSnapshot(position);
+        String jobId = snapshot.getId();
+        Intent intent= new Intent(getActivity(),ViewPostulates.class);
+        intent.putExtra("jobID", jobId);
+        startActivity(intent);
+
     }
 }
