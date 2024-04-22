@@ -35,14 +35,14 @@ public class SignUpC extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up_c);
         mFirestore = FirebaseFirestore.getInstance();
 
-        campTextName = findViewById(R.id.editTextNameCompanyFormC);
-        campTextUserName = findViewById(R.id.editTextCompanyTypeFormC);
+        campTextName = findViewById(R.id.editTextNameCompanyEditDataC);
+        campTextUserName = findViewById(R.id.editTextCompanyTypeEditDataC);
         campTextEmail = findViewById(R.id.editTextUserEmailSignUpC);
-        campTextPassword1 = findViewById(R.id.editTextLocationFormC);
+        campTextPassword1 = findViewById(R.id.editTextLocationEditDataC);
         campTextPassword2 = findViewById(R.id.editTextPasswordSignUpC2);
 
-        btnContinue = findViewById(R.id.buttonContinueFormC);
-        btnBack = findViewById(R.id.buttonBackFormC);
+        btnContinue = findViewById(R.id.buttonSaveEditDataC);
+        btnBack = findViewById(R.id.buttonCancelEditDataC);
 
 
 
@@ -62,8 +62,6 @@ public class SignUpC extends AppCompatActivity {
         btnContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProgressDialog progressDialog = ProgressDialog.show(SignUpC.this, "", "Registrando usuario...", true);
-                progressDialog.setCancelable(false);
 
                 final String name = campTextName.getText().toString();
                 final String username = campTextUserName.getText().toString();
@@ -73,12 +71,10 @@ public class SignUpC extends AppCompatActivity {
 
                 if(username.isEmpty() || email.isEmpty() || password1.isEmpty() || password2.isEmpty()){
                     Toast.makeText(getApplicationContext(), "Completa todos los datos correspondientes", Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
                 }
                 else{
                     if(!password1.equals(password2)){
                         Toast.makeText(getApplicationContext(), "Las contraseñas deben coincidir, por favor verifica nuevamente", Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
                     }
                     else{
                         // Registrar usuario en Firebase Authentication
@@ -95,12 +91,7 @@ public class SignUpC extends AppCompatActivity {
                                         } else {
                                             Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                         }
-                                        new Handler().postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                progressDialog.dismiss();
-                                            }
-                                        },2000);
+
                                     }
                                 });
                     }

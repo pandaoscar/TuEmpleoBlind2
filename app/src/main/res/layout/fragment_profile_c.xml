@@ -8,15 +8,26 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+
     <Button
         android:id="@+id/signOff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="93dp"
         android:text="Cerrar Sesión"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/buttonDataProfile" />
 
+    <Button
+        android:id="@+id/buttonDataProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="@string/dataPerfil"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="161dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

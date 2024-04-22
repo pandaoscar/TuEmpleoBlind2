@@ -36,7 +36,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/editTextNameCompanyFormC"
+                    android:id="@+id/editTextNameCompanyEditDataC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="name"
@@ -56,10 +56,10 @@
                     android:textColor="@color/normal_color"
                     android:textSize="26sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextNameCompanyFormC" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTextNameCompanyEditDataC" />
 
                 <EditText
-                    android:id="@+id/editTextCompanyTypeFormC"
+                    android:id="@+id/editTextCompanyTypeEditDataC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="name"
@@ -80,7 +80,7 @@
                     android:textColor="@color/normal_color"
                     android:textSize="26sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextCompanyTypeFormC" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTextCompanyTypeEditDataC" />
 
                 <EditText
                     android:id="@+id/editTextUserEmailSignUpC"
@@ -109,7 +109,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/editTextUserEmailSignUpC" />
 
                 <EditText
-                    android:id="@+id/editTextLocationFormC"
+                    android:id="@+id/editTextLocationEditDataC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -130,7 +130,7 @@
                     android:textColor="@color/normal_color"
                     android:textSize="26sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextLocationFormC" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTextLocationEditDataC" />
 
                 <EditText
                     android:id="@+id/editTextPasswordSignUpC2"
@@ -156,7 +156,7 @@
                 android:layout_height="wrap_content">
 
                 <Button
-                    android:id="@+id/buttonContinueFormC"
+                    android:id="@+id/buttonSaveEditDataC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
@@ -170,7 +170,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
-                    android:id="@+id/buttonBackFormC"
+                    android:id="@+id/buttonCancelEditDataC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
@@ -181,7 +181,7 @@
                     android:textSize="28dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/buttonContinueFormC" />
+                    app:layout_constraintTop_toBottomOf="@+id/buttonSaveEditDataC" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 

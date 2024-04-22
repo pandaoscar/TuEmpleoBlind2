@@ -12,9 +12,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -29,12 +26,13 @@ public class SignUpCForm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_cform);
 
+
         mFirestore = FirebaseFirestore.getInstance();
-        campTextNameCompany = findViewById(R.id.editTextNameCompanyFormC);
-        campTextTypeCompany = findViewById(R.id.editTextCompanyTypeFormC);
-        campTextLocation = findViewById(R.id.editTextLocationFormC);
-        campTextWebPag = findViewById(R.id.editTextWebPagFormC);
-        btnContinue = findViewById(R.id.buttonContinueFormC);
+        campTextNameCompany = findViewById(R.id.editTextNameCompanyEditDataC);
+        campTextTypeCompany = findViewById(R.id.editTextCompanyTypeEditDataC);
+        campTextLocation = findViewById(R.id.editTextLocationEditDataC);
+        campTextWebPag = findViewById(R.id.editTextWebPagEditDataC);
+        btnContinue = findViewById(R.id.buttonSaveEditDataC);
 
         actionContinue();
     }

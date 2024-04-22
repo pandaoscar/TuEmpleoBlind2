@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignUpCForm"
+    tools:context=".EditDataProfileC"
     android:background="@color/lavanderBlush">
 
     <ScrollView
@@ -25,6 +25,75 @@
                 >
 
                 <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/yourName"
+                    android:textColor="@color/normal_color"
+                    android:textSize="26sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/editTextNameEditDataC"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="name"
+                    android:ems="10"
+                    android:hint="@string/yourName"
+                    android:inputType="text"
+                    android:textSize="24sp"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/name_user"
+                    android:textColor="@color/normal_color"
+                    android:textSize="26sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editTextNameEditDataC" />
+
+                <EditText
+                    android:id="@+id/editTextUserNameEditDataC"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="name"
+                    android:ems="10"
+                    android:hint="@string/name_user"
+                    android:inputType="text"
+                    android:textSize="24sp"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sign_up_c_email"
+                    android:textColor="@color/normal_color"
+                    android:textSize="26sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editTextUserNameEditDataC" />
+
+                <EditText
+                    android:id="@+id/editTextEmailEditDataC"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="name"
+                    android:ems="10"
+                    android:hint="@string/sign_up_c_email"
+                    android:inputType="textEmailAddress"
+                    android:textSize="24sp"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+                <TextView
                     android:id="@+id/textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -33,7 +102,7 @@
                     android:textColor="@color/normal_color"
                     android:textSize="26sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTextEmailEditDataC" />
 
                 <EditText
                     android:id="@+id/editTextNameCompanyEditDataC"
@@ -115,10 +184,13 @@
                     android:layout_marginBottom="10dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+
+
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextWebPagEditDataC"/>
+                    app:layout_constraintTop_toBottomOf="@+id/editTextEmailEditDataC"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -130,7 +202,7 @@
                     android:layout_width="380dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
-                    android:text="@string/confirm"
+                    android:text="@string/save"
                     android:textSize="28dp"
                     android:textColor="@color/ghost_white"
                     android:textStyle="bold"
