@@ -4,14 +4,15 @@
         <layer-list>
             <item>
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/seaSalt"/>
+                    <solid android:color="@color/marinian_blue"/>
                     <corners android:radius="10dp"/>
-                    <stroke android:color="@color/lapis_lazuli" android:width="2dp"/>
-                    <padding android:right="10dp" android:bottom="10dp"/>
+                    <stroke android:color="@color/pursian_blue" android:width="2dp"/>
+                    <padding android:right="10dp"
+                        android:left="10dp"/>
                     <size android:height="48dp"/>
                 </shape>
             </item>
-            <item android:drawable="@drawable/ic_down_2" android:gravity="center|end">
+            <item android:drawable="@drawable/icon_search_user" android:gravity="center|start">
             </item>
         </layer-list>
     </item>

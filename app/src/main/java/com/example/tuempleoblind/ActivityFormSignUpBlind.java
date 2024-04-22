@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class ActivityFormSignUpBlind extends AppCompatActivity {
 
-    EditText campTextProfession, campTextAddress, campTextPhone;
+    EditText campTextProfession, campTextAddress, campTextPhone,campTextAbilities;
     Spinner spinnerLevelBlind;
     Button btnContinue, btnBack;
     private FirebaseFirestore mFirestore;
@@ -32,12 +32,12 @@ public class ActivityFormSignUpBlind extends AppCompatActivity {
 
         mFirestore = FirebaseFirestore.getInstance();
         spinnerLevelBlind = findViewById(R.id.spinnerCategoryLevelBlind);
-        ArrayAdapter<CharSequence> adapter=ArrayAdapter.createFromResource(this,R.array.lista_categoria_empleo,R.layout.style_spinner);
+        ArrayAdapter<CharSequence> adapter=ArrayAdapter.createFromResource(this,R.array.list_level_blind,R.layout.style_spinner);
         adapter.setDropDownViewResource(R.layout.style_spinner);
         spinnerLevelBlind.setAdapter(adapter);
 
 
-
+        campTextAbilities=findViewById(R.id.editTextAbilitiesBlind);
         campTextProfession = findViewById(R.id.editTextProfessionFormBlind);
         campTextAddress = findViewById(R.id.editTextAddressFormBlind);
         campTextPhone = findViewById(R.id.editTextPhoneNumberFormBlind);
@@ -54,21 +54,24 @@ public class ActivityFormSignUpBlind extends AppCompatActivity {
                 String profession = campTextProfession.getText().toString();
                 String address = campTextAddress.getText().toString();
                 String phone = campTextPhone.getText().toString();
+                String abilities=campTextAbilities.getText().toString();
 
-                if(levelBlind.isEmpty() || profession.isEmpty() || address.isEmpty()){
-                    Toast.makeText(getApplicationContext(), "Completa todos los datos correspondientes", Toast.LENGTH_SHORT).show();
+                if(levelBlind.isEmpty() || profession.isEmpty() ||phone.isEmpty()||abilities.isEmpty()|| address.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Completa todos los datos para continuar", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    postUsernameBlind(levelBlind, profession, address, phone);
+                    postUsernameBlind(levelBlind, profession, address, phone,abilities);
                 }
             }
 
-            private void postUsernameBlind(String nameCompany, String typeCompany, String location, String webPag) {
+            private void postUsernameBlind(String levelBlind, String profetion, String location,
+                                           String phonenumbre,String abilities) {
                 Map<String, Object> map = new HashMap<>();
-                map.put("Nivel de ceguera", nameCompany);
-                map.put("Profesión", typeCompany);
+                map.put("Nivel de ceguera", levelBlind);
+                map.put("Profetion", profetion);
                 map.put("Dirección", location);
-                map.put("Numero de Teléfono", webPag);
+                map.put("Numero de Teléfono", phonenumbre);
+                map.put("abilities",abilities);
 
                 String userID = getIntent().getStringExtra("userID");
 

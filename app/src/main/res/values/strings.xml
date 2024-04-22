@@ -22,7 +22,7 @@
     <string name="cancel">Cancelar</string>
     <string name="conti">Continuar</string>
     <string name="back">Volver</string>
-    <string name="sign_up_c_name">¿Cómo te llamas?</string>
+    <string name="sign_up_c_name">¿Cómo te llamas?(Nombre Completo)</string>
     <string name="sign_up_c_username">Nombre de Usuario</string>
     <string name="sign_up_c_password">Contraseña</string>
     <string name="sign_up_c_password2">Confirmar Contraseña</string>
@@ -82,10 +82,18 @@
     <string name="postulateToOfer">Postularse al Empleo</string>
     <string name="delete">Eliminar</string>
     <string name="view_more">Ver detalles de la oferta</string>
+    <string name="view_postulates">Ver Postulados</string>
     <string name="jobDetail">Detalles de la Oferta</string>
     <string name="discardPostulate">Descartar Postulado</string>
     <string name="applicantsPostulateFor">Aspirantes Postulados Para</string>
     <string name="viewPostulateCurriculum">Ver Hoja De Vida</string>
+    <string name="signUpFormBlindAbilities">Describir sus habilidades (trabajo en equipo,word,exel...)</string>
+    <string-array name="list_level_blind">
+        <item>Baja Visión</item>
+        <item>Cegera Parcial</item>
+        <item>Cegera Legal</item>
+        <item>Cegera Total</item>
+    </string-array>
     <string-array name="lista_typo_empleo">
         <item>Tiempo Completo</item>
         <item>Medio Tiempo</item>

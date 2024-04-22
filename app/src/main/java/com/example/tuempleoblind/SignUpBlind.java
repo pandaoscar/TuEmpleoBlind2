@@ -104,7 +104,7 @@ public class SignUpBlind extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(getApplicationContext(), "Datos del usuario guardados correctamente", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Usuario creado correctamente, llena la siguiente información", Toast.LENGTH_SHORT).show();
                         // Continuar con la lógica de tu aplicación
                         Intent intent = new Intent(getApplicationContext(), ActivityFormSignUpBlind.class);
                         intent.putExtra("userID", userID);

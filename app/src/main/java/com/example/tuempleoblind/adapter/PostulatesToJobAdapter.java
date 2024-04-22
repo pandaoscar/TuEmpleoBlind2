@@ -3,7 +3,9 @@ package com.example.tuempleoblind.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +14,9 @@ import com.example.tuempleoblind.R;
 import com.example.tuempleoblind.model.PostulatesToJob;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 
 public class PostulatesToJobAdapter extends FirestoreRecyclerAdapter<PostulatesToJob,PostulatesToJobAdapter.ViewHolder> {
     /**
@@ -29,6 +34,8 @@ public class PostulatesToJobAdapter extends FirestoreRecyclerAdapter<PostulatesT
         holder.userBlindName.setText(PostulatesToJob.getUserBlindName());
         holder.userBlindPhone.setText(PostulatesToJob.getUserBlindPhone());
         holder.userEmail.setText(PostulatesToJob.getUserEmail());
+        holder.userBlindProfetion.setText(PostulatesToJob.getProfetion());
+        holder.userBlindAbilities.setText(PostulatesToJob.getAbilities());
     }
 
     @NonNull
@@ -39,12 +46,40 @@ public class PostulatesToJobAdapter extends FirestoreRecyclerAdapter<PostulatesT
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView userBlindName,userBlindPhone,userEmail;
+        TextView userBlindName,userBlindPhone,userEmail,userBlindProfetion,userBlindAbilities;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             userBlindName=itemView.findViewById(R.id.postulateName);
             userBlindPhone=itemView.findViewById(R.id.postulatePhone);
             userEmail=itemView.findViewById(R.id.postulateEmail);
+            userBlindProfetion=itemView.findViewById(R.id.postulateProfetion);
+            userBlindAbilities=itemView.findViewById(R.id.postulateAbilities);
+
+
+            Button buttonEliminatePostulate= itemView.findViewById(R.id.buttonPostulateDiscard);
+            buttonEliminatePostulate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAbsoluteAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        // Obtener la referencia al documento del postulado que se va a eliminar
+                        DocumentReference postulateRef = getSnapshots().getSnapshot(position).getReference();
+                        // Eliminar el postulado de la base de datos
+                        postulateRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Toast.makeText(itemView.getContext(), "Postulado eliminado.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(itemView.getContext(), "Error al eliminar el postulado: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                    }
+                                });
+                    }
+                }
+            });
         }
     }
 }
