@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -21,7 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btnFindJob, btnFindHire, btnLogIn;
+    Button btnFindJob, btnFindHire, btnLogIn,btnTalkback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,32 @@ public class MainActivity extends AppCompatActivity {
         hire();
         job();
     }
-
+    public void activarTalkback(View view){
+        try {
+            // Verifica si el TalkBack ya está activado
+            if (!esTalkBackActivado()) {
+                // Activa el TalkBack
+                Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                startActivity(intent);
+                // Muestra un mensaje de éxito
+                Toast.makeText(this, "TalkBack activado", Toast.LENGTH_SHORT).show();
+            } else {
+                // Muestra un mensaje indicando que el TalkBack ya está activado
+                Toast.makeText(this, "TalkBack ya está activado", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Muestra un mensaje de error si hay algún problema
+            Toast.makeText(this, "Error al activar TalkBack: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+    private boolean esTalkBackActivado() {
+        String enabledListeners = Settings.Secure.getString(
+                getContentResolver(),
+                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+        );
+        return enabledListeners != null && enabledListeners.contains("com.google.android.marvin.talkback/");
+    }
     private void login() {
         btnLogIn.setOnClickListener(new View.OnClickListener() {
             @Override

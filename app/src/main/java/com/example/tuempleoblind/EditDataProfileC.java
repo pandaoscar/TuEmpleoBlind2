@@ -54,7 +54,8 @@ public class EditDataProfileC extends AppCompatActivity {
         btnCancel = findViewById(R.id.buttonCancelEditDataC);
 
         btnSave.setEnabled(false);
-
+        btnSave.setBackgroundResource(R.drawable.btn_disabled);
+        btnSave.setTextColor(getResources().getColor(R.color.litle_color));
         obtenerValoresFirestore();
 
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -80,8 +81,6 @@ public class EditDataProfileC extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), companyHome.class);
-                startActivity(intent);
                 finish();
             }
         });
@@ -218,9 +217,13 @@ public class EditDataProfileC extends AppCompatActivity {
                             !usernameEdit.equals(usernameFire)) {
                         // Si hay cambios, habilitar el botón
                         btnSave.setEnabled(true);
+                        btnSave.setBackgroundResource(R.drawable.btn_orange);
+                        btnSave.setTextColor(getResources().getColor(R.color.ghost_white));
                     } else {
                         // Si no hay cambios, deshabilitar el botón
                         btnSave.setEnabled(false);
+                        btnSave.setBackgroundResource(R.drawable.btn_disabled);
+                        btnSave.setTextColor(getResources().getColor(R.color.litle_color));
                     }
                 }
             }

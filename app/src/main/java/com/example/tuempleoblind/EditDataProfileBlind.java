@@ -68,7 +68,8 @@ public class EditDataProfileBlind extends AppCompatActivity {
         btnCancel = findViewById(R.id.buttonCancelEditDataBlind);
 
         btnSave.setEnabled(false);
-
+        btnSave.setBackgroundResource(R.drawable.btn_disabled);
+        btnSave.setTextColor(getResources().getColor(R.color.litle_color));
         obtenerValoresFirestore();
 
 
@@ -114,8 +115,6 @@ public class EditDataProfileBlind extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class); // Cambia "MainActivity" por la actividad a la que quieras regresar
-                startActivity(intent);
                 finish();
             }
         });
@@ -275,9 +274,13 @@ public class EditDataProfileBlind extends AppCompatActivity {
                                 !abilitiesEdit.equals(abilitiesFire) || !finalLevelSpinner.equals(levelFire)) {
                             // Si hay cambios, habilitar el botón
                             btnSave.setEnabled(true);
+                            btnSave.setBackgroundResource(R.drawable.btn_orange);
+                            btnSave.setTextColor(getResources().getColor(R.color.ghost_white));
                         } else {
                             // Si no hay cambios, deshabilitar el botón
                             btnSave.setEnabled(false);
+                            btnSave.setTextColor(getResources().getColor(R.color.litle_color));
+                            btnSave.setBackgroundResource(R.drawable.btn_disabled);
                         }
                     }
                 }

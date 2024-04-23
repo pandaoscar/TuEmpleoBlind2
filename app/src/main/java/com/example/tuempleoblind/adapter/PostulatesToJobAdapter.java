@@ -34,7 +34,7 @@ public class PostulatesToJobAdapter extends FirestoreRecyclerAdapter<PostulatesT
         holder.userBlindName.setText(PostulatesToJob.getUserBlindName());
         holder.userBlindPhone.setText(PostulatesToJob.getUserBlindPhone());
         holder.userEmail.setText(PostulatesToJob.getUserEmail());
-        holder.userBlindProfetion.setText(PostulatesToJob.getProfetion());
+        holder.userBlindProfesión.setText(PostulatesToJob.getProfesión());
         holder.userBlindAbilities.setText(PostulatesToJob.getAbilities());
     }
 
@@ -46,13 +46,13 @@ public class PostulatesToJobAdapter extends FirestoreRecyclerAdapter<PostulatesT
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView userBlindName,userBlindPhone,userEmail,userBlindProfetion,userBlindAbilities;
+        TextView userBlindName,userBlindPhone,userEmail,userBlindProfesión,userBlindAbilities;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             userBlindName=itemView.findViewById(R.id.postulateName);
             userBlindPhone=itemView.findViewById(R.id.postulatePhone);
             userEmail=itemView.findViewById(R.id.postulateEmail);
-            userBlindProfetion=itemView.findViewById(R.id.postulateProfetion);
+            userBlindProfesión=itemView.findViewById(R.id.postulateProfetion);
             userBlindAbilities=itemView.findViewById(R.id.postulateAbilities);
 
 

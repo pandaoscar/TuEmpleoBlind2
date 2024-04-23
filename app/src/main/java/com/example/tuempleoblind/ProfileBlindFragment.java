@@ -90,7 +90,6 @@ public class ProfileBlindFragment extends Fragment {
         try {
             Intent intent = new Intent(getActivity(), EditDataProfileBlind.class); // Reemplaza "NuevoActivity" con el nombre de tu Activity de destino
             startActivity(intent);
-            getActivity().finish();
         } catch (Exception e) {
             e.printStackTrace();
             // Manejar la excepción aquí, como mostrar un mensaje de error al usuario

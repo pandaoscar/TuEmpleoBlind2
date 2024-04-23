@@ -10,6 +10,7 @@
     <string name="already_aconunt_question" translatable="false">¿Ya tienes una cuenta?</string>
     <string name="log_in">Inciar Sesión</string>
     <string name="job_aplications">Mis Trabajos Aplicados</string>
+    <string name="activate_talkback">Activar Talkback</string>
 
 
     <string name="sign_in">Inciar Sesión</string>
