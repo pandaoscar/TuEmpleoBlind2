@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
  */
 public class ProfileBlindFragment extends Fragment {
     Button btn_exit;
+    Button btn_dataPerfil;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -67,6 +68,14 @@ public class ProfileBlindFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile_blind, container, false);
         btn_exit = view.findViewById(R.id.signOffBlind);
+        btn_dataPerfil = view.findViewById(R.id.buttonDataProfileBlind);
+
+        btn_dataPerfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataProfile();
+            }
+        });
         btn_exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,6 +85,18 @@ public class ProfileBlindFragment extends Fragment {
         // Inflate the layout for this fragment
         return view;
     }
+
+    private void dataProfile() {
+        try {
+            Intent intent = new Intent(getActivity(), EditDataProfileBlind.class); // Reemplaza "NuevoActivity" con el nombre de tu Activity de destino
+            startActivity(intent);
+            getActivity().finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Manejar la excepción aquí, como mostrar un mensaje de error al usuario
+        }
+    }
+
     private void signOut() {
         try {
             FirebaseAuth.getInstance().signOut();
