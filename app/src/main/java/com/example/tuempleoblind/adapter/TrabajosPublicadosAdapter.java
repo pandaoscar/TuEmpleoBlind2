@@ -45,9 +45,6 @@ public class TrabajosPublicadosAdapter extends FirestoreRecyclerAdapter<Trabajos
 
     @Override
     protected void onBindViewHolder(@NonNull viewHolder holder, int position, @NonNull TrabajosPublicados TrabajosPublicados) { // Verificar si el ID del usuario asociado al trabajo coincide con el ID del usuario actual
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        companyPublishId=currentUser.getUid().toString();
-        if (TrabajosPublicados.getCompanyPublishId().equals(companyPublishId)) {
             DocumentSnapshot documentSnapshot= getSnapshots().getSnapshot(holder.getAdapterPosition());
             final String id=documentSnapshot.getId();
             holder.title.setText(TrabajosPublicados.getTitle());
@@ -70,15 +67,9 @@ public class TrabajosPublicadosAdapter extends FirestoreRecyclerAdapter<Trabajos
                         if (position!=RecyclerView.NO_POSITION){
                             listener.onViewPostulatesClick(position);
                         }
-
                     }
                 }
             });
-        } else {
-            // Si no coincide, ocultar la vista del trabajo
-            holder.itemView.setVisibility(View.GONE);
-            holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0)); // Opcionalmente, puedes establecer el ancho y la altura de la vista a cero para evitar problemas de diseño
-        }
 
     }
 
