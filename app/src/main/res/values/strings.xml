@@ -11,6 +11,13 @@
     <string name="log_in">Inciar Sesión</string>
     <string name="job_aplications">Mis Trabajos Aplicados</string>
     <string name="activate_talkback">Activar Talkback</string>
+    <string name="prepare_to_intervire">Preparate para la entrevista</string>
+    <string name="vid_1_title">Impresiona a los Reclutadores: 5 Consejos para Ser el Candidato Ideal</string>
+    <string name="vid_2_title">Dejar artras el temor, Primera Entrevista Laboral sin Experiencia</string>
+    <string name="vid_3_title">Preparate para la entrevista</string>
+    <string name="vid_1_decop">Destaca entre los demás postulantes y convertirte en el candidato perfecto. Obtén consejos prácticos y efectivos para mejorar tu impresión en los reclutadores y asegurar esa oferta laboral tan deseada. ¡No te pierdas estos consejos clave para alcanzar tus metas profesionales!"</string>
+    <string name="vid_2_decop">Brillar en tu primera entrevista laboral, incluso sin experiencia previa. Obtén consejos prácticos sobre qué decir y cómo destacarte para impresionar a los reclutadores. ¡Prepárate para dar lo mejor de ti y alcanzar tus metas profesionales desde el primer paso!"</string>
+    <string name="vid_3_decop">Preparate para la entrevista</string>
 
 
     <string name="sign_in">Inciar Sesión</string>
@@ -37,9 +44,12 @@
 
     <string name="bottom_c_profile">Perfil</string>
     <string name="bottom_c_config">Configuración</string>
+    <string name="bottom_c_law">Normativa</string>
     <string name="bottom_c_home">Inicio</string>
     <string name="bottom_blind_profile">Perfil</string>
     <string name="bottom_blind_config">Configuración</string>
+    <string name="bottom_blind_interview">Entrevista</string>
+    <string name="bottom_blind_tips">Tips</string>
     <string name="bottom_blind_home">Inicio</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -87,6 +97,14 @@
     <string name="applicantsPostulateFor">Aspirantes Postulados Para</string>
     <string name="viewPostulateCurriculum">Ver Hoja De Vida</string>
     <string name="signUpFormBlindAbilities">Describir sus habilidades (trabajo en equipo,word,exel...)</string>
+
+    <string name="lawsAndMore">Marco Normativo de la Discapacidad en Colombia</string>
+    <string name="law1_link"> <a href="http://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Leyes/1677870">Convención sobre los Derechos de las Personas con Discapacidad de Naciones Unidas.</a></string>
+    <string name="law2_link"><a href="https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=85399">Decreto 392 del 26 de febrero de 2018. </a></string>
+    <string name="law3_link"><a href="http://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Decretos/30034373">Decreto 2177 del 22 de diciembre de 2017. </a></string>
+    <string name="law1_descop">Colombia adopta mediante Ley 1346 de 2009 la Convención de Naciones Unidas promulgada por la Asamblea de Naciones Unidas el 13 de diciembre de 2006, la cual reafirma la responsabilidad del Estado de establecer mecanismos y sistemas de garantía del ejercicio de los derechos de las personas con discapacidad, sin discriminación por motivo de su condición. El artículo 27º establece que los Estados Partes reconocen el derecho de las personas con discapacidad las personas con discapacidad a trabajar, en igualdad de condiciones con los demás.</string>
+    <string name="law2_descop">Por el cual se establecen incentivos en los procesos de contratación a las empresas que tengan vinculadas personas con discapacidad. En los procesos de licitación publica y concurso de méritos, para incentivar el sistema de preferencias a favor de las personas con discapacidad, las entidades estatales deberán otorgar el (1 %) del total de los puntos establecidos en el pliego de condiciones, a los proponentes que acrediten la vinculación de trabajadores con discapacidad en su planta de personal.</string>
+    <string name="law3_descop">Por el cual se crea el Consejo para la Inclusión de la Discapacidad y se dictan disposiciones relacionadas con su funcionamiento” y cuyo objeto es coordinar las acciones que el sector privado adelante para coadyuvar al ejercicio de los derechos y la inclusión social, laboral y productiva de las personas con discapacidad, orientadas al desarrollo de las capacidades a través de la formación para el trabajo, la producción y el empleo de las personas con discapacidad, sus familias y cuidadores.</string>
     <string-array name="list_level_blind">
         <item>Baja Visión</item>
         <item>Cegera Parcial</item>

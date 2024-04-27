@@ -17,6 +17,6 @@
         android:id="@+id/configCFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:icon="@drawable/icon_config"
-        android:title="@string/bottom_c_config" />
+        android:icon="@drawable/ic_law_building"
+        android:title="@string/bottom_c_law" />
 </menu>

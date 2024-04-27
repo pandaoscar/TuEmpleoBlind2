@@ -7,6 +7,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+
+import com.google.j2objc.annotations.Weak;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +63,20 @@ public class ConfigBlindFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_config_blind, container, false);
+        View view = inflater.inflate(R.layout.fragment_config_blind, container, false);
+
+        // Encuentra el WebView en el layout
+        WebView webViewInterview = view.findViewById(R.id.entrevistaVideo);
+        String videoInterview="<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/eRdqCjdUp-M?si=oCTw1iigMO-SSO-8\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>";
+        webViewInterview.loadData(videoInterview,"text/html","utf-8");
+        webViewInterview.getSettings().setJavaScriptEnabled(true);
+        webViewInterview.setWebChromeClient(new WebChromeClient());
+
+        WebView webViewFirstTime = view.findViewById(R.id.sinExperienciaVideo);
+        String videoFirstTime="<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/0MtYRN5eA5c?si=XRQ94l024wR6eo_G\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>";
+        webViewFirstTime.loadData(videoFirstTime,"text/html","utf-8");
+        webViewFirstTime.getSettings().setJavaScriptEnabled(true);
+        webViewFirstTime.setWebChromeClient(new WebChromeClient());
+        return view;
     }
 }

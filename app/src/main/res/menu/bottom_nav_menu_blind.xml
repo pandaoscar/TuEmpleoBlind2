@@ -17,6 +17,6 @@
         android:id="@+id/configBlindFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:icon="@drawable/icon_config"
-        android:title="@string/bottom_blind_config" />
+        android:icon="@drawable/ic_employment_test"
+        android:title="@string/bottom_blind_tips" />
 </menu>

@@ -48,10 +48,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-condensed-medium"
-        android:text="@string/ucun"
-        android:textSize="28sp"
+        android:text="@string/desing_by"
+        android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@color/indian_green"
+        android:textColor="@color/litle_color"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="70dp"/>
@@ -60,11 +60,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-condensed-medium"
-        android:text="@string/desing_by"
-        android:textSize="18sp"
+        android:text="@string/ucun"
+        android:textSize="28sp"
         android:textStyle="bold"
         android:layout_above="@id/text_animation2"
-        android:textColor="@color/litle_color"
+        android:textColor="@color/indian_green"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp"/>
 </RelativeLayout>

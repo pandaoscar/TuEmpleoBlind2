@@ -4,9 +4,11 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +61,15 @@ public class ConfigCFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_config_c, container, false);
+        View view =inflater.inflate(R.layout.fragment_config_c, container, false);
+        TextView textViewLaw1=view.findViewById(R.id.law1link);
+        textViewLaw1.setMovementMethod(LinkMovementMethod.getInstance());
+
+        TextView textViewLaw2=view.findViewById(R.id.law2link);
+        textViewLaw2.setMovementMethod(LinkMovementMethod.getInstance());
+
+        TextView textViewLaw3=view.findViewById(R.id.law3link);
+        textViewLaw3.setMovementMethod(LinkMovementMethod.getInstance());
+        return view;
     }
 }
