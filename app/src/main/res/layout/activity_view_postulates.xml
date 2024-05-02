@@ -50,4 +50,6 @@
                 android:layout_height="match_parent" />
         </LinearLayout>
     </ScrollView>
+
+    <include layout="@layout/base_flotante" />
 </androidx.constraintlayout.widget.ConstraintLayout>

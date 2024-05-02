@@ -94,6 +94,10 @@ public class TrabajosPublicadosAdapter extends FirestoreRecyclerAdapter<Trabajos
         return new viewHolder(v);
     }
     public interface OnViewPostulatesClickListener {
+        void onPermissionsGranted(int requestCode, @NonNull String[] perms);
+
+        void onPermissionsDenied(int requestCode, @NonNull String[] perms);
+
         void onViewPostulatesClick(int position);
     }
     private OnViewPostulatesClickListener listener;

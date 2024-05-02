@@ -44,6 +44,10 @@ public class JobsAvailableAdapter extends FirestoreRecyclerAdapter<JobsAvailable
 
     }
     public interface OnViewMoreClickListener {
+        void onPermissionsGranted(int requestCode, @NonNull String[] perms);
+
+        void onPermissionsDenied(int requestCode, @NonNull String[] perms);
+
         void onViewMoreClick(int position);
     }
     private OnViewMoreClickListener listener;

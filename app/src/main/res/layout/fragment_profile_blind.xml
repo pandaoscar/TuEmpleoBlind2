@@ -31,4 +31,6 @@
             tools:layout_editor_absoluteY="47dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <include layout="@layout/base_flotante" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

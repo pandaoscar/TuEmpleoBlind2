@@ -2,6 +2,9 @@ package com.example.tuempleoblind;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
@@ -13,16 +16,45 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomePageBlind extends AppCompatActivity {
 
-    private @NonNull ActivityHomePageBlindBinding binding;
+    private ActivityHomePageBlindBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding= ActivityHomePageBlindBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        replaceFragment(new HomeBlindFragment());
+        binding.navViewBlind.setBackground(null);
 
-        BottomNavigationView navView= findViewById(R.id.nav_view_blind);
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_blind);
-        NavigationUI.setupWithNavController(binding.navViewBlind, navController);
+        String framentDeseado = getIntent().getStringExtra("keyword");
+        if (framentDeseado != null){
+            NavigationManager.navigateToDestinationBlind(HomePageBlind.this, framentDeseado, getSupportFragmentManager(), new HomeBlindFragment());
+        }
+
+        binding.navViewBlind.setOnItemSelectedListener(item -> {
+
+            if (item.getItemId() == R.id.homeBlindFragment) {
+                replaceFragment(new HomeBlindFragment());
+            } else {
+                if (item.getItemId() == R.id.profileBlindFragment){
+                    replaceFragment(new ProfileBlindFragment());
+                }else{
+                    if (item.getItemId() == R.id.configBlindFragment){
+                        replaceFragment(new ConfigBlindFragment());
+                    }
+                    else {
+                        System.out.println("joa mani, no se pudo");
+                    }
+                }
+            }
+            return true;
+
+        });
+    }
+    private void replaceFragment (Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.layoutConstraintBlind, fragment);
+        fragmentTransaction.commit();
     }
 }

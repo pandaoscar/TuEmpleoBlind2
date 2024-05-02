@@ -1,21 +1,36 @@
 package com.example.tuempleoblind;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.speech.RecognizerIntent;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import pub.devrel.easypermissions.EasyPermissions;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ConfigCFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ConfigCFragment extends Fragment {
+public class ConfigCFragment extends Fragment implements EasyPermissions.PermissionCallbacks{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,6 +40,9 @@ public class ConfigCFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private static final int CODIGO_RECONOCIMIENTO_VOZ = 1;
+    private static final int PERMISSION_REQUEST_CODE = 123;
+    FloatingActionButton microComand;
 
     public ConfigCFragment() {
         // Required empty public constructor
@@ -70,6 +88,86 @@ public class ConfigCFragment extends Fragment {
 
         TextView textViewLaw3=view.findViewById(R.id.law3link);
         textViewLaw3.setMovementMethod(LinkMovementMethod.getInstance());
+
+        microComand = view.findViewById(R.id.floatingButtonComands);
+        microComand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                checkAndRequestPermissions();
+            }
+        });
         return view;
+    }
+    private void checkAndRequestPermissions() {
+        if (EasyPermissions.hasPermissions(requireContext(), android.Manifest.permission.RECORD_AUDIO)) {
+            // Permission already granted, perform operation
+            Toast.makeText(requireContext(), "Permission already granted", Toast.LENGTH_SHORT).show();
+            iniciarReconocimientoVoz();
+        } else {
+            // Request permissions
+            EasyPermissions.requestPermissions(this, "Porfavor acepta los permisos del microfono", PERMISSION_REQUEST_CODE, Manifest.permission.RECORD_AUDIO);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                Toast.makeText(requireContext(), "Permission granted", Toast.LENGTH_SHORT).show();
+            } else {
+                // Permission is denied
+                Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        // Permission granted, handle accordingly
+        Toast.makeText(getContext(), "Permission granted", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        // Permission denied, handle accordingly
+        Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void iniciarReconocimientoVoz() {
+        // Crea un Intent para el reconocimiento de voz
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        // Configura el idioma para el reconocimiento (puedes cambiarlo según tus necesidades)
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        // Configura un mensaje para el usuario
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Di algo...");
+        // Inicia la actividad de reconocimiento de voz y espera los resultados
+        startActivityForResult(intent, CODIGO_RECONOCIMIENTO_VOZ);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CODIGO_RECONOCIMIENTO_VOZ) {
+            if (resultCode == RESULT_OK && data != null) {
+                // Obtiene la lista de palabras reconocidas
+                ArrayList<String> palabrasReconocidas = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                if (palabrasReconocidas != null && palabrasReconocidas.size() > 0) {
+                    // Guarda la primera palabra reconocida en un String
+                    String palabra = palabrasReconocidas.toString().replace("[", "").replace("]", "");
+
+                    NavigationManager.navigateToDestinationC(getContext(), palabra, getActivity().getSupportFragmentManager(), this);
+                }
+            } else {
+                // Mensaje de error si el reconocimiento de voz no fue exitoso
+                Toast.makeText(requireActivity(), "Error en el reconocimiento de voz", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

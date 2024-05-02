@@ -349,4 +349,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+    <include layout="@layout/base_flotante" />
 </androidx.constraintlayout.widget.ConstraintLayout>

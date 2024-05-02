@@ -111,4 +111,6 @@
 
     </ScrollView>
 
+    <include layout="@layout/base_flotante" />
+
 </FrameLayout>
