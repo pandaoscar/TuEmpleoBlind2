@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        startService(new Intent(this, NewJobPublishedNotification.class));
 
         // Verificar si el usuario ya está autenticado
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
