@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lavender_blush"
+    android:background="@color/mistyRose"
     android:layout_marginTop="-5dp">
 
     <LinearLayout
@@ -20,7 +20,7 @@
             android:layout_marginTop="1dp"
             android:scaleType="centerCrop"
             android:src="@drawable/background2"
-            />
+            android:importantForAccessibility="no" />
     </LinearLayout>
 
     <ScrollView
@@ -57,8 +57,8 @@
                         android:background="@drawable/corners_botton"
                         android:gravity="center"
                         android:orientation="vertical"
-                        app:cardCornerRadius="16dp"
-                        >
+                        app:cardCornerRadius="16sp"
+                        tools:ignore="UselessParent">
 
                         <TextView
                             android:id="@+id/textView7"
@@ -95,7 +95,7 @@
                     android:id="@+id/activateTalkback"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="22dp"
+                    android:layout_marginTop="40dp"
                     android:layout_marginEnd="40dp"
                     android:layout_marginStart="40dp"
                     android:textStyle="bold"

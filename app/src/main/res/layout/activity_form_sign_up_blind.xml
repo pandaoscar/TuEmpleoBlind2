@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SignUpCForm"
-    android:background="@color/lavanderBlush">
+    android:background="@color/mistyRose">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -35,8 +35,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"/>
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"/>
 
 
                 <LinearLayout
@@ -44,9 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintTop_toBottomOf="@+id/textView"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp">
+                    app:layout_constraintTop_toBottomOf="@+id/textView">
 
 
                     <Spinner
@@ -63,7 +61,9 @@
                         android:layout_height="wrap_content"
                         android:text="@string/Phone"
                         android:textColor="@color/normal_color"
-                        android:textSize="26sp" />
+                        android:textSize="26sp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"/>
 
                     <EditText
                         android:id="@+id/editTextPhoneNumberFormBlind"
@@ -73,7 +73,10 @@
                         android:ems="10"
                         android:hint="@string/Phone"
                         android:inputType="text"
-                        android:textSize="24sp" />
+                        android:textSize="24sp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
+                        tools:ignore="TextFields" />
 
                     <TextView
                         android:id="@+id/textView2"
@@ -82,7 +85,9 @@
                         android:layout_marginTop="18dp"
                         android:text="@string/signUpFormBlindProfession"
                         android:textColor="@color/normal_color"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"/>
 
                     <EditText
                         android:id="@+id/editTextProfessionFormBlind"
@@ -92,7 +97,9 @@
                         android:ems="10"
                         android:hint="@string/signUpFormBlindProfession"
                         android:inputType="text"
-                        android:textSize="24sp" />
+                        android:textSize="24sp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"/>
                     <TextView
                         android:id="@+id/textView15"
                         android:layout_width="match_parent"
@@ -100,7 +107,9 @@
                         android:layout_marginTop="18dp"
                         android:text="@string/signUpFormBlindAbilities"
                         android:textColor="@color/normal_color"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"/>
 
                     <EditText
                         android:id="@+id/editTextAbilitiesBlind"
@@ -110,7 +119,9 @@
                         android:ems="10"
                         android:hint="@string/signUpFormBlindAbilities"
                         android:inputType="text"
-                        android:textSize="24sp" />
+                        android:textSize="24sp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"/>
                     <TextView
                         android:id="@+id/textView3"
                         android:layout_width="match_parent"
@@ -118,7 +129,9 @@
                         android:layout_marginTop="16dp"
                         android:text="@string/signUpFormBlindAddress"
                         android:textColor="@color/normal_color"
-                        android:textSize="26sp" />
+                        android:textSize="26sp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"/>
 
                     <EditText
                         android:id="@+id/editTextAddressFormBlind"
@@ -128,7 +141,14 @@
                         android:ems="10"
                         android:hint="@string/sign_up_c_location"
                         android:inputType="text"
-                        android:textSize="24sp" />
+                        android:textSize="24sp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"/>
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        app:layout_constraintTop_toBottomOf="@+id/editTextPasswordSignUpBlind2"
+                        tools:ignore="UselessLeaf" />
 
                 </LinearLayout>
 

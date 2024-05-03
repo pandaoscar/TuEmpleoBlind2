@@ -16,7 +16,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/app_color">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:text="@string/create_ofer"
-                android:textSize="42dp"
+                android:textSize="42sp"
                 android:gravity="center"
                 android:textStyle="bold"
                 android:textColor="@color/ghost_white"
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/create_ofer2"
                 android:gravity="center"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textColor="@color/pale_dogwood"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -66,9 +66,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="24dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="8dp"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -83,14 +83,16 @@
 
                 <TextView
                     android:id="@+id/textView12"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/ofer_info"
                     android:textColor="@color/marinian_blue"
                     android:layout_marginTop="20dp"
-                    android:textSize="26dp"
+                    android:textSize="26sp"
                     android:layout_gravity="center"
                     android:textStyle="bold"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
                     />
 
                 <EditText
@@ -99,7 +101,11 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/ofer_title"
-                    android:textSize="20dp" />
+                    android:textSize="20sp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    tools:ignore="TextFields"
+                    android:autofillHints="" />
 
                 <TextView
                     android:id="@+id/text23"
@@ -109,7 +115,7 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/ofer_categori"
                     android:textColor="@color/rich_black"
-                    android:textSize="20dp" />
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -121,7 +127,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/style_spiner"
-                        />
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"/>
                 </LinearLayout>
 
 
@@ -133,12 +140,18 @@
                     android:gravity="start|top"
                     android:hint="@string/ofer_description"
                     android:inputType="textMultiLine"
-                    android:background="@drawable/btn_beta"/>
+                    android:background="@drawable/btn_beta"
+                    android:autofillHints=""
+                    tools:ignore="Autofill"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp">
 
                     <TextView
                         android:id="@+id/text22"
@@ -147,7 +160,7 @@
                         android:layout_marginEnd="27dp"
                         android:text="@string/ofer_tipe"
                         android:textColor="@color/rich_black"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
 
                     <Spinner
                         android:id="@+id/spinnerTypeJobNewJobC"
@@ -165,13 +178,15 @@
                    android:background="@drawable/btn_beta">
                 <TextView
                     android:id="@+id/textView13"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/ofer_requi"
                     android:textColor="@color/marinian_blue"
-                    android:textSize="22dp"
+                    android:textSize="22sp"
                     android:layout_gravity="center"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"/>
 
                 <EditText
                     android:id="@+id/editTextLevelEduNewJobC"
@@ -180,7 +195,10 @@
                     android:ems="10"
                     android:hint="@string/ofer_level_requi"
                     android:inputType="text"
-                    android:textSize="20dp" />
+                    android:textSize="20sp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    tools:ignore="Autofill" />
 
                 <EditText
                     android:id="@+id/editTextExperienceNewJobC"
@@ -189,7 +207,10 @@
                     android:ems="10"
                     android:hint="@string/ofer_experence"
                     android:inputType="text"
-                    android:textSize="20dp" />
+                    android:textSize="20sp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    tools:ignore="Autofill" />
 
                 <EditText
                     android:id="@+id/editTextHabilitiesNewJobC"
@@ -198,8 +219,11 @@
                     android:ems="10"
                     android:hint="@string/ofer_habilites"
                     android:inputType="text"
-                    android:textSize="20dp"
-                    android:layout_marginBottom="16dp"/>
+                    android:textSize="20sp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    tools:ignore="Autofill" />
                </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -209,13 +233,15 @@
                     android:layout_marginTop="8dp">
                 <TextView
                     android:id="@+id/textView15"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/ofer_benefits"
                     android:textColor="@color/marinian_blue"
-                    android:textSize="22dp"
+                    android:textSize="22sp"
                     android:layout_gravity="center"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"/>
 
                 <EditText
                     android:id="@+id/editTextSalaryNewJobC"
@@ -224,7 +250,10 @@
                     android:ems="10"
                     android:hint="@string/ofer_salary"
                     android:inputType="text"
-                    android:textSize="20dp" />
+                    android:textSize="20sp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    tools:ignore="Autofill" />
 
                 <EditText
                     android:id="@+id/editTextBenefitsNewJobC"
@@ -233,8 +262,11 @@
                     android:ems="10"
                     android:hint="@string/ofer_benefits_plus"
                     android:inputType="text"
-                    android:textSize="20dp"
-                    android:layout_marginBottom="16dp"/>
+                    android:textSize="20sp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    tools:ignore="Autofill" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -244,13 +276,15 @@
                     android:layout_marginTop="8dp">
                 <TextView
                     android:id="@+id/textView14"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/ofer_detail_compani"
                     android:textColor="@color/marinian_blue"
-                    android:textSize="22dp"
+                    android:textSize="22sp"
                     android:layout_gravity="center"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"/>
 
                 <EditText
                     android:id="@+id/editTextLocationNewJobC"
@@ -259,7 +293,10 @@
                     android:ems="10"
                     android:hint="@string/ofer_location_job"
                     android:inputType="text"
-                    android:textSize="20dp" />
+                    android:textSize="20sp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    tools:ignore="Autofill" />
 
                 <TextView
                     android:id="@+id/textView18"
@@ -268,8 +305,10 @@
                     android:layout_gravity="center"
                     android:text="@string/ofer_q_elevator"
                     android:textColor="@color/rich_black"
-                    android:textSize="20dp"
-                    android:layout_marginTop="8dp"/>
+                    android:textSize="20sp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"/>
 
                     <RadioGroup
                         android:id="@+id/groupElevatorNewJobC"
@@ -281,14 +320,18 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/ofer_afirmation"
-                            android:textSize="20dp" />
+                            android:textSize="20sp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"/>
 
                         <RadioButton
                             android:id="@+id/falseElevatorNewJobC"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/ofer_negative"
-                            android:textSize="20dp" />
+                            android:textSize="20sp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"/>
                     </RadioGroup>
 
                 <TextView
@@ -298,8 +341,10 @@
                     android:layout_gravity="center"
                     android:text="@string/ofer_q_ramp"
                     android:textColor="@color/rich_black"
-                    android:textSize="20dp"
-                    android:layout_marginTop="8dp"/>
+                    android:textSize="20sp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"/>
 
                     <RadioGroup
                         android:id="@+id/groupRampNewJobC"
@@ -311,7 +356,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/ofer_afirmation"
-                            android:textSize="20dp" />
+                            android:textSize="20sp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"/>
 
                         <RadioButton
                             android:id="@+id/falseRampNewJobC"
@@ -319,7 +366,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="18dp"
                             android:text="@string/ofer_negative"
-                            android:textSize="20dp" />
+                            android:textSize="20sp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"/>
                     </RadioGroup>
                 </LinearLayout>
                 <Button

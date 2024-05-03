@@ -34,6 +34,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class ProfileBlindFragment extends Fragment implements EasyPermissions.PermissionCallbacks{
     Button btn_exit;
     Button btn_dataPerfil;
+    Button btnabout, btnsecurity;
     FloatingActionButton microComand;
     private static final int CODIGO_RECONOCIMIENTO_VOZ = 1;
     private static final int PERMISSION_REQUEST_CODE = 123;
@@ -85,6 +86,8 @@ public class ProfileBlindFragment extends Fragment implements EasyPermissions.Pe
         View view = inflater.inflate(R.layout.fragment_profile_blind, container, false);
         btn_exit = view.findViewById(R.id.signOffBlind);
         btn_dataPerfil = view.findViewById(R.id.buttonDataProfileBlind);
+        btnabout=view.findViewById(R.id.buttonaboutblind);
+        btnsecurity=view.findViewById(R.id.buttonsecurityblind);
         microComand = view.findViewById(R.id.floatingButtonComands);
 
         microComand.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +97,20 @@ public class ProfileBlindFragment extends Fragment implements EasyPermissions.Pe
                 checkAndRequestPermissions();
             }
         });
-
+        btnabout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), AboutActivity.class); // Reemplaza "NuevoActivity" con el nombre de tu Activity de destino
+                startActivity(intent);
+            }
+        });
+        btnsecurity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), PoliticalSecurityActivity.class); // Reemplaza "NuevoActivity" con el nombre de tu Activity de destino
+                startActivity(intent);
+            }
+        });
         btn_dataPerfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

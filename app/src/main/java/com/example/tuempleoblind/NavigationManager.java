@@ -21,7 +21,7 @@ public class NavigationManager extends AppCompatActivity {
         if (!context.getClass().getSimpleName().equals("companyHome")){
             Intent intent = new Intent(context, companyHome.class);
 
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Esto limpiará la pila de actividades y creará una nueva tarea
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Esto limpiará la pila de actividades y creará una nueva tarea
             intent.putExtra("keyword", keyword);
             context.startActivity(intent);
 
@@ -36,15 +36,23 @@ public class NavigationManager extends AppCompatActivity {
                 }else{
                     if (ifNavigation(keyword, "menu principal") && !fragmentActual.getClass().getSimpleName().equalsIgnoreCase("HomeCFragment") ) {
                         Intent intent = new Intent(context, companyHome.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Esto limpiará la pila de actividades y creará una nueva tarea
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Esto limpiará la pila de actividades y creará una nueva tarea
                         context.startActivity(intent);
                     } else if (ifNavigation(keyword, "nuevo trabajo")||(ifNavigation(keyword, "nuevo empleo") )&& !context.getClass().getSimpleName().equalsIgnoreCase("NewJob")) {
                         Intent intent = new Intent(context, NewJob.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
                     } else if (ifNavigation(keyword, "editar datos") && !context.getClass().getSimpleName().equals("EditDataProfileC")){
                         Intent intent = new Intent(context, EditDataProfileC.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    } else if (ifNavigation(keyword, "politicas seguridad") && !context.getClass().getSimpleName().equals("PoliticalSecurityActivity")) {
+                        Intent intent = new Intent(context, PoliticalSecurityActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    } else if (ifNavigation(keyword, "acerca de") && !context.getClass().getSimpleName().equals("AboutActivity")) {
+                        Intent intent = new Intent(context, AboutActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
                     }
                 }
@@ -56,7 +64,7 @@ public class NavigationManager extends AppCompatActivity {
     public static void navigateToDestinationBlind(Context context, String keyword, FragmentManager fragmentManager, Fragment fragmentActual) {
         if (!context.getClass().getSimpleName().equals("HomePageBlind")){
             Intent intent = new Intent(context, HomePageBlind.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Esto limpiará la pila de actividades y creará una nueva tarea
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Esto limpiará la pila de actividades y creará una nueva tarea
             intent.putExtra("keyword", keyword);
             context.startActivity(intent);
 
@@ -69,11 +77,19 @@ public class NavigationManager extends AppCompatActivity {
                 }else{
                     if (ifNavigation(keyword, "menu principal") && !fragmentActual.getClass().getSimpleName().equalsIgnoreCase("HomeBlindFragment") ) {
                         Intent intent = new Intent(context, HomePageBlind.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Esto limpiará la pila de actividades y creará una nueva tarea
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Esto limpiará la pila de actividades y creará una nueva tarea
                         context.startActivity(intent);
                     } else if (ifNavigation(keyword, "editar datos") && !context.getClass().getSimpleName().equals("EditDataProfileBlind")){
                         Intent intent = new Intent(context, EditDataProfileBlind.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    } else if (ifNavigation(keyword, "politicas seguridad") && !context.getClass().getSimpleName().equals("PoliticalSecurityActivity")) {
+                        Intent intent = new Intent(context, PoliticalSecurityActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    } else if (ifNavigation(keyword, "acerca de") && !context.getClass().getSimpleName().equals("AboutActivity")) {
+                        Intent intent = new Intent(context, AboutActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
                     }
                 }
