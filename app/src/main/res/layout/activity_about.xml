@@ -150,5 +150,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
+    <include layout="@layout/base_flotante" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

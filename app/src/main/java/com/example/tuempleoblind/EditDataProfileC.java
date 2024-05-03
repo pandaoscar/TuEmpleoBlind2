@@ -270,7 +270,6 @@ public class EditDataProfileC extends AppCompatActivity implements EasyPermissio
 
         @Override
         public void afterTextChanged(Editable s) {
-            Toast.makeText(getApplicationContext(), "oñis", Toast.LENGTH_SHORT).show();
             verificarCambios();
         }
     };

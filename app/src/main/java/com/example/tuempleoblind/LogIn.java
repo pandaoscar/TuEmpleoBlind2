@@ -39,8 +39,6 @@ public class LogIn extends AppCompatActivity {
         btnConfirm = findViewById(R.id.buttonConfirmLogIn);
         btnBack = findViewById(R.id.buttonBackLogIn);
 
-        Toast.makeText(getApplicationContext(), "oñis", Toast.LENGTH_SHORT).show();
-
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
