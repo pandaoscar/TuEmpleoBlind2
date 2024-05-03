@@ -53,6 +53,9 @@
     <string name="bottom_blind_home">Inicio</string>
     <string name="loginPhase">Bienvenido de Vuelta Recuerdame tus datos</string>
     <string name="editData">Editar Datos</string>
+    <string name="btnpoliticalsecurity">Politicas de seguridad</string>
+    <string name="btnaboutus">Acerca de</string>
+    <string name="btnlogout">Cerrar Sesión</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="your_oferts">Tus publicaciones:</string>
@@ -63,7 +66,46 @@
     <string name="aboutDisingBy">Este proyecto esta desarrollado por:</string>
     <string name="aboutAutor1">Oscar Julian Hernandez Bonilla</string>
     <string name="aboutAutor2">Javier Andres Ramirez Zabaleta</string>
-    <string name="aboutPurpouse">Javier Andres Ramirez Zabaleta</string>
+    <string name="aboutPurpouse">Este prototipo fue Diseñado y Desarrollado bajo arquitectura móvil para Android con el fin de facilitar la búsqueda de empleo para personas con discapacidad visual y baja visión, utilizando tecnologías de audio y comandos por voz.</string>
+    <string name="aboutProfetion">Estudiante de Ingeneria de sistemas y computación</string>
+    <string name="aboutDirection">El prototipo fue desarrolldo bajo la asesoria de:</string>
+    <string name="aboutDirection2">La Univerdad De Cundinamarca</string>
+    <string name="aboutDirection3">Extensión Facatativa</string>
+
+
+    <string name="politicalsecuritytitle">Términos y Condiciones:</string>
+    <string name="politicalsecuritywelcome">Bienvenido a TuEmpleoBlind, una plataforma de búsqueda de empleo diseñada para personas invidentes. Antes de utilizar nuestra aplicación, te pedimos que leas detenidamente estos Términos y Condiciones.</string>
+    <string name="politicalsecurityitem1">1.Aceptación de los Términos y Condiciones:</string>
+    <string name="politicalsecuritytextitem1">Al utilizar nuestra aplicación, aceptas estar legalmente vinculado por estos Términos y Condiciones, así como por nuestra Política de Privacidad. Si no estás de acuerdo con alguno de estos términos, te recomendamos que no utilices nuestra aplicación.</string>
+    <string name="politicalsecurityitem2">2.Uso de la Aplicación:</string>
+    <string name="politicalsecuritytextitem2">Nuestra aplicación está destinada exclusivamente para uso personal y no comercial. No debes utilizar nuestra aplicación de manera que interfiera con el uso de otros usuarios o que viole cualquier ley aplicable.</string>
+    <string name="politicalsecurityitem3">3.Responsabilidades del Usuario:</string>
+    <string name="politicalsecuritytextitem3">Eres responsable de mantener la confidencialidad de tu cuenta y contraseña. Debes notificarnos inmediatamente si sospechas que tu cuenta ha sido comprometida o utilizada de manera no autorizada.</string>
+    <string name="politicalsecuritytext2item3">No debes compartir información falsa o engañosa en nuestra aplicación ni utilizarla para fines ilegales o inapropiados.</string>
+    <string name="politicalsecurityitem4">4.Propiedad Intelectual:</string>
+    <string name="politicalsecuritytextitem4">Todos los derechos de propiedad intelectual relacionados con nuestra aplicación y su contenido son propiedad de los desarrolladores y estan protegidos bajo la Universidad de Cundinamarca. No tienes derecho a utilizar nuestro nombre, logotipo o marca sin nuestro consentimiento previo por escrito.</string>
+    <string name="politicalsecurityitem5">5.Modificaciones y Terminación:</string>
+    <string name="politicalsecuritytextitem5">Nos reservamos el derecho de modificar o discontinuar cualquier parte de nuestra aplicación en cualquier momento sin previo aviso. Además, nos reservamos el derecho de terminar tu acceso a nuestra aplicación si violas estos Términos y Condiciones.</string>
+    <string name="politicalsecurityitem6">6.Limitación de Responsabilidad:</string>
+    <string name="politicalsecuritytextitem6">No seremos responsables por ningún daño directo, indirecto, incidental, especial o consecuente que surja del uso de nuestra aplicación, incluso si hemos sido informados de la posibilidad de tales daños.</string>
+    <string name="politicalsecurityitem7">7.Ley Aplicable:</string>
+    <string name="politicalsecuritytextitem7">Estos Términos y Condiciones se regirán e interpretarán de acuerdo con las leyes de Colombia, sin tener en cuenta sus disposiciones sobre conflictos de leyes.</string>
+    <string name="politicalsecurityitem">Al utilizar nuestra aplicación, aceptas estos Términos y Condiciones en su totalidad. Si tienes alguna pregunta o inquietud, no dudes en contactarnos en ojulianhernandez@ucundinamarca.edu.co ó javierandresramirez@ucundinamarca.edu.co</string>
+    <string name="privacypolicytitle">Política de Privacidad:</string>
+    <string name="privacypolicycontext">La privacidad de nuestros usuarios es de suma importancia para nosotros. A continuación, te explicamos cómo recopilamos, utilizamos y protegemos tu información personal en nuestra aplicación.</string>
+    <string name="privacyitem1">1.Información Recopilada:</string>
+    <string name="privacytextitem1">Recopilamos información personal cuando te registras en nuestra aplicación, completas tu perfil, buscas empleo o interactúas con otras funciones de la aplicación. Esta información puede incluir tu nombre, dirección de correo electrónico, historial laboral, habilidades, etc.</string>
+    <string name="privacyitem2">2.Uso de la Información:</string>
+    <string name="privacytextitem2">Utilizamos la información recopilada para proporcionarte una experiencia personalizada en nuestra aplicación, incluida la recomendación de empleos relevantes y la facilitación de la comunicación entre empleadores y solicitantes de empleo.</string>
+    <string name="privacytext2titem2">No compartiremos tu información personal con terceros sin tu consentimiento, excepto cuando sea necesario para proporcionar nuestros servicios o cumplir con la ley.</string>
+    <string name="privacyitem3">3.Seguridad de la Información:</string>
+    <string name="privacytextitem3">Implementamos medidas de seguridad razonables para proteger tu información personal contra el acceso no autorizado, el uso o la divulgación.</string>
+    <string name="privacytext2item3">Sin embargo, no podemos garantizar la seguridad absoluta de tu información debido a la naturaleza de Internet y los riesgos asociados con la transmisión de datos en línea.</string>
+    <string name="privacyitem4">4.Derechos del Usuario:</string>
+    <string name="privacytextitem4">Tienes derecho a acceder, corregir o eliminar tu información personal en cualquier momento. También puedes optar por no recibir comunicaciones de marketing de nuestra parte.</string>
+    <string name="privacytex2titem4">Si deseas ejercer alguno de estos derechos o tienes preguntas sobre nuestra Política de Privacidad, no dudes en contactarnos.</string>
+    <string name="privacyitem">Al utilizar nuestra aplicación, aceptas nuestra Política de Privacidad y el procesamiento de tu información personal de acuerdo con lo establecido anteriormente.</string>
+
 
     <string name="UsernameSignUpBlindLabel">Para empezar llena los suiguientes datos:</string>
     <string name="SignUpButtonSend">Enviar</string>
