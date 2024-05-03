@@ -4,21 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditDataProfileBlind">
+    tools:context=".EditDataProfileBlind"
+    android:background="@color/mistyRose">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
-
+            <TextView
+                android:id="@+id/textVieweditdata"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/editData"
+                android:textColor="@color/marinian_blue"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="12dp"/>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_beta"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 >
@@ -31,7 +43,10 @@
                     android:textColor="@color/normal_color"
                     android:textSize="26sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"/>
 
                 <EditText
                     android:id="@+id/editTextNameEditDataBlind"
@@ -44,7 +59,9 @@
                     android:textSize="24sp"
                     android:layout_marginBottom="10dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView6" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView6"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"/>
 
                 <TextView
                     android:id="@+id/textView7"
@@ -54,7 +71,9 @@
                     android:textColor="@color/normal_color"
                     android:textSize="26sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextNameEditDataBlind" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTextNameEditDataBlind"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"/>
 
                 <EditText
                     android:id="@+id/editTextUserNameEditDataBlind"
@@ -67,7 +86,9 @@
                     android:textSize="24sp"
                     android:layout_marginBottom="10dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView7" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView7"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"/>
 
                 <TextView
                     android:id="@+id/textView8"
@@ -77,7 +98,9 @@
                     android:textColor="@color/normal_color"
                     android:textSize="26sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextUserNameEditDataBlind" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTextUserNameEditDataBlind"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"/>
 
                 <EditText
                     android:id="@+id/editTextEmailEditDataBlind"
@@ -90,7 +113,9 @@
                     android:textSize="24sp"
                     android:layout_marginBottom="10dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView8" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView8"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"/>
 
                 <TextView
                     android:id="@+id/textView"
@@ -102,8 +127,8 @@
                     android:textSize="26sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editTextEmailEditDataBlind"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"/>
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"/>
 
 
                 <LinearLayout
@@ -112,8 +137,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     app:layout_constraintTop_toBottomOf="@+id/textView"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp">
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp">
 
 
                     <Spinner
@@ -204,7 +229,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp">
 
                 <Button
                     android:id="@+id/buttonSaveEditDataBlind"
@@ -212,13 +238,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
                     android:text="@string/save"
-                    android:textSize="28dp"
+                    android:textSize="28sp"
                     android:textColor="@color/ghost_white"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:background="@drawable/btn_orange"/>
+                    android:background="@drawable/btn_orange"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"/>
 
                 <Button
                     android:id="@+id/buttonCancelEditDataBlind"
@@ -226,14 +254,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="@string/cancel"
-                    android:textSize="28dp"
+                    android:textSize="28sp"
                     android:textColor="@color/ghost_white"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.516"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/buttonSaveEditDataBlind"
-                    android:background="@drawable/btn_blue"/>
+                    android:background="@drawable/btn_blue"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 

@@ -51,12 +51,19 @@
     <string name="bottom_blind_interview">Entrevista</string>
     <string name="bottom_blind_tips">Tips</string>
     <string name="bottom_blind_home">Inicio</string>
+    <string name="loginPhase">Bienvenido de Vuelta Recuerdame tus datos</string>
+    <string name="editData">Editar Datos</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="your_oferts">Tus publicaciones:</string>
     <string name="ofer_evelator">Cuenta con Elevador</string>
     <string name="ofer_elevator">Cuenta con Elevador</string>
     <string name="ofer_ramp">Cuenta con Rampas</string>
+
+    <string name="aboutDisingBy">Este proyecto esta desarrollado por:</string>
+    <string name="aboutAutor1">Oscar Julian Hernandez Bonilla</string>
+    <string name="aboutAutor2">Javier Andres Ramirez Zabaleta</string>
+    <string name="aboutPurpouse">Javier Andres Ramirez Zabaleta</string>
 
     <string name="UsernameSignUpBlindLabel">Para empezar llena los suiguientes datos:</string>
     <string name="SignUpButtonSend">Enviar</string>

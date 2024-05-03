@@ -16,7 +16,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -34,8 +34,8 @@
                     android:text="@string/lawsAndMore"
                     android:textAlignment="center"
                     android:gravity="center"
-                    android:textColor="@color/rich_black"
-                    android:textSize="24dp"
+                    android:textColor="@color/marinian_blue"
+                    android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -61,8 +61,11 @@
                         android:layout_height="wrap_content"
                         android:text="@string/law1_link"
                         android:textColor="@color/rich_black"
-                        android:textSize="18dp"
-                        android:textStyle="bold"/>
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginTop="12dp"/>
 
                     <TextView
                         android:id="@+id/textView29"
@@ -70,8 +73,10 @@
                         android:layout_height="wrap_content"
                         android:text="@string/law1_descop"
                         android:textColor="@color/rich_black"
-                        android:textSize="16dp"
-                        />
+                        android:textSize="16sp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginBottom="20dp"/>
 
                 <TextView
                     android:id="@+id/law2link"
@@ -79,8 +84,10 @@
                     android:layout_height="wrap_content"
                     android:text="@string/law2_link"
                     android:textColor="@color/rich_black"
-                    android:textSize="18dp"
-                    android:textStyle="bold"/>
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"/>
 
                     <TextView
                         android:id="@+id/textView27"
@@ -88,16 +95,20 @@
                         android:layout_height="wrap_content"
                         android:text="@string/law2_descop"
                         android:textColor="@color/rich_black"
-                        android:textSize="16dp"
-                        />
+                        android:textSize="16sp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginBottom="20dp"/>
                     <TextView
                         android:id="@+id/law3link"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/law3_link"
                         android:textColor="@color/rich_black"
-                        android:textSize="18dp"
-                        android:textStyle="bold"/>
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"/>
 
                     <TextView
                         android:id="@+id/textView30"
@@ -105,8 +116,10 @@
                         android:layout_height="wrap_content"
                         android:text="@string/law3_descop"
                         android:textColor="@color/rich_black"
-                        android:textSize="16dp"
-                        android:layout_marginBottom="80dp"/>
+                        android:textSize="16sp"
+                        android:layout_marginBottom="80dp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"/>
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

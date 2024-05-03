@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lavender_blush"
+    android:background="@color/mistyRose"
     android:layout_marginTop="-5dp">
 
     <LinearLayout
@@ -20,7 +20,7 @@
             android:layout_marginTop="1dp"
             android:scaleType="centerCrop"
             android:src="@drawable/background2"
-            />
+            android:importantForAccessibility="no" />
     </LinearLayout>
 
     <ScrollView
@@ -52,13 +52,13 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="40dp"
-                        android:layout_marginEnd="40dp"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginEnd="30dp"
                         android:background="@drawable/corners_botton"
                         android:gravity="center"
                         android:orientation="vertical"
-                        app:cardCornerRadius="16dp"
-                        >
+                        app:cardCornerRadius="16sp"
+                        tools:ignore="UselessParent">
 
                         <TextView
                             android:id="@+id/textView7"
@@ -72,12 +72,13 @@
 
                         <TextView
                             android:id="@+id/textView8"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="15dp"
                             android:layout_marginTop="8dp"
                             android:text="@string/app_name"
                             android:textColor="@color/white"
+                            android:gravity="center"
                             android:textSize="40sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -94,13 +95,14 @@
                     android:id="@+id/activateTalkback"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="40dp"
                     android:layout_marginEnd="40dp"
                     android:layout_marginStart="40dp"
                     android:textStyle="bold"
+                    android:gravity="start|center"
                     android:textColor="@color/ghost_white"
                     android:onClick="activarTalkback"
-                    android:textSize="18dp"
+                    android:textSize="18sp"
                     android:text="@string/activate_talkback"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -111,17 +113,17 @@
                     android:id="@+id/textView9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="90dp"
+                    android:layout_marginTop="50dp"
                     android:text="@string/identification"
                     android:textColor="@color/rich_black"
                     android:textSize="22sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/activateTalkback" />
 
                 <Button
                     android:id="@+id/buttonFindHire"
-                    android:layout_width="380dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
                     android:text="@string/want_employ_question"
@@ -135,7 +137,7 @@
 
                 <Button
                     android:id="@+id/buttonFindJob"
-                    android:layout_width="380dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
                     android:text="@string/want_job_question"
@@ -163,11 +165,12 @@
                     android:textSize="22sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="SpUsage" />
 
                 <Button
                     android:id="@+id/buttonLogIn"
-                    android:layout_width="380dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
                     android:text="@string/sign_in"

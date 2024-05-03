@@ -42,7 +42,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:fontFamily="@font/montserrat_light"
-                    android:text="Algun eslogan o bienvenida?"
+                    android:text="@string/loginPhase"
                     android:textColor="@color/colorText"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -58,7 +58,8 @@
                     android:background="@drawable/ic_illustration_blind1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView2"
+                    android:importantForAccessibility="no" />
 
                 <EditText
                     android:id="@+id/editTextEmailLogIn"
@@ -70,12 +71,13 @@
                     android:fontFamily="@font/montserrat_semibold"
                     android:hint="@string/sign_up_c_email"
                     android:inputType="textEmailAddress"
-                    android:paddingLeft="60dp"
+                    android:paddingStart="60dp"
                     android:textColor="@color/app_color"
-                    android:textSize="40px"
+                    android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                    app:layout_constraintTop_toBottomOf="@+id/imageView"
+                    tools:ignore="Autofill,RtlSymmetry" />
 
                 <EditText
                     android:id="@+id/editTextPasswordLogIn"
@@ -88,27 +90,14 @@
                     android:fontFamily="@font/montserrat_semibold"
                     android:hint="@string/sign_up_c_password"
                     android:inputType="textPassword"
-                    android:paddingLeft="60dp"
+                    android:paddingStart="60dp"
                     android:textColor="@color/colorText"
-                    android:textSize="40px"
+                    android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextEmailLogIn" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTextEmailLogIn"
+                    tools:ignore="Autofill,RtlSymmetry" />
 
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/montserrat_light"
-                    android:text="Forgot your password?"
-                    android:textColor="@color/colorText"
-                    android:textSize="32px"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.883"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextPasswordLogIn" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Button
@@ -119,14 +108,15 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/btn_next"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:text="@string/log_in"
                 android:textColor="@color/orange"
                 android:textStyle="bold"
                 android:paddingEnd="90dp"
                 android:textAlignment="viewEnd"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                app:layout_constraintTop_toBottomOf="@+id/textView3"
+                tools:ignore="RtlSymmetry" />
 
             <Button
                 android:id="@+id/buttonBackLogIn"
@@ -136,25 +126,14 @@
                 android:background="@drawable/btn_back"
                 android:textColor="@color/lapis_lazuli"
                 android:text="@string/back"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 android:paddingStart="90dp"
                 android:textAlignment="textStart"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                app:layout_constraintTop_toBottomOf="@+id/textView3"
+                tools:ignore="RtlSymmetry" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="16dp"
-                android:fontFamily="@font/montserrat_light"
-                android:text="Don't you have an account? Create"
-                android:textColor="@color/colorText"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
 
         </LinearLayout>
     </ScrollView>
