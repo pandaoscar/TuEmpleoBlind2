@@ -121,6 +121,7 @@ public class ProfileCFragment extends Fragment implements EasyPermissions.Permis
         btn_exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getActivity().stopService(new Intent(getActivity(),NewJobPublishedNotification.class));
                 signOut();
             }
         });

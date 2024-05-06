@@ -62,43 +62,49 @@ public class NewJobPublishedNotification extends Service {
                     switch (dc.getType()) {
                         case ADDED:
                             DocumentSnapshot addedDoc = dc.getDocument();
-                            String userID = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Obtener el ID del usuario actualmente autenticado
+                            // Obtener el ID del usuario actualmente autenticado
                             // Verificar si el usuario pertenece a la colección "UsernameC"
-                            FirebaseFirestore.getInstance().collection("UsernameC")
-                                    .document(userID)
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                DocumentSnapshot document = task.getResult();
-                                                if (!document.exists()) {
-                                                    // El usuario no está en "UsernameC", ahora verificamos si está en "UsernameBlind"
-                                                    FirebaseFirestore.getInstance().collection("UsernameBlind")
-                                                            .document(userID)
-                                                            .get()
-                                                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                                    if (task.isSuccessful()) {
-                                                                        DocumentSnapshot document = task.getResult();
-                                                                        if (document.exists()) {
-                                                                            // El usuario está en "UsernameBlind", enviar notificación
-                                                                            sendNotification();
+                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                            if (currentUser != null) { // Verificar si el usuario está autenticado
+                                String userID = currentUser.getUid();{
+                                    FirebaseFirestore.getInstance().collection("UsernameC")
+                                            .document(userID)
+                                            .get()
+                                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                    if (task.isSuccessful()) {
+                                                        DocumentSnapshot document = task.getResult();
+                                                        if (!document.exists()) {
+                                                            // El usuario no está en "UsernameC", ahora verificamos si está en "UsernameBlind"
+                                                            FirebaseFirestore.getInstance().collection("UsernameBlind")
+                                                                    .document(userID)
+                                                                    .get()
+                                                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                            if (task.isSuccessful()) {
+                                                                                DocumentSnapshot document = task.getResult();
+                                                                                if (document.exists()) {
+                                                                                    // El usuario está en "UsernameBlind", enviar notificación
+                                                                                    sendNotification();
+                                                                                }
+                                                                            } else {
+                                                                                Log.w(TAG, "Error getting document.", task.getException());
+                                                                            }
                                                                         }
-                                                                    } else {
-                                                                        Log.w(TAG, "Error getting document.", task.getException());
-                                                                    }
-                                                                }
-                                                            });
+                                                                    });
+                                                        }
+                                                    } else {
+                                                        Log.w(TAG, "Error getting document.", task.getException());
+                                                    }
                                                 }
-                                            } else {
-                                                Log.w(TAG, "Error getting document.", task.getException());
-                                            }
-                                        }
-                                    });
+                                            });
 
-                            break;
+                                    break;
+                                }
+                            }
+
                     }
                 }
             }

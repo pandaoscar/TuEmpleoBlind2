@@ -17,6 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TuEmpleoBlind"
         tools:targetApi="31">
+        <service android:name=".NewJobPublishedNotification" />
         <activity
             android:name=".PoliticalSecurityActivity"
             android:exported="false" />
