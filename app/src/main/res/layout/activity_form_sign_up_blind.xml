@@ -139,7 +139,7 @@
                         android:layout_height="wrap_content"
                         android:autofillHints="name"
                         android:ems="10"
-                        android:hint="@string/sign_up_c_location"
+                        android:hint="@string/ofer_location"
                         android:inputType="text"
                         android:textSize="24sp"
                         android:layout_marginStart="12dp"

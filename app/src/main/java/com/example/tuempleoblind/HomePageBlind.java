@@ -43,7 +43,10 @@ public class HomePageBlind extends AppCompatActivity {
                         replaceFragment(new ConfigBlindFragment());
                     }
                     else {
-                        System.out.println("joa mani, no se pudo");
+                        if(item.getItemId()==R.id.artificialIntelligence){
+                            replaceFragment(new ArtificialIntelligence());
+                        }else{ System.out.println("joa mani, no se pudo");}
+
                     }
                 }
             }

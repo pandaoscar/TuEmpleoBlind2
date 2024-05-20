@@ -22,12 +22,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="0dp"
                 android:layout_marginEnd="0dp"
-                android:background="?android:attr/windowBackground"
+                android:background="@color/light_green"
                 app:itemBackground="@drawable/bottom_nav_item_colors"
                 app:itemIconTint="@drawable/bottom_items_colors"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
                 app:menu="@menu/bottom_nav_menu_blind" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

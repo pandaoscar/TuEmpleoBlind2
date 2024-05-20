@@ -50,6 +50,7 @@
     <string name="bottom_blind_config">Configuración</string>
     <string name="bottom_blind_interview">Entrevista</string>
     <string name="bottom_blind_tips">Tips</string>
+    <string name="bottom_blind_ia">IA</string>
     <string name="bottom_blind_home">Inicio</string>
     <string name="loginPhase">Bienvenido de Vuelta Recuerdame tus datos</string>
     <string name="editData">Editar Datos</string>
@@ -71,6 +72,10 @@
     <string name="aboutDirection">El prototipo fue desarrolldo bajo la asesoria de:</string>
     <string name="aboutDirection2">La Univerdad De Cundinamarca</string>
     <string name="aboutDirection3">Extensión Facatativa</string>
+
+    <string name="ia_title">Reconocimiento Óptico de Caracteres</string>
+    <string name="ia_description">La inteligencia artificial en visión por computadora permite a las computadoras entender y procesar imágenes en tiempo real. Utilizando algoritmos avanzados, pueden reconocer objetos, personas y texto en las imágenes. Con técnicas de reconocimiento óptico de caracteres (OCR), la IA puede extraer texto de las imágenes, permitiendo a las computadoras leer texto de manera automática.</string>
+    <string name="ia_button">Comenzar Reconocimiento</string>
 
 
     <string name="politicalsecuritytitle">Términos y Condiciones:</string>
@@ -147,6 +152,7 @@
     <string name="viewPostulateCurriculum">Ver Hoja De Vida</string>
     <string name="signUpFormBlindAbilities">Describir sus habilidades (trabajo en equipo,word,exel...)</string>
 
+    <string name="LectorActivate">Lector de Textos, poner el dispositivo frente al texto</string>
     <string name="lawsAndMore">Marco Normativo de la Discapacidad en Colombia</string>
     <string name="law1_link"> <a href="http://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Leyes/1677870">Convención sobre los Derechos de las Personas con Discapacidad de Naciones Unidas.</a></string>
     <string name="law2_link"><a href="https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=85399">Decreto 392 del 26 de febrero de 2018. </a></string>
@@ -156,9 +162,9 @@
     <string name="law3_descop">Por el cual se crea el Consejo para la Inclusión de la Discapacidad y se dictan disposiciones relacionadas con su funcionamiento” y cuyo objeto es coordinar las acciones que el sector privado adelante para coadyuvar al ejercicio de los derechos y la inclusión social, laboral y productiva de las personas con discapacidad, orientadas al desarrollo de las capacidades a través de la formación para el trabajo, la producción y el empleo de las personas con discapacidad, sus familias y cuidadores.</string>
     <string-array name="list_level_blind">
         <item>Baja Visión</item>
-        <item>Cegera Parcial</item>
-        <item>Cegera Legal</item>
-        <item>Cegera Total</item>
+        <item>Ceguera Parcial</item>
+        <item>Ceguera Legal</item>
+        <item>Ceguera Total</item>
     </string-array>
     <string-array name="lista_typo_empleo">
         <item>Tiempo Completo</item>

@@ -20,4 +20,9 @@
         android:name="com.example.tuempleoblind.ConfigBlindFragment"
         android:label="fragment_config_blind"
         tools:layout="@layout/fragment_config_blind" />
+    <fragment
+        android:id="@+id/artificialIntelligence"
+        android:name="com.example.tuempleoblind.ArtificialIntelligence"
+        android:label="fragment_artificial_intelligence"
+        tools:layout="@layout/fragment_artificial_intelligence" />
 </navigation>

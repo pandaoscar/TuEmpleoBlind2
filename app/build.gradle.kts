@@ -55,4 +55,5 @@ dependencies {
     implementation ("androidx.cardview:cardview:1.0.0")
     implementation("androidx.navigation:navigation-fragment:2.7.7")
     implementation("androidx.navigation:navigation-ui:2.7.7")
+    implementation ("com.google.android.gms:play-services-vision:20.1.3")
 }
