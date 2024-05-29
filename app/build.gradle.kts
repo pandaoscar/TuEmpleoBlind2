@@ -56,4 +56,7 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment:2.7.7")
     implementation("androidx.navigation:navigation-ui:2.7.7")
     implementation ("com.google.android.gms:play-services-vision:20.1.3")
+
+    //pdf
+    implementation ("com.itextpdf:itext7-core:7.1.16")
 }

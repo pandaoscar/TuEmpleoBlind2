@@ -57,6 +57,7 @@ public class NewJobPublishedNotification extends Service {
                     Log.w(TAG, "Listen failed.", e);
                     return;
                 }
+                System.out.println("Aquiiiiiiiiiiiiiii");
 
                 for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
                     switch (dc.getType()) {

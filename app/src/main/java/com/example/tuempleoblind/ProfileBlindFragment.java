@@ -117,6 +117,7 @@ public class ProfileBlindFragment extends Fragment implements EasyPermissions.Pe
                 dataProfile();
             }
         });
+
         btn_exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

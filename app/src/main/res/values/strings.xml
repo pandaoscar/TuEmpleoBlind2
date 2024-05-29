@@ -118,6 +118,9 @@
     <string name="signUpFormBlindProfession">Introduzca su profesión, enfoque y especialización (ejemplo: Psicólogo clínico, Terapia cognitivo-conductual)</string>
     <string name="signUpFormBlindAddress">Escribe pais, provincia y barrio</string>
     <string name="Phone">Numero de telefono</string>
+    <string name="report_download_title">Reportes</string>
+    <string name="report_download">Descargar Reporte</string>
+    <string name="report_text">Tener reportes es crucial para cualquier organización, ya que proporcionan una visión clara y detallada del desempeño y las operaciones. Ayudan a identificar áreas de mejora, facilitando la toma de decisiones informadas y estratégicas. Además, los reportes permiten un seguimiento efectivo del progreso hacia los objetivos, aseguran la transparencia y la rendición de cuentas, y respaldan la comunicación interna y externa, fortaleciendo la confianza y la eficiencia en el entorno laboral.</string>
 
     <string name="create_ofer">Crear nueva oferta</string>
     <string name="create_ofer2">llene la siguiente información</string>

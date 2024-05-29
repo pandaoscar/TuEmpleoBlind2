@@ -50,6 +50,17 @@
                 android:textSize="22sp"/>
 
             <Button
+                android:id="@+id/buttonReport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/report_download_title"
+                android:layout_marginTop="28dp"
+                android:background="@color/mistyRose"
+                android:textStyle="bold"
+                android:textColor="@color/marinian_blue"
+                android:textSize="22sp"/>
+
+            <Button
                 android:id="@+id/signOff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

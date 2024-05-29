@@ -33,7 +33,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  */
 public class ProfileCFragment extends Fragment implements EasyPermissions.PermissionCallbacks{
     Button btn_exit;
-    Button btn_dataPerfil;
+    Button btn_dataPerfil, btnReport;
     Button btn_about,btn_security;
     FloatingActionButton microComand;
     private static final int CODIGO_RECONOCIMIENTO_VOZ = 1;
@@ -87,6 +87,7 @@ public class ProfileCFragment extends Fragment implements EasyPermissions.Permis
         btn_dataPerfil = view.findViewById(R.id.buttonDataProfile);
         btn_security=view.findViewById(R.id.buttonsecurity);
         btn_about=view.findViewById(R.id.buttonabout);
+        btnReport = view.findViewById(R.id.buttonReport);
 
         microComand = view.findViewById(R.id.floatingButtonComands);
 
@@ -118,6 +119,14 @@ public class ProfileCFragment extends Fragment implements EasyPermissions.Permis
                 dataProfile();
             }
         });
+
+        btnReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataReport();
+            }
+        });
+
         btn_exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -211,6 +220,15 @@ public class ProfileCFragment extends Fragment implements EasyPermissions.Permis
         }
     }
 
+    private void dataReport() {
+        try {
+            Intent intent = new Intent(getActivity(), DowloadReportActivity.class); // Reemplaza "NuevoActivity" con el nombre de tu Activity de destino
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Manejar la excepción aquí, como mostrar un mensaje de error al usuario
+        }
+    }
 
     private void signOut() {
         try {
