@@ -40,10 +40,14 @@ import java.util.Locale;
 import java.util.Map;
 
 
-
+import io.grpc.okhttp.internal.Util;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class NewJob extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
+    private static final String numeroDeEmpleoPublicados = "numeroDeEmpleoPublicados";
+    private static final String numeroDeEmpleoPublicadosTotales = "numeroDeEmpleoPublicadosTotales";
+    private static final String collectionReporte = "Reporte";
+    private static final String documentTotales = "Totales";
     FirebaseFirestore mFirestore;
     Button btnback, btnPublish;
     FloatingActionButton microComand;
@@ -318,8 +322,8 @@ public class NewJob extends AppCompatActivity implements EasyPermissions.Permiss
                         Intent intent = new Intent(getApplicationContext(), companyHome.class);
                         intent.putExtra("userID", userID);
                         intent.putExtra("jobID", jobId);
-                        incrementarMensual();
-                        incrementarTotal();
+                        Utilidad.incrementarMensual(mFirestore,collectionReporte,numeroDeEmpleoPublicados);
+                        Utilidad.incrementarTotal(mFirestore,collectionReporte,documentTotales,numeroDeEmpleoPublicadosTotales);
                         startActivity(intent);
                         finish();
 
