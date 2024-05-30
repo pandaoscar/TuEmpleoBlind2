@@ -44,12 +44,14 @@ import io.grpc.okhttp.internal.Util;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class NewJob extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
-    private static final String numeroDeEmpleoPublicados = "numeroDeEmpleoPublicados";
-    private static final String numeroDeEmpleoPublicadosTotales = "numeroDeEmpleoPublicadosTotales";
-    private static final String collectionReporte = "Reporte";
-    private static final String documentTotales = "Totales";
+    private static final String NUMERO_DE_EMPLOS_PUBLICADOS = "numeroDeEmpleoPublicados";
+    private static final String NUMERO_DE_EMPLEOS_PUBLICADOS_TOTALES = "numeroDeEmpleoPublicadosTotales";
+    private static final String COLLECTION_REPORTE = "Reporte";
+    private static final String DOCUMENT_TOTALES = "Totales";
+
     FirebaseFirestore mFirestore;
-    Button btnback, btnPublish;
+    Button btnback;
+    Button btnPublish;
     FloatingActionButton microComand;
     private static final int CODIGO_RECONOCIMIENTO_VOZ = 1;
     private static final int PERMISSION_REQUEST_CODE = 123;
@@ -322,8 +324,8 @@ public class NewJob extends AppCompatActivity implements EasyPermissions.Permiss
                         Intent intent = new Intent(getApplicationContext(), companyHome.class);
                         intent.putExtra("userID", userID);
                         intent.putExtra("jobID", jobId);
-                        Utilidad.incrementarMensual(mFirestore,collectionReporte,numeroDeEmpleoPublicados);
-                        Utilidad.incrementarTotal(mFirestore,collectionReporte,documentTotales,numeroDeEmpleoPublicadosTotales);
+                        Utilidad.incrementarMensual(mFirestore,COLLECTION_REPORTE,NUMERO_DE_EMPLOS_PUBLICADOS);
+                        Utilidad.incrementarTotal(mFirestore,COLLECTION_REPORTE,DOCUMENT_TOTALES,NUMERO_DE_EMPLEOS_PUBLICADOS_TOTALES);
                         startActivity(intent);
                         finish();
 

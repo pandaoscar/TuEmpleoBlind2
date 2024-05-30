@@ -4,37 +4,28 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.w3c.dom.Document;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class JobDetails extends AppCompatActivity {
-    private static final String numeroDeAspirantesPostulados = "numeroDeAspirantesPostulados";
-    private static final String numeroDeAspirantesPostuladosTotales = "numeroDeAspirantesPostuladosTotales";
-    private static final String collectionReporte = "Reporte";
-    private static final String documentTotales = "Totales";
-    private FirebaseFirestore db;
+    private static final String NUMERO_DE_ASPIRANTES_POSTULADOS = "numeroDeAspirantesPostulados";
+    private static final String NUMERO_DE_ASPIRANTES_POSTULADOS_TOTALES = "numeroDeAspirantesPostuladosTotales";
+    private static final String COLLECTION_REPORTE = "Reporte";
+    private static final String DOCUMENT_TOTALES = "Totales";
+    private FirebaseFirestore mFirestore;
     private FirebaseAuth mAuth;
 
 
@@ -54,7 +45,7 @@ public class JobDetails extends AppCompatActivity {
             finish(); // Finalizar la actividad si no se proporciona el ID del trabajo
         }
 
-        db=FirebaseFirestore.getInstance();
+        mFirestore =FirebaseFirestore.getInstance();
         mAuth= FirebaseAuth.getInstance();
         // Obtener los datos de la intención
         String title=getIntent().getStringExtra("title");
@@ -147,7 +138,7 @@ public class JobDetails extends AppCompatActivity {
                             userBlindData.put("abilities",userBlindAbilities);
 
                             // Añadir el ID del usuario a la subcolección "postulantes" del documento del empleo
-                            DocumentReference jobRef = db.collection("TrabajosPublicados").document(jobID);
+                            DocumentReference jobRef = mFirestore.collection("TrabajosPublicados").document(jobID);
                             jobRef.collection("Postulates").document(userID).set(userBlindData)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
@@ -173,7 +164,7 @@ public class JobDetails extends AppCompatActivity {
                 finish();
             }
         });
-        Utilidad.incrementarMensual(db,collectionReporte,numeroDeAspirantesPostulados);
-        Utilidad.incrementarTotal(db,collectionReporte,documentTotales,numeroDeAspirantesPostuladosTotales);
+        Utilidad.incrementarMensual(mFirestore,COLLECTION_REPORTE,NUMERO_DE_ASPIRANTES_POSTULADOS);
+        Utilidad.incrementarTotal(mFirestore,COLLECTION_REPORTE,DOCUMENT_TOTALES,NUMERO_DE_ASPIRANTES_POSTULADOS_TOTALES);
     }
 }

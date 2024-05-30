@@ -31,10 +31,10 @@ import java.util.Locale;
 import java.util.Map;
 
 public class SignUpC extends AppCompatActivity {
-    private static final String numeroDeInvidentesRegistrados = "numeroDeEmpleadoresRegistrados";
-    private static final String numeroDeInvidentesRegistradosTotales = "numeroDeEmpleadoresRegistradosTotales";
-    private static final String collecctionReporte = "Reporte";
-    private static final String documentTotales = "Totales";
+    private static final String NUMERO_DE_EMPLEADORES_REGISTRADOS = "numeroDeEmpleadoresRegistrados";
+    private static final String NUMERO_DE_EMPLEADORES_REGISTRADOS_TOTALES = "numeroDeEmpleadoresRegistradosTotales";
+    private static final String COLLECTION_REPORTE = "Reporte";
+    private static final String DOCUMENT_TOTALES = "Totales";
 
     EditText campTextName;
     EditText campTextUserName;
@@ -143,8 +143,8 @@ public class SignUpC extends AppCompatActivity {
                         });
             }
         });
-        Utilidad.incrementarMensual(mFirestore,collecctionReporte,numeroDeInvidentesRegistrados);
-        Utilidad.incrementarTotal(mFirestore,collecctionReporte,documentTotales,numeroDeInvidentesRegistradosTotales);
+        Utilidad.incrementarMensual(mFirestore,COLLECTION_REPORTE,NUMERO_DE_EMPLEADORES_REGISTRADOS);
+        Utilidad.incrementarTotal(mFirestore,COLLECTION_REPORTE,DOCUMENT_TOTALES,NUMERO_DE_EMPLEADORES_REGISTRADOS_TOTALES);
     }
 
 

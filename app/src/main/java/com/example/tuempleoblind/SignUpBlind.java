@@ -36,10 +36,10 @@ import java.util.Map;
 import io.grpc.okhttp.internal.Util;
 
 public class SignUpBlind extends AppCompatActivity {
-    private static final String numeroDeInvidentesRegistrados = "numeroDeInvidentesRegistrados";
-    private static final String numeroDeInvidentesRegistradosTotales = "numeroDeInvidentesRegistradosTotales";
-    private static final String collecctionReporte = "Reporte";
-    private static final String documentTotales = "Totales";
+    private static final String NUMERO_DE_INVIDENTES_REGISTRADOS = "numeroDeInvidentesRegistrados";
+    private static final String NUMERO_DE_INVIDENTES_REGISTRADOS_TOTALES = "numeroDeInvidentesRegistradosTotales";
+    private static final String COLLECTION_REPORTE = "Reporte";
+    private static final String DOCUMENT_TOTALES = "Totales";
 
     EditText campTextName;
     EditText campTextUserName;
@@ -105,8 +105,8 @@ public class SignUpBlind extends AppCompatActivity {
                 }
             }
         });
-        Utilidad.incrementarMensual(mFirestore, collecctionReporte, numeroDeInvidentesRegistrados);
-        Utilidad.incrementarTotal(mFirestore,collecctionReporte,documentTotales,numeroDeInvidentesRegistradosTotales);
+        Utilidad.incrementarMensual(mFirestore, COLLECTION_REPORTE, NUMERO_DE_INVIDENTES_REGISTRADOS);
+        Utilidad.incrementarTotal(mFirestore,COLLECTION_REPORTE,DOCUMENT_TOTALES,NUMERO_DE_INVIDENTES_REGISTRADOS_TOTALES);
     }
 
     private void postUsernameBlind(String name, String username, String email, String userID) {
