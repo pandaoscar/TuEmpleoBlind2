@@ -3,11 +3,8 @@ package com.example.tuempleoblind;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,14 +17,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class SignUpC extends AppCompatActivity {
@@ -36,11 +28,11 @@ public class SignUpC extends AppCompatActivity {
     private static final String COLLECTION_REPORTE = "Reporte";
     private static final String DOCUMENT_TOTALES = "Totales";
 
-    EditText campTextName;
-    EditText campTextUserName;
-    EditText campTextEmail;
-    EditText campTextPassword1;
-    EditText campTextPassword2;
+    EditText campTextNameC;
+    EditText campTextUserNameC;
+    EditText campTextEmailC;
+    EditText campTextPassword1C;
+    EditText campTextPassword2C;
     Button btnContinue;
     Button btnBack;
     private FirebaseFirestore mFirestore;
@@ -51,11 +43,11 @@ public class SignUpC extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up_c);
         mFirestore = FirebaseFirestore.getInstance();
 
-        campTextName = findViewById(R.id.editTextNameCompanyEditDataC);
-        campTextUserName = findViewById(R.id.editTextCompanyTypeEditDataC);
-        campTextEmail = findViewById(R.id.editTextUserEmailSignUpC);
-        campTextPassword1 = findViewById(R.id.editTextLocationEditDataC);
-        campTextPassword2 = findViewById(R.id.editTextPasswordSignUpC2);
+        campTextNameC = findViewById(R.id.editTextNameCompanyEditDataC);
+        campTextUserNameC = findViewById(R.id.editTextCompanyTypeEditDataC);
+        campTextEmailC = findViewById(R.id.editTextUserEmailSignUpC);
+        campTextPassword1C = findViewById(R.id.editTextLocationEditDataC);
+        campTextPassword2C = findViewById(R.id.editTextPasswordSignUpC2);
 
         btnContinue = findViewById(R.id.buttonSaveEditDataC);
         btnBack = findViewById(R.id.buttonCancelEditDataC);
@@ -79,11 +71,11 @@ public class SignUpC extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                final String name = campTextName.getText().toString();
-                final String username = campTextUserName.getText().toString();
-                final String email = campTextEmail.getText().toString();
-                final String password1 = campTextPassword1.getText().toString();
-                String password2 = campTextPassword2.getText().toString();
+                final String name = campTextNameC.getText().toString();
+                final String username = campTextUserNameC.getText().toString();
+                final String email = campTextEmailC.getText().toString();
+                final String password1 = campTextPassword1C.getText().toString();
+                String password2 = campTextPassword2C.getText().toString();
 
                 if(username.isEmpty() || email.isEmpty() || password1.isEmpty() || password2.isEmpty()){
                     Toast.makeText(getApplicationContext(), "Completa todos los datos correspondientes", Toast.LENGTH_SHORT).show();
