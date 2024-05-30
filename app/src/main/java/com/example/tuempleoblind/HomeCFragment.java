@@ -49,12 +49,12 @@ public class HomeCFragment extends Fragment implements TrabajosPublicadosAdapter
     private static final int CODIGO_RECONOCIMIENTO_VOZ = 1;
     private static final int PERMISSION_REQUEST_CODE = 123;
 
-    // TODO: Rename parameter arguments, choose names that match
+    // Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+    // Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -70,7 +70,7 @@ public class HomeCFragment extends Fragment implements TrabajosPublicadosAdapter
      * @param param2 Parameter 2.
      * @return A new instance of fragment HomeCFragment.
      */
-    // TODO: Rename and change types and number of parameters
+    // Rename and change types and number of parameters
     public static HomeCFragment newInstance(String param1, String param2) {
         HomeCFragment fragment = new HomeCFragment();
         Bundle args = new Bundle();

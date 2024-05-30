@@ -32,12 +32,12 @@ import pub.devrel.easypermissions.EasyPermissions;
  */
 public class ConfigCFragment extends Fragment implements EasyPermissions.PermissionCallbacks{
 
-    // TODO: Rename parameter arguments, choose names that match
+    //  Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+    // Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private static final int CODIGO_RECONOCIMIENTO_VOZ = 1;
@@ -56,7 +56,7 @@ public class ConfigCFragment extends Fragment implements EasyPermissions.Permiss
      * @param param2 Parameter 2.
      * @return A new instance of fragment ConfigCFragment.
      */
-    // TODO: Rename and change types and number of parameters
+    // Rename and change types and number of parameters
     public static ConfigCFragment newInstance(String param1, String param2) {
         ConfigCFragment fragment = new ConfigCFragment();
         Bundle args = new Bundle();
@@ -158,7 +158,7 @@ public class ConfigCFragment extends Fragment implements EasyPermissions.Permiss
             if (resultCode == RESULT_OK && data != null) {
                 // Obtiene la lista de palabras reconocidas
                 ArrayList<String> palabrasReconocidas = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                if (palabrasReconocidas != null && palabrasReconocidas.size() > 0) {
+                if (palabrasReconocidas != null && palabrasReconocidas.isEmpty()) {
                     // Guarda la primera palabra reconocida en un String
                     String palabra = palabrasReconocidas.toString().replace("[", "").replace("]", "");
 

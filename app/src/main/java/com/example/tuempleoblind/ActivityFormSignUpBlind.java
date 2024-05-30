@@ -21,9 +21,13 @@ import java.util.Map;
 
 public class ActivityFormSignUpBlind extends AppCompatActivity {
 
-    EditText campTextProfession, campTextAddress, campTextPhone,campTextAbilities;
+    EditText campTextProfession;
+    EditText campTextAddress;
+    EditText campTextPhone;
+    EditText campTextAbilities;
     Spinner spinnerLevelBlind;
-    Button btnContinue, btnBack;
+    Button btnContinue;
+    Button btnBack;
     private FirebaseFirestore mFirestore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
