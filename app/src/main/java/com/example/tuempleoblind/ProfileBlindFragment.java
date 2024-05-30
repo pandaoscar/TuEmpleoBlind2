@@ -32,8 +32,8 @@ import pub.devrel.easypermissions.EasyPermissions;
  * create an instance of this fragment.
  */
 public class ProfileBlindFragment extends Fragment implements EasyPermissions.PermissionCallbacks{
-    Button btn_exit;
-    Button btn_dataPerfil;
+    Button btnExit;
+    Button btnDataPerfil;
     Button btnabout, btnsecurity;
     FloatingActionButton microComand;
     private static final int CODIGO_RECONOCIMIENTO_VOZ = 1;
@@ -84,8 +84,8 @@ public class ProfileBlindFragment extends Fragment implements EasyPermissions.Pe
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile_blind, container, false);
-        btn_exit = view.findViewById(R.id.signOffBlind);
-        btn_dataPerfil = view.findViewById(R.id.buttonDataProfileBlind);
+        btnExit = view.findViewById(R.id.signOffBlind);
+        btnDataPerfil = view.findViewById(R.id.buttonDataProfileBlind);
         btnabout=view.findViewById(R.id.buttonaboutblind);
         btnsecurity=view.findViewById(R.id.buttonsecurityblind);
         microComand = view.findViewById(R.id.floatingButtonComands);
@@ -111,14 +111,14 @@ public class ProfileBlindFragment extends Fragment implements EasyPermissions.Pe
                 startActivity(intent);
             }
         });
-        btn_dataPerfil.setOnClickListener(new View.OnClickListener() {
+        btnDataPerfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dataProfile();
             }
         });
 
-        btn_exit.setOnClickListener(new View.OnClickListener() {
+        btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().stopService(new Intent(getActivity(),NewJobPublishedNotification.class));
