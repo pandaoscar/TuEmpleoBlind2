@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,8 +20,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class SignUpC extends AppCompatActivity {
@@ -48,6 +55,67 @@ public class SignUpC extends AppCompatActivity {
 
         actionContinue();
 
+    }
+
+    private void incrementarMensual() {
+        CollectionReference reporteRef = mFirestore.collection("Reporte");
+        Calendar calendar = Calendar.getInstance();
+        String monthYear = new SimpleDateFormat("MMMM-yyyy", Locale.getDefault()).format(calendar.getTime());
+        reporteRef.document(monthYear).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Verifica si el campo "numeroDeEmpleadoresRegistrados" existe
+                        if (document.contains("numeroDeEmpleadoresRegistrados")) {
+                            // Si el campo existe, obtén el número actual de empleos publicados y añade uno
+                            long currentJobs = document.getLong("numeroDeEmpleadoresRegistrados");
+                            reporteRef.document(monthYear).update("numeroDeEmpleadoresRegistrados", currentJobs + 1);
+                        } else {
+                            // Si el campo no existe, crea uno con numeroDeEmpleadoresRegistrados = 1
+                            reporteRef.document(monthYear).update("numeroDeEmpleadoresRegistrados", 1);
+                        }
+                    } else {
+                        // Si el documento no existe, crea uno con numeroDeEmpleadoresRegistrados = 1
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("numeroDeEmpleadoresRegistrados", 1);
+                        reporteRef.document(monthYear).set(data);
+                    }
+                } else {
+                    Log.d("Error obteniendo documentos:", String.valueOf(task.getException()));
+                }
+            }
+        });
+    }
+    private void incrementarTotal() {
+        CollectionReference reporteRef = mFirestore.collection("Reporte");
+        reporteRef.document("Totales").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Verifica si el campo "numeroDeEmpleadoresRegistrados" existe
+                        if (document.contains("numeroDeEmpleadoresRegistradosTotales")) {
+                            // Si el campo existe, obtén el número actual de empleos publicados y añade uno
+                            long currentJobs = document.getLong("numeroDeEmpleadoresRegistradosTotales");
+                            reporteRef.document("Totales").update("numeroDeEmpleadoresRegistradosTotales", currentJobs + 1);
+                        } else {
+                            // Si el campo no existe, crea uno con numeroDeEmpleadoresRegistrados = 1
+                            reporteRef.document("Totales").update("numeroDeEmpleadoresRegistradosTotales", 1);
+                        }
+                    } else {
+                        // Si el documento no existe, crea uno con numeroDeEmpleadoresRegistrados = 1
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("numeroDeEmpleadoresRegistradosTotales", 1);
+                        reporteRef.document("Totales").set(data);
+                    }
+                } else {
+                    Log.d("Error obteniendo documentos:", String.valueOf(task.getException()));
+                }
+            }
+        });
     }
 
     private void actionContinue() {
@@ -127,6 +195,8 @@ public class SignUpC extends AppCompatActivity {
                         });
             }
         });
+        incrementarMensual();
+        incrementarTotal();
     }
 
 

@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,17 +19,24 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -213,6 +221,7 @@ public class NewJob extends AppCompatActivity implements EasyPermissions.Permiss
                     postNewJob(companyPublishId,title, description, levelEducation, experienceLab, habilities, salary, benefits, location, category,
                             typeJob, checkElevator, checkRamp);
 
+
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -221,6 +230,65 @@ public class NewJob extends AppCompatActivity implements EasyPermissions.Permiss
                     },2000);
                 }
 
+            }
+            CollectionReference reporteRef = mFirestore.collection("Reporte");
+            Calendar calendar = Calendar.getInstance();
+            String monthYear = new SimpleDateFormat("MMMM-yyyy", Locale.getDefault()).format(calendar.getTime());
+            private void incrementarMensual() {
+                reporteRef.document(monthYear).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                // Verifica si el campo "numeroDeEmpleoPublicados" existe
+                                if (document.contains("numeroDeEmpleoPublicados")) {
+                                    // Si el campo existe, obtén el número actual de empleos publicados y añade uno
+                                    long currentJobs = document.getLong("numeroDeEmpleoPublicados");
+                                    reporteRef.document(monthYear).update("numeroDeEmpleoPublicados", currentJobs + 1);
+                                } else {
+                                    // Si el campo no existe, crea uno con numeroDeEmpleoPublicados = 1
+                                    reporteRef.document(monthYear).update("numeroDeEmpleoPublicados", 1);
+                                }
+                            } else {
+                                // Si el documento no existe, crea uno con numeroDeEmpleoPublicados = 1
+                                Map<String, Object> data = new HashMap<>();
+                                data.put("numeroDeEmpleoPublicados", 1);
+                                reporteRef.document(monthYear).set(data);
+                            }
+                        } else {
+                            Log.d("Error obteniendo documentos:", String.valueOf(task.getException()));
+                        }
+                    }
+                });
+            }
+            private void incrementarTotal() {
+                reporteRef.document("Totales").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                // Verifica si el campo "numeroDeEmpleoPublicados" existe
+                                if (document.contains("numeroDeEmpleoPublicadosTotales")) {
+                                    // Si el campo existe, obtén el número actual de empleos publicados y añade uno
+                                    long currentJobs = document.getLong("numeroDeEmpleoPublicadosTotales");
+                                    reporteRef.document("Totales").update("numeroDeEmpleoPublicadosTotales", currentJobs + 1);
+                                } else {
+                                    // Si el campo no existe, crea uno con numeroDeEmpleoPublicados = 1
+                                    reporteRef.document("Totales").update("numeroDeEmpleoPublicadosTotales", 1);
+                                }
+                            } else {
+                                // Si el documento no existe, crea uno con numeroDeEmpleoPublicados = 1
+                                Map<String, Object> data = new HashMap<>();
+                                data.put("numeroDeEmpleoPublicadosTotales", 1);
+                                reporteRef.document("Totales").set(data);
+                            }
+                        } else {
+                            Log.d("Error obteniendo documentos:", String.valueOf(task.getException()));
+                        }
+                    }
+                });
             }
 
             private void postNewJob(String companyPublishId, String title, String description, String levelEducation, String experienceLab, String habilities, String salary, String benefits, String location, String category, String typeJob, boolean checkElevator, boolean checkRamp) {
@@ -244,11 +312,14 @@ public class NewJob extends AppCompatActivity implements EasyPermissions.Permiss
                 mFirestore.collection("TrabajosPublicados").add(jobPublish).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
+
                         String jobId = documentReference.getId();
                         Toast.makeText(getApplicationContext(), "Trabajo publicado correctamente", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), companyHome.class);
                         intent.putExtra("userID", userID);
                         intent.putExtra("jobID", jobId);
+                        incrementarMensual();
+                        incrementarTotal();
                         startActivity(intent);
                         finish();
 

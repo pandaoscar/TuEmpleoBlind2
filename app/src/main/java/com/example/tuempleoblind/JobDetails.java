@@ -4,27 +4,95 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Document;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class JobDetails extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
+
+    private void incrementarMensual() {
+        CollectionReference reporteRef = db.collection("Reporte");
+        Calendar calendar = Calendar.getInstance();
+        String monthYear = new SimpleDateFormat("MMMM-yyyy", Locale.getDefault()).format(calendar.getTime());
+        reporteRef.document(monthYear).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Verifica si el campo "numeroDeAspirantesPostulados" existe
+                        if (document.contains("numeroDeAspirantesPostulados")) {
+                            // Si el campo existe, obtén el número actual de empleos publicados y añade uno
+                            long currentJobs = document.getLong("numeroDeAspirantesPostulados");
+                            reporteRef.document(monthYear).update("numeroDeAspirantesPostulados", currentJobs + 1);
+                        } else {
+                            // Si el campo no existe, crea uno con numeroDeAspirantesPostulados = 1
+                            reporteRef.document(monthYear).update("numeroDeAspirantesPostulados", 1);
+                        }
+                    } else {
+                        // Si el documento no existe, crea uno con numeroDeAspirantesPostulados = 1
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("numeroDeAspirantesPostulados", 1);
+                        reporteRef.document(monthYear).set(data);
+                    }
+                } else {
+                    Log.d("Error obteniendo documentos:", String.valueOf(task.getException()));
+                }
+            }
+        });
+    }
+    private void incrementarTotal() {
+        CollectionReference reporteRef = db.collection("Reporte");
+        reporteRef.document("Totales").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Verifica si el campo "numeroDeAspirantesPostulados" existe
+                        if (document.contains("numeroDeAspirantesPostuladosTotales")) {
+                            // Si el campo existe, obtén el número actual de empleos publicados y añade uno
+                            long currentJobs = document.getLong("numeroDeAspirantesPostuladosTotales");
+                            reporteRef.document("Totales").update("numeroDeAspirantesPostuladosTotales", currentJobs + 1);
+                        } else {
+                            // Si el campo no existe, crea uno con numeroDeAspirantesPostulados = 1
+                            reporteRef.document("Totales").update("numeroDeAspirantesPostuladosTotales", 1);
+                        }
+                    } else {
+                        // Si el documento no existe, crea uno con numeroDeAspirantesPostulados = 1
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("numeroDeAspirantesPostuladosTotales", 1);
+                        reporteRef.document("Totales").set(data);
+                    }
+                } else {
+                    Log.d("Error obteniendo documentos:", String.valueOf(task.getException()));
+                }
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,5 +229,7 @@ public class JobDetails extends AppCompatActivity {
                 finish();
             }
         });
+        incrementarMensual();
+        incrementarTotal();
     }
 }
