@@ -275,12 +275,12 @@ public class EditDataProfileC extends AppCompatActivity implements EasyPermissio
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+            // default implementation ignored
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+            // default implementation ignored
         }
 
         @Override

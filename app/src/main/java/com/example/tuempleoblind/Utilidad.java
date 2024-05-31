@@ -1,15 +1,12 @@
 package com.example.tuempleoblind;
 
 import android.util.Log;
-
 import androidx.annotation.NonNull;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -17,6 +14,12 @@ import java.util.Locale;
 import java.util.Map;
 
 public class Utilidad {
+
+    // Constructor privado para evitar la instanciación de la clase
+    private Utilidad() {
+        throw new IllegalStateException("Clase utilitaria");
+    }
+
     public static void incrementarMensual(FirebaseFirestore firestore, String collectionName, String fieldName) {
         CollectionReference reporteRef = firestore.collection(collectionName);
         Calendar calendar = Calendar.getInstance();

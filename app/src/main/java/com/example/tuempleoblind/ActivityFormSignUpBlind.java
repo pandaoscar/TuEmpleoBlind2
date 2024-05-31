@@ -22,9 +22,9 @@ import java.util.Map;
 public class ActivityFormSignUpBlind extends AppCompatActivity {
 
     EditText campTextProfession;
-    EditText campTextAddress;
+        EditText campTextAddress;
     EditText campTextPhone;
-    EditText campTextAbilities;
+        EditText campTextAbilities;
     Spinner spinnerLevelBlind;
     Button btnContinue;
     Button btnBack;

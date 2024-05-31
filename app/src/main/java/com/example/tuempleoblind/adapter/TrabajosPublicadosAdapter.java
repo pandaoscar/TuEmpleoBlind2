@@ -44,14 +44,18 @@ public class TrabajosPublicadosAdapter extends FirestoreRecyclerAdapter<Trabajos
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull viewHolder holder, int position, @NonNull TrabajosPublicados TrabajosPublicados) { // Verificar si el ID del usuario asociado al trabajo coincide con el ID del usuario actual
+    protected void onBindViewHolder(@NonNull viewHolder holder, int position, @NonNull TrabajosPublicados trabajosPublicados) { // Verificar si el ID del usuario asociado al trabajo coincide con el ID del usuario actual
             DocumentSnapshot documentSnapshot= getSnapshots().getSnapshot(holder.getAdapterPosition());
             final String id=documentSnapshot.getId();
-            holder.title.setText(TrabajosPublicados.getTitle());
-            holder.category.setText(TrabajosPublicados.getCategory());
-            holder.salary.setText(TrabajosPublicados.getSalary());
-            holder.checkElevator.setText(TrabajosPublicados.getCheckElevator() ? "Sí" : "No");
-            holder.checkRamp.setText(TrabajosPublicados.getCheckRamp() ? "Sí" : "No");
+            holder.title.setText(trabajosPublicados.getTitle());
+            holder.category.setText(trabajosPublicados.getCategory());
+            holder.salary.setText(trabajosPublicados.getSalary());
+            // Si getCheckElevator devuelve Boolean
+            boolean checkElevator = trabajosPublicados.getCheckElevator() != null && trabajosPublicados.getCheckElevator();
+            holder.checkElevator.setText(checkElevator ? "Sí" : "No");
+            // Si getCheckRamp devuelve Boolean
+            boolean checkRamp = trabajosPublicados.getCheckRamp() != null && trabajosPublicados.getCheckRamp();
+            holder.checkRamp.setText(checkRamp ? "Sí" : "No");
             holder.btn_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -77,12 +81,12 @@ public class TrabajosPublicadosAdapter extends FirestoreRecyclerAdapter<Trabajos
         mFiestore.collection("TrabajosPublicados").document(id).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-
-
+                // default implementation ignored
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                // default implementation ignored
             }
         });
     }

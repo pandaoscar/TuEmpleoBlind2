@@ -31,9 +31,14 @@ public class JobsAvailableAdapter extends FirestoreRecyclerAdapter<JobsAvailable
         holder.title.setText(model.getTitle());
         holder.category.setText(model.getCategory());
         holder.salary.setText(model.getSalary());
-        holder.checkElevator.setText(model.getCheckElevator() ? "Sí" : "No");
-        holder.checkRamp.setText(model.getCheckRamp() ? "Sí" : "No");
-        holder.btn_view_more.setOnClickListener(new View.OnClickListener() {
+        // Si getCheckElevator devuelve Boolean
+        boolean checkElevator = model.getCheckElevator() != null && model.getCheckElevator();
+        holder.checkElevator.setText(checkElevator ? "Sí" : "No");
+
+        // Si getCheckRamp devuelve Boolean
+        boolean checkRamp = model.getCheckRamp() != null && model.getCheckRamp();
+        holder.checkRamp.setText(checkRamp ? "Sí" : "No");
+        holder.btnViewMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(listener!=null){
@@ -65,8 +70,12 @@ public class JobsAvailableAdapter extends FirestoreRecyclerAdapter<JobsAvailable
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView title, category, salary, checkElevator, checkRamp;
-        Button btn_view_more;
+        TextView title;
+        TextView category;
+        TextView salary;
+        TextView checkElevator;
+        TextView checkRamp;
+        Button btnViewMore;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             title=itemView.findViewById(R.id.JobsAvailableTitle);
@@ -74,7 +83,7 @@ public class JobsAvailableAdapter extends FirestoreRecyclerAdapter<JobsAvailable
             salary=itemView.findViewById(R.id.JobsAvailableSalary);
             checkElevator=itemView.findViewById(R.id.JobsAvailableElevator);
             checkRamp=itemView.findViewById(R.id.JobsAvailableRamp);
-            btn_view_more=itemView.findViewById(R.id.buttonViewMore);
+            btnViewMore =itemView.findViewById(R.id.buttonViewMore);
         }
     }
 }
