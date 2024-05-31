@@ -72,7 +72,7 @@ public class SignUpCForm extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         Toast.makeText(getApplicationContext(), "Datos del usuario guardados correctamente", Toast.LENGTH_SHORT).show();
                         // Continuar con la lógica de tu aplicación
-                        Intent intent = new Intent(getApplicationContext(), companyHome.class);
+                        Intent intent = new Intent(getApplicationContext(), CompanyHome.class);
                         startActivity(intent);
                     }
                 }).addOnFailureListener(new OnFailureListener() {

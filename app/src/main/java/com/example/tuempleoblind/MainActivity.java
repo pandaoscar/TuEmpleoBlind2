@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                                         DocumentSnapshot documentC = task.getResult();
                                         if (documentC.exists()) {
                                             // El usuario pertenece a la colección UsernameC
-                                            startActivity(new Intent(getApplicationContext(), companyHome.class));
+                                            startActivity(new Intent(getApplicationContext(), CompanyHome.class));
                                             finish(); // Finalizar la actividad de inicio de sesión
                                         } else {
                                             // No se encontró el usuario en ninguna colección

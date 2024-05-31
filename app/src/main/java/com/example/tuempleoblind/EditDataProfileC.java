@@ -211,7 +211,7 @@ public class EditDataProfileC extends AppCompatActivity implements EasyPermissio
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(getApplicationContext(), "Datos del usuario guardados correctamente", Toast.LENGTH_SHORT).show();
                         // Continuar con la lógica de tu aplicación
-                        Intent intent = new Intent(getApplicationContext(), companyHome.class);
+                        Intent intent = new Intent(getApplicationContext(), CompanyHome.class);
                         intent.putExtra("userID", userID);
                         startActivity(intent);
                         finish();

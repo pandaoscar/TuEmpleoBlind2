@@ -4,23 +4,24 @@ public class PostulatesToJob {
     String userBlindName;
     String userBlindPhone;
     String userEmail;
-    String Profesion,abilities;
+    String profesion;
+    String  abilities;
     public PostulatesToJob(){}
 
     public PostulatesToJob(String userBlindName, String userBlindPhone, String userEmail,String userProfesion, String userAbilitires) {
         this.userBlindName = userBlindName;
         this.userBlindPhone = userBlindPhone;
         this.userEmail = userEmail;
-        this.Profesion = userProfesion;
+        this.profesion = userProfesion;
         this.abilities = userAbilitires;
     }
 
     public String getProfesion() {
-        return Profesion;
+        return profesion;
     }
 
     public void setProfesion(String profesion) {
-        Profesion = profesion;
+        this.profesion = profesion;
     }
 
     public String getAbilities() {

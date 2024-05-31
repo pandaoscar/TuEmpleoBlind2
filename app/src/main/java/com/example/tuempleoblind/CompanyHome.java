@@ -6,10 +6,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.tuempleoblind.databinding.ActivityCompanyHomeBinding;
 
-public class companyHome extends AppCompatActivity {
+public class CompanyHome extends AppCompatActivity {
     private ActivityCompanyHomeBinding binding;
 
     @Override
@@ -23,7 +24,7 @@ public class companyHome extends AppCompatActivity {
 
         String framentDeseado = getIntent().getStringExtra("keyword");
         if (framentDeseado != null){
-            NavigationManager.navigateToDestinationC(companyHome.this, framentDeseado, getSupportFragmentManager(), new HomeCFragment());
+            NavigationManager.navigateToDestinationC(CompanyHome.this, framentDeseado, getSupportFragmentManager(), new HomeCFragment());
         }
 
         binding.navViewC.setOnItemSelectedListener(item -> {
@@ -38,7 +39,7 @@ public class companyHome extends AppCompatActivity {
                         replaceFragment(new ConfigCFragment());
                     }
                     else {
-                        System.out.println("joa mani, no se pudo");
+                        Log.d("TAG", "No se pudo");
                     }
                 }
             }

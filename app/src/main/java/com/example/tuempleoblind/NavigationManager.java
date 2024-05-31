@@ -19,8 +19,8 @@ import java.text.Normalizer;
 public class NavigationManager extends AppCompatActivity {
     public static void navigateToDestinationC(Context context, String keyword, FragmentManager fragmentManager, Fragment fragmentActual) {
         Log.d("TAG", "Clase nombre " + context.getClass().getSimpleName());
-        if (!context.getClass().getSimpleName().equals("companyHome")){
-            Intent intent = new Intent(context, companyHome.class);
+        if (!context.getClass().getSimpleName().equals("CompanyHome")){
+            Intent intent = new Intent(context, CompanyHome.class);
 
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Esto limpiará la pila de actividades y creará una nueva tarea
             intent.putExtra("keyword", keyword);
@@ -36,7 +36,7 @@ public class NavigationManager extends AppCompatActivity {
                     replaceFragmentC(new ConfigCFragment(), fragmentManager);
                 }else{
                     if (ifNavigation(keyword, "menu principal") && !fragmentActual.getClass().getSimpleName().equalsIgnoreCase("HomeCFragment") ) {
-                        Intent intent = new Intent(context, companyHome.class);
+                        Intent intent = new Intent(context, CompanyHome.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Esto limpiará la pila de actividades y creará una nueva tarea
                         context.startActivity(intent);
                     } else if (ifNavigation(keyword, "nuevo trabajo")||(ifNavigation(keyword, "nuevo empleo") )&& !context.getClass().getSimpleName().equalsIgnoreCase("NewJob")) {

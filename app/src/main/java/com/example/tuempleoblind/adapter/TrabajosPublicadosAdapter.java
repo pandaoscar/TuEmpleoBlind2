@@ -1,28 +1,20 @@
 package com.example.tuempleoblind.adapter;
-import android.app.Activity;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.tuempleoblind.HomeCFragment;
-import com.example.tuempleoblind.NewJob;
 import com.example.tuempleoblind.R;
-import com.example.tuempleoblind.ViewPostulates;
 import com.example.tuempleoblind.model.TrabajosPublicados;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -56,14 +48,14 @@ public class TrabajosPublicadosAdapter extends FirestoreRecyclerAdapter<Trabajos
             // Si getCheckRamp devuelve Boolean
             boolean checkRamp = trabajosPublicados.getCheckRamp() != null && trabajosPublicados.getCheckRamp();
             holder.checkRamp.setText(checkRamp ? "Sí" : "No");
-            holder.btn_delete.setOnClickListener(new View.OnClickListener() {
+            holder.btnDeleteJob.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     deleteJob(id);
 
                 }
             });
-            holder.btn_viewPostulates.setOnClickListener(new View.OnClickListener() {
+            holder.btnViewPostulates.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if(listener!=null){
@@ -112,8 +104,13 @@ public class TrabajosPublicadosAdapter extends FirestoreRecyclerAdapter<Trabajos
 
     public class viewHolder extends RecyclerView.ViewHolder {
 
-        TextView title, category, salary, checkElevator, checkRamp;
-        Button btn_delete,btn_viewPostulates;
+        TextView title;
+        TextView category;
+        TextView salary;
+        TextView checkElevator;
+        TextView checkRamp;
+        Button btnDeleteJob;
+        Button btnViewPostulates;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             title=itemView.findViewById(R.id.RecycleViewJobsTitle);
@@ -121,8 +118,8 @@ public class TrabajosPublicadosAdapter extends FirestoreRecyclerAdapter<Trabajos
             salary=itemView.findViewById(R.id.RecycleViewJobsSalary);
             checkElevator=itemView.findViewById(R.id.RecycleViewJobsElevator);
             checkRamp=itemView.findViewById(R.id.RecycleViewJobsRamp);
-            btn_delete=itemView.findViewById(R.id.buttonDeleteJob);
-            btn_viewPostulates=itemView.findViewById(R.id.buttonViewPostulatesToJob);
+            btnDeleteJob =itemView.findViewById(R.id.buttonDeleteJob);
+            btnViewPostulates =itemView.findViewById(R.id.buttonViewPostulatesToJob);
 
         }
     }

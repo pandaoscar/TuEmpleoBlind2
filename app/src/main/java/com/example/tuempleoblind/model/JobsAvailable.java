@@ -1,9 +1,18 @@
 package com.example.tuempleoblind.model;
 
 public class JobsAvailable {
-    String title, category, salary, companyPublishId, typeJob,description,
-    levelEducation,experienceLab,location, habilities;
-    Boolean checkRamp, checkElevator;
+    String title;
+    String category;
+    String salary;
+    String companyPublishId;
+    String typeJob;
+    String description;
+    String levelEducation;
+    String experienceLab;
+    String location;
+    String habilities;
+    Boolean checkRamp;
+    Boolean checkElevator;
     public JobsAvailable(){}
 
     public String getDescription() {

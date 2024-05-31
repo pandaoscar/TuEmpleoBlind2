@@ -59,7 +59,7 @@
             android:name=".NewJob"
             android:exported="false" />
         <activity
-            android:name=".companyHome"
+            android:name=".CompanyHome"
             android:exported="false" />
         <activity
             android:name=".SignUpCForm"

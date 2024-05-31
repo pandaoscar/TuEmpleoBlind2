@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -19,28 +18,20 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 
-import io.grpc.okhttp.internal.Util;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class NewJob extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
@@ -283,7 +274,7 @@ public class NewJob extends AppCompatActivity implements EasyPermissions.Permiss
 
                         String jobId = documentReference.getId();
                         Toast.makeText(getApplicationContext(), "Trabajo publicado correctamente", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), companyHome.class);
+                        Intent intent = new Intent(getApplicationContext(), CompanyHome.class);
                         intent.putExtra("userID", userID);
                         intent.putExtra("jobID", jobId);
                         Utilidad.incrementarMensual(mFirestore,COLLECTION_REPORTE,NUMERO_DE_EMPLOS_PUBLICADOS);
