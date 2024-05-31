@@ -3,8 +3,12 @@ package com.example.tuempleoblind.model;
 import android.text.BoringLayout;
 
 public class TrabajosPublicados {
-    String title, category, salary, companyPublishId;
-    Boolean checkRamp, checkElevator;
+    String title;
+    String category;
+    String salary;
+    String companyPublishId;
+    Boolean checkRamp;
+    Boolean checkElevator;
     public TrabajosPublicados(){}
 
     public TrabajosPublicados(String title, String category, String salary,String companyPublishId ,Boolean checkRamp, Boolean checkElevator) {

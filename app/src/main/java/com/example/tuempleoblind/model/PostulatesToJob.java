@@ -1,23 +1,26 @@
 package com.example.tuempleoblind.model;
 
 public class PostulatesToJob {
-    String userBlindName, userBlindPhone,userEmail,Profesión,abilities;
+    String userBlindName;
+    String userBlindPhone;
+    String userEmail;
+    String Profesion,abilities;
     public PostulatesToJob(){}
 
-    public PostulatesToJob(String userBlindName, String userBlindPhone, String userEmail,String userProfesión, String userAbilitires) {
+    public PostulatesToJob(String userBlindName, String userBlindPhone, String userEmail,String userProfesion, String userAbilitires) {
         this.userBlindName = userBlindName;
         this.userBlindPhone = userBlindPhone;
         this.userEmail = userEmail;
-        this.Profesión = userProfesión;
+        this.Profesion = userProfesion;
         this.abilities = userAbilitires;
     }
 
-    public String getProfesión() {
-        return Profesión;
+    public String getProfesion() {
+        return Profesion;
     }
 
-    public void setProfesión(String profesión) {
-        Profesión = profesión;
+    public void setProfesion(String profesion) {
+        Profesion = profesion;
     }
 
     public String getAbilities() {

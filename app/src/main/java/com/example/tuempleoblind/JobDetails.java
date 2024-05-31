@@ -125,14 +125,14 @@ public class JobDetails extends AppCompatActivity {
                         if(documentSnapshot.exists()){
                             String userBlindPhone=documentSnapshot.getString("Numero de Teléfono");
                             String userBlindName=documentSnapshot.getString("Nombre");
-                            String userBlindProfesion=documentSnapshot.getString("Profesión");
+                            String userBlindProfesion=documentSnapshot.getString("Profesion");
                             String userBlindAbilities=documentSnapshot.getString("abilities");
 
                             Map<String, Object> userBlindData = new HashMap<>();
                             userBlindData.put("userBlindName",userBlindName);
                             userBlindData.put("userEmail", userBlindEmail);
                             userBlindData.put("userBlindPhone", userBlindPhone);
-                            userBlindData.put("Profesión",userBlindProfesion);
+                            userBlindData.put("Profesion",userBlindProfesion);
                             userBlindData.put("abilities",userBlindAbilities);
 
                             // Añadir el ID del usuario a la subcolección "postulantes" del documento del empleo

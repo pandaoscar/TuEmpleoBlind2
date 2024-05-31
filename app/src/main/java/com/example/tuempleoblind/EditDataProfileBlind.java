@@ -39,7 +39,7 @@ public class EditDataProfileBlind extends AppCompatActivity implements EasyPermi
     private static final String FIELD_NAME = "Nombre";
     private static final String FIELD_USERNAME = "Usuario";
     private static final String FIELD_EMAIL = "Correo";
-    private static final String FIELD_PROFESSION = "Profesión";
+    private static final String FIELD_PROFESSION = "Profesion";
     private static final String FIELD_ADDRESS = "Dirección";
     private static final String FIELD_PHONE = "Numero de Teléfono";
     private static final String FIELD_ABILITIES = "abilities";
