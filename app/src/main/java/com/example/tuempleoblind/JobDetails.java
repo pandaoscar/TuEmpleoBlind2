@@ -35,7 +35,7 @@ public class JobDetails extends AppCompatActivity {
         setContentView(R.layout.activity_job_details);
         if (getIntent().hasExtra("jobID")) {
             // Si se ha pasado el extra "jobID", obtener su valor
-            String jobID = getIntent().getStringExtra("jobID");
+            //  String jobID = getIntent().getStringExtra("jobID");
 
             // Aquí puedes hacer lo que necesites con el ID del trabajo (jobID)
             // Por ejemplo, puedes utilizarlo para obtener los detalles del trabajo desde Firestore
@@ -127,14 +127,14 @@ public class JobDetails extends AppCompatActivity {
                         if(documentSnapshot.exists()){
                             String userBlindPhone=documentSnapshot.getString("Numero de Teléfono");
                             String userBlindName=documentSnapshot.getString("Nombre");
-                            String userBlindProfesión=documentSnapshot.getString("Profesión");
+                            String userBlindProfesion=documentSnapshot.getString("Profesión");
                             String userBlindAbilities=documentSnapshot.getString("abilities");
 
                             Map<String, Object> userBlindData = new HashMap<>();
                             userBlindData.put("userBlindName",userBlindName);
                             userBlindData.put("userEmail", userBlindEmail);
                             userBlindData.put("userBlindPhone", userBlindPhone);
-                            userBlindData.put("Profesión",userBlindProfesión);
+                            userBlindData.put("Profesión",userBlindProfesion);
                             userBlindData.put("abilities",userBlindAbilities);
 
                             // Añadir el ID del usuario a la subcolección "postulantes" del documento del empleo

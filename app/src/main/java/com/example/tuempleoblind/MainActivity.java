@@ -22,7 +22,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btnFindJob, btnFindHire, btnLogIn,btnTalkback;
+    Button btnFindJob;
+    Button btnFindHire;
+    Button btnLogIn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
                 startActivity(intent);
                 // Muestra un mensaje de éxito
-                Toast.makeText(this, "TalkBack activado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Por favor activa el TalkBakc", Toast.LENGTH_SHORT).show();
             } else {
                 // Muestra un mensaje indicando que el TalkBack ya está activado
                 Toast.makeText(this, "TalkBack ya está activado", Toast.LENGTH_SHORT).show();

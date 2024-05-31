@@ -55,11 +55,21 @@ public class NewJob extends AppCompatActivity implements EasyPermissions.Permiss
     FloatingActionButton microComand;
     private static final int CODIGO_RECONOCIMIENTO_VOZ = 1;
     private static final int PERMISSION_REQUEST_CODE = 123;
-    Spinner spinnerCategory, spinnerTypeJob;
-    EditText campTextTitle, campTextMultiDescription, campTextLevelEducation, campTextExperienceLab, campTextHabilities, campTextSalary,
-            campTextBenefits, campTextLocation;
+    Spinner spinnerCategory;
+    Spinner spinnerTypeJob;
+    EditText campTextTitle;
+    EditText campTextMultiDescription;
+    EditText campTextLevelEducation;
+    EditText campTextExperienceLab;
+    EditText campTextHabilities;
+    EditText campTextSalary;
+    EditText campTextBenefits;
+    EditText campTextLocation;
 
-    RadioButton radioButtonTrueElevator, radioButtonTrueRamp, radioButtonFalseElevator, radioButtonFalseRamp;
+    RadioButton radioButtonTrueElevator;
+    RadioButton radioButtonTrueRamp;
+    RadioButton radioButtonFalseElevator;
+    RadioButton radioButtonFalseRamp;
 
 
     @Override
@@ -195,7 +205,17 @@ public class NewJob extends AppCompatActivity implements EasyPermissions.Permiss
                 ProgressDialog progressDialog = ProgressDialog.show(NewJob.this, "", "Registrando usuario...", true);
                 progressDialog.setCancelable(false);
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                final String companyPublishId,title, description, levelEducation, experienceLab, habilities, salary, benefits, location, category, typeJob;
+                final String companyPublishId;
+                final String title;
+                final String description;
+                final String levelEducation;
+                final String experienceLab;
+                final String habilities;
+                final String salary;
+                final String benefits;
+                final String location;
+                final String category;
+                final String typeJob;
                 companyPublishId=currentUser.getUid().toString();
                 title = campTextTitle.getText().toString();
                 description = campTextMultiDescription.getText().toString();

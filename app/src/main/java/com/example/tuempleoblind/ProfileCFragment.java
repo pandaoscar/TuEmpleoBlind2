@@ -30,9 +30,12 @@ public class ProfileCFragment extends Fragment implements EasyPermissions.Permis
     private static final int CODIGO_RECONOCIMIENTO_VOZ = 1;
     private static final int PERMISSION_REQUEST_CODE = 123;
 
-    Button btn_exit;
-    Button btn_dataPerfil, btnReport;
-    Button btn_about, btn_security;
+    Button btnExitC;
+    Button btnDataPerfilC;
+    Button btnReportC;
+
+    Button btnAboutC;
+    Button btnSecurityC;
     FloatingActionButton microComand;
 
     public ProfileCFragment() {
@@ -47,11 +50,11 @@ public class ProfileCFragment extends Fragment implements EasyPermissions.Permis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile_c, container, false);
-        btn_exit = view.findViewById(R.id.signOff);
-        btn_dataPerfil = view.findViewById(R.id.buttonDataProfile);
-        btn_security = view.findViewById(R.id.buttonsecurity);
-        btn_about = view.findViewById(R.id.buttonabout);
-        btnReport = view.findViewById(R.id.buttonReport);
+        btnExitC = view.findViewById(R.id.signOff);
+        btnDataPerfilC = view.findViewById(R.id.buttonDataProfile);
+        btnSecurityC = view.findViewById(R.id.buttonsecurity);
+        btnAboutC = view.findViewById(R.id.buttonabout);
+        btnReportC = view.findViewById(R.id.buttonReport);
         microComand = view.findViewById(R.id.floatingButtonComands);
 
         microComand.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +64,7 @@ public class ProfileCFragment extends Fragment implements EasyPermissions.Permis
             }
         });
 
-        btn_about.setOnClickListener(new View.OnClickListener() {
+        btnAboutC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), AboutActivity.class);
@@ -69,7 +72,7 @@ public class ProfileCFragment extends Fragment implements EasyPermissions.Permis
             }
         });
 
-        btn_security.setOnClickListener(new View.OnClickListener() {
+        btnSecurityC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), PoliticalSecurityActivity.class);
@@ -77,21 +80,21 @@ public class ProfileCFragment extends Fragment implements EasyPermissions.Permis
             }
         });
 
-        btn_dataPerfil.setOnClickListener(new View.OnClickListener() {
+        btnDataPerfilC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dataProfile();
             }
         });
 
-        btnReport.setOnClickListener(new View.OnClickListener() {
+        btnReportC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dataReport();
             }
         });
 
-        btn_exit.setOnClickListener(new View.OnClickListener() {
+        btnExitC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().stopService(new Intent(getActivity(), NewJobPublishedNotification.class));

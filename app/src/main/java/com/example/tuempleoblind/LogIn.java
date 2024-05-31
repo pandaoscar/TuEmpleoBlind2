@@ -24,8 +24,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class LogIn extends AppCompatActivity {
 
     FirebaseAuth mAuth;
-    EditText campTextEmail, campTextPassword;
-    Button btnConfirm, btnBack;
+    EditText campTextEmail;
+    EditText campTextPassword;
+    Button btnConfirm;
+    Button btnBack;
 
 
     @Override
@@ -60,63 +62,52 @@ public class LogIn extends AppCompatActivity {
 
     private void login(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // El inicio de sesión fue exitoso
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            // Obtener una instancia de Firestore
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                            // Obtener referencias a los documentos en ambas colecciones
-                            DocumentReference docRefUsernameBlind = db.collection("UsernameBlind").document(user.getUid());
-                            DocumentReference docRefUsernameC = db.collection("UsernameC").document(user.getUid());
-
-                            // Verificar si existe el documento en UsernameBlind
-                            docRefUsernameBlind.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        DocumentSnapshot documentBlind = task.getResult();
-                                        if (documentBlind.exists()) {
-                                            // El usuario pertenece a la colección UsernameBlind
-                                            startActivity(new Intent(getApplicationContext(), HomePageBlind.class));
-                                            finish(); // Finalizar la actividad de inicio de sesión
-                                        } else {
-                                            // Verificar si existe el documento en UsernameC
-                                            docRefUsernameC.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                    if (task.isSuccessful()) {
-                                                        DocumentSnapshot documentC = task.getResult();
-                                                        if (documentC.exists()) {
-                                                            // El usuario pertenece a la colección UsernameC
-                                                            startActivity(new Intent(getApplicationContext(), companyHome.class));
-                                                            finish(); // Finalizar la actividad de inicio de sesión
-                                                        } else {
-                                                            // No se encontró el usuario en ninguna colección
-                                                            Toast.makeText(getApplicationContext(), "Usuario no encontrado en ninguna colección.", Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    } else {
-                                                        // Error al obtener el documento de UsernameC
-                                                        Toast.makeText(getApplicationContext(), "Error: No se pudo obtener el documento del usuario de UsernameC.", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    } else {
-                                        // Error al obtener el documento de UsernameBlind
-                                        Toast.makeText(getApplicationContext(), "Error: No se pudo obtener el documento del usuario de UsernameBlind.", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                        } else {
-                            // El inicio de sesión falló
-                            Toast.makeText(getApplicationContext(), "Inicio de sesión fallido.", Toast.LENGTH_SHORT).show();
-                        }
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        DocumentReference docRefUsernameBlind = db.collection("UsernameBlind").document(user.getUid());
+                        DocumentReference docRefUsernameC = db.collection("UsernameC").document(user.getUid());
+                        checkUserCollection(docRefUsernameBlind, docRefUsernameC);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Inicio de sesión fallido.", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void checkUserCollection(DocumentReference docRefUsernameBlind, DocumentReference docRefUsernameC) {
+        docRefUsernameBlind.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot documentBlind = task.getResult();
+                if (documentBlind.exists()) {
+                    navigateToHomePage(HomePageBlind.class);
+                } else {
+                    checkCompanyCollection(docRefUsernameC);
+                }
+            } else {
+                Toast.makeText(getApplicationContext(), "Error: No se pudo obtener el documento del usuario de UsernameBlind.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void checkCompanyCollection(DocumentReference docRefUsernameC) {
+        docRefUsernameC.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot documentC = task.getResult();
+                if (documentC.exists()) {
+                    navigateToHomePage(companyHome.class);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Usuario no encontrado en ninguna colección.", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getApplicationContext(), "Error: No se pudo obtener el documento del usuario de UsernameC.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void navigateToHomePage(Class<?> homePageClass) {
+        startActivity(new Intent(getApplicationContext(), homePageClass));
+        finish();
     }
 
 

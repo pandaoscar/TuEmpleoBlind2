@@ -18,8 +18,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SignUpCForm extends AppCompatActivity {
-    EditText campTextNameCompany, campTextTypeCompany, campTextLocation, campTextWebPag;
-    Button btnContinue, btnBack;
+    EditText campTextNameCompany;
+    EditText campTextTypeCompany;
+    EditText campTextLocation;
+    EditText campTextWebPag;
+    Button btnContinue;
+    Button btnBack;
     private FirebaseFirestore mFirestore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,16 +45,16 @@ public class SignUpCForm extends AppCompatActivity {
         btnContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String NameCompany = campTextNameCompany.getText().toString();
-                String TypeCompany = campTextTypeCompany.getText().toString();
-                String Location = campTextLocation.getText().toString();
-                String WebPag = campTextWebPag.getText().toString();
+                String nameCompany = campTextNameCompany.getText().toString();
+                String typeCompany = campTextTypeCompany.getText().toString();
+                String locationCompany = campTextLocation.getText().toString();
+                String webPagCompany = campTextWebPag.getText().toString();
 
-                if(NameCompany.isEmpty() || TypeCompany.isEmpty() || Location.isEmpty()){
+                if(nameCompany.isEmpty() || typeCompany.isEmpty() || locationCompany.isEmpty()){
                     Toast.makeText(getApplicationContext(), "Completa todos los datos correspondientes", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    postUsernameBlind(NameCompany, TypeCompany, Location, WebPag);
+                    postUsernameBlind(nameCompany, typeCompany, locationCompany, webPagCompany);
                 }
             }
 

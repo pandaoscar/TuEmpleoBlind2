@@ -12,9 +12,9 @@ import com.airbnb.lottie.LottieAnimationView;
 
 public class SplashScreen extends AppCompatActivity {
     LottieAnimationView lottie;
-    TextView tx_animation1;
-    TextView tx_animation2;
-    TextView tx_animation3;
+    TextView txAnimation1;
+    TextView txAnimation2;
+    TextView txAnimation3;
     RelativeLayout animationTop;
     RelativeLayout animationBottom;
 
@@ -28,14 +28,14 @@ public class SplashScreen extends AppCompatActivity {
                 .withEndAction(() -> lottie.animate().translationY(-2000).setDuration(500).setStartDelay(500));
         lottie.animate().scaleX(0.5f).scaleY(0.5f).setDuration(500).setStartDelay(900);
 
-        tx_animation1=findViewById(R.id.text_animation1);
-        tx_animation1.animate().translationY(-2000).setDuration(500).setStartDelay(1900);
+        txAnimation1 =findViewById(R.id.text_animation1);
+        txAnimation1.animate().translationY(-2000).setDuration(500).setStartDelay(1900);
 
-        tx_animation2=findViewById(R.id.text_animation2);
-        tx_animation2.animate().translationY(2000).setDuration(500).setStartDelay(1900);
+        txAnimation2 =findViewById(R.id.text_animation2);
+        txAnimation2.animate().translationY(2000).setDuration(500).setStartDelay(1900);
 
-        tx_animation3=findViewById(R.id.text_animation3);
-        tx_animation3.animate().translationY(2000).setDuration(500).setStartDelay(1900);
+        txAnimation3 =findViewById(R.id.text_animation3);
+        txAnimation3.animate().translationY(2000).setDuration(500).setStartDelay(1900);
 
         animationTop = findViewById(R.id.animation_top);
         animationTop.animate().translationY(-2000).setDuration(500).setStartDelay(1900);

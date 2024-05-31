@@ -62,7 +62,6 @@ public class NewJobPublishedNotification extends Service {
                 for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
                     switch (dc.getType()) {
                         case ADDED:
-                            DocumentSnapshot addedDoc = dc.getDocument();
                             // Obtener el ID del usuario actualmente autenticado
                             // Verificar si el usuario pertenece a la colección "UsernameC"
                             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
