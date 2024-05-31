@@ -110,7 +110,6 @@ public class DowloadReportActivity extends AppCompatActivity {
         File prueba;
         int con = 0;
         String path = "Reporte.pdf";
-        boolean aux = false;
         while(file == null){
             prueba = new File(pdfPath, path);
             if(!prueba.exists()){
