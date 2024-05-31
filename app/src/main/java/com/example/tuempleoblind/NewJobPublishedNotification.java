@@ -57,7 +57,6 @@ public class NewJobPublishedNotification extends Service {
                     Log.w(TAG, "Listen failed.", e);
                     return;
                 }
-                System.out.println("Aquiiiiiiiiiiiiiii");
 
                 for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
                     switch (dc.getType()) {
@@ -136,7 +135,7 @@ public class NewJobPublishedNotification extends Service {
                 .setSmallIcon(R.drawable.icon_search_user)
                 .setContentTitle("Nuevo Trabajo publicado!")
                 .setContentText("Esta es una prueba de notificación")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent);
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(getApplicationContext());
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
