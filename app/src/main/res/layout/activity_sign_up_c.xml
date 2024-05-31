@@ -127,16 +127,15 @@
                     android:id="@+id/editTextLocationEditDataC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
                     android:layout_marginTop="16dp"
                     android:autofillHints="name"
                     android:ems="10"
                     android:hint="@string/sign_up_c_password"
-                    android:inputType="text"
+                    android:inputType="textPassword"
                     android:textSize="24sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView3"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="12dp"/>
+                    app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
                 <TextView
                     android:id="@+id/textView4"
@@ -155,15 +154,14 @@
                     android:id="@+id/editTextPasswordSignUpC2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
                     android:autofillHints="name"
                     android:ems="10"
                     android:hint="@string/sign_up_c_password2"
-                    android:inputType="text"
+                    android:inputType="textPassword"
                     android:textSize="24sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView4"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="12dp"
                     tools:ignore="TextFields" />
 
                     <FrameLayout
