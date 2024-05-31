@@ -10,6 +10,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.tuempleoblind.databinding.ActivityHomePageBlindBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -45,7 +46,7 @@ public class HomePageBlind extends AppCompatActivity {
                     else {
                         if(item.getItemId()==R.id.artificialIntelligence){
                             replaceFragment(new ArtificialIntelligence());
-                        }else{ System.out.println("joa mani, no se pudo");}
+                        }else{ Log.e("TAG", "No se pudo");}
 
                     }
                 }

@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class EditDataProfileC extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
+    private static final String FIELD_COLLECTION_C="UsernameC";
     private static final String FIELD_NAME_C = "Nombre";
     private static final String FIELD_USERNAME_C = "Usuario";
     private static final String FIELD_EMAIL_C = "Correo Electronico";
@@ -203,7 +204,7 @@ public class EditDataProfileC extends AppCompatActivity implements EasyPermissio
         map.put(FIELD_COMPANY_TYPE_C, typeCompany);
         map.put(FIELD_LOCATION_C, location);
 
-        mFirestore.collection("UsernameC").document(userID)
+        mFirestore.collection(FIELD_COLLECTION_C).document(userID)
                 .set(map)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -228,7 +229,7 @@ public class EditDataProfileC extends AppCompatActivity implements EasyPermissio
     private void obtenerValoresFirestore() {
         // Obtener el documento deseado de Firestore
         FirebaseUser user = mUser.getCurrentUser();
-        DocumentReference docRef = mFirestore.collection("UsernameC").document(user.getUid());
+        DocumentReference docRef = mFirestore.collection(FIELD_COLLECTION_C).document(user.getUid());
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -301,7 +302,7 @@ public class EditDataProfileC extends AppCompatActivity implements EasyPermissio
 
 
         // Obtener los valores almacenados en Firestore
-        DocumentReference docRef = mFirestore.collection("UsernameC").document(mUser.getUid());
+        DocumentReference docRef = mFirestore.collection(FIELD_COLLECTION_C).document(mUser.getUid());
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -339,7 +340,5 @@ public class EditDataProfileC extends AppCompatActivity implements EasyPermissio
             }
         });
     }
-
-
 
 }

@@ -228,7 +228,8 @@ public class NewJob extends AppCompatActivity implements EasyPermissions.Permiss
                 category = spinnerCategory.getSelectedItem().toString();
                 typeJob = spinnerTypeJob.getSelectedItem().toString();
 
-                boolean checkElevator = false, checkRamp = false;
+                boolean checkElevator = false;
+                boolean checkRamp = false;
                 if(radioButtonTrueElevator.isChecked()){
                     checkElevator = true;
                     progressDialog.dismiss();
@@ -256,65 +257,6 @@ public class NewJob extends AppCompatActivity implements EasyPermissions.Permiss
                     },2000);
                 }
 
-            }
-            CollectionReference reporteRef = mFirestore.collection("Reporte");
-            Calendar calendar = Calendar.getInstance();
-            String monthYear = new SimpleDateFormat("MMMM-yyyy", Locale.getDefault()).format(calendar.getTime());
-            private void incrementarMensual() {
-                reporteRef.document(monthYear).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                // Verifica si el campo "numeroDeEmpleoPublicados" existe
-                                if (document.contains("numeroDeEmpleoPublicados")) {
-                                    // Si el campo existe, obtén el número actual de empleos publicados y añade uno
-                                    long currentJobs = document.getLong("numeroDeEmpleoPublicados");
-                                    reporteRef.document(monthYear).update("numeroDeEmpleoPublicados", currentJobs + 1);
-                                } else {
-                                    // Si el campo no existe, crea uno con numeroDeEmpleoPublicados = 1
-                                    reporteRef.document(monthYear).update("numeroDeEmpleoPublicados", 1);
-                                }
-                            } else {
-                                // Si el documento no existe, crea uno con numeroDeEmpleoPublicados = 1
-                                Map<String, Object> data = new HashMap<>();
-                                data.put("numeroDeEmpleoPublicados", 1);
-                                reporteRef.document(monthYear).set(data);
-                            }
-                        } else {
-                            Log.d("Error obteniendo documentos:", String.valueOf(task.getException()));
-                        }
-                    }
-                });
-            }
-            private void incrementarTotal() {
-                reporteRef.document("Totales").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                // Verifica si el campo "numeroDeEmpleoPublicados" existe
-                                if (document.contains("numeroDeEmpleoPublicadosTotales")) {
-                                    // Si el campo existe, obtén el número actual de empleos publicados y añade uno
-                                    long currentJobs = document.getLong("numeroDeEmpleoPublicadosTotales");
-                                    reporteRef.document("Totales").update("numeroDeEmpleoPublicadosTotales", currentJobs + 1);
-                                } else {
-                                    // Si el campo no existe, crea uno con numeroDeEmpleoPublicados = 1
-                                    reporteRef.document("Totales").update("numeroDeEmpleoPublicadosTotales", 1);
-                                }
-                            } else {
-                                // Si el documento no existe, crea uno con numeroDeEmpleoPublicados = 1
-                                Map<String, Object> data = new HashMap<>();
-                                data.put("numeroDeEmpleoPublicadosTotales", 1);
-                                reporteRef.document("Totales").set(data);
-                            }
-                        } else {
-                            Log.d("Error obteniendo documentos:", String.valueOf(task.getException()));
-                        }
-                    }
-                });
             }
 
             private void postNewJob(String companyPublishId, String title, String description, String levelEducation, String experienceLab, String habilities, String salary, String benefits, String location, String category, String typeJob, boolean checkElevator, boolean checkRamp) {

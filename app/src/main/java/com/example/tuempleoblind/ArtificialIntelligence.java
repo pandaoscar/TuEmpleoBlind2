@@ -16,7 +16,7 @@ import android.widget.Button;
  * create an instance of this fragment.
  */
 public class ArtificialIntelligence extends Fragment {
-    Button IaBtn;
+    Button iaBtn;
 
     // Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -64,8 +64,8 @@ public class ArtificialIntelligence extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_artificial_intelligence, container, false);
-        IaBtn=view.findViewById(R.id.buttonStartIa);
-        IaBtn.setOnClickListener(new View.OnClickListener() {
+        iaBtn =view.findViewById(R.id.buttonStartIa);
+        iaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), ComputerVision.class); // Reemplaza "NuevoActivity" con el nombre de tu Activity de destino

@@ -3,6 +3,7 @@ package com.example.tuempleoblind;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,7 +18,7 @@ import java.text.Normalizer;
 
 public class NavigationManager extends AppCompatActivity {
     public static void navigateToDestinationC(Context context, String keyword, FragmentManager fragmentManager, Fragment fragmentActual) {
-        System.out.println("Clase nombre "+context.getClass().getSimpleName());
+        Log.d("TAG", "Clase nombre " + context.getClass().getSimpleName());
         if (!context.getClass().getSimpleName().equals("companyHome")){
             Intent intent = new Intent(context, companyHome.class);
 
@@ -27,11 +28,11 @@ public class NavigationManager extends AppCompatActivity {
 
         }else{
             if (ifNavigation(keyword, "perfil") ){
-                System.out.println(R.id.profileCFragment);
+                Log.d("TAG", "ProfileCFragment ID: " + R.id.profileCFragment);
                 replaceFragmentC(new ProfileCFragment(), fragmentManager);
             }else{
                 if (ifNavigation(keyword, "normativa") && !fragmentActual.getClass().getSimpleName().equalsIgnoreCase("ConfigCFragment")){
-                    System.out.println(R.id.profileCFragment);
+                    Log.d("TAG", "ProfileCFragment ID: " + R.id.profileCFragment);
                     replaceFragmentC(new ConfigCFragment(), fragmentManager);
                 }else{
                     if (ifNavigation(keyword, "menu principal") && !fragmentActual.getClass().getSimpleName().equalsIgnoreCase("HomeCFragment") ) {
@@ -137,8 +138,7 @@ public class NavigationManager extends AppCompatActivity {
 
     public static String eliminarTildes(String cadena) {
         // Normalizar la cadena y eliminar las tildes
-        String cadenaNormalizada = Normalizer.normalize(cadena, Normalizer.Form.NFD)
+        return Normalizer.normalize(cadena, Normalizer.Form.NFD)
                 .replaceAll("[^\\p{ASCII}]", "");
-        return cadenaNormalizada;
     }
 }

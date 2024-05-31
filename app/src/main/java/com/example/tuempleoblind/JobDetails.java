@@ -35,8 +35,6 @@ public class JobDetails extends AppCompatActivity {
         setContentView(R.layout.activity_job_details);
         if (getIntent().hasExtra("jobID")) {
             // Si se ha pasado el extra "jobID", obtener su valor
-            //  String jobID = getIntent().getStringExtra("jobID");
-
             // Aquí puedes hacer lo que necesites con el ID del trabajo (jobID)
             // Por ejemplo, puedes utilizarlo para obtener los detalles del trabajo desde Firestore
         } else {

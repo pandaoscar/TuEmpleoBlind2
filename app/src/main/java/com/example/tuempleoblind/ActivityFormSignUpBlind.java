@@ -68,11 +68,11 @@ public class ActivityFormSignUpBlind extends AppCompatActivity {
                 }
             }
 
-            private void postUsernameBlind(String levelBlind, String profesión, String location,
+            private void postUsernameBlind(String levelBlind, String profesion, String location,
                                            String phonenumbre,String abilities) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("Nivel de ceguera", levelBlind);
-                map.put("Profesión", profesión);
+                map.put("Profesión", profesion);
                 map.put("Dirección", location);
                 map.put("Numero de Teléfono", phonenumbre);
                 map.put("abilities",abilities);

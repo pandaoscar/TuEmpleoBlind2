@@ -35,6 +35,7 @@ import java.util.Map;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class EditDataProfileBlind extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
+    private static final String FIELD_COLLECTION="UsernameBlind";
     private static final String FIELD_NAME = "Nombre";
     private static final String FIELD_USERNAME = "Usuario";
     private static final String FIELD_EMAIL = "Correo";
@@ -235,7 +236,7 @@ public class EditDataProfileBlind extends AppCompatActivity implements EasyPermi
         map.put(FIELD_ABILITIES, abilities);
         map.put(FIELD_LEVEL, level);
 
-        mFirestore.collection("UsernameBlind").document(userID)
+        mFirestore.collection(FIELD_COLLECTION).document(userID)
                 .set(map)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -258,7 +259,7 @@ public class EditDataProfileBlind extends AppCompatActivity implements EasyPermi
 
     private void obtenerValoresFirestore() {
         FirebaseUser user = mUser.getCurrentUser();
-        DocumentReference docRef = mFirestore.collection("UsernameBlind").document(user.getUid());
+        DocumentReference docRef = mFirestore.collection(FIELD_COLLECTION).document(user.getUid());
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -355,7 +356,7 @@ public class EditDataProfileBlind extends AppCompatActivity implements EasyPermi
         // Obtener los valores almacenados en Firestore
         FirebaseUser user = mUser.getCurrentUser();
         if (user != null) {
-            DocumentReference docRef = mFirestore.collection("UsernameBlind").document(user.getUid());
+            DocumentReference docRef = mFirestore.collection(FIELD_COLLECTION).document(user.getUid());
             String finalLevelSpinner = levelSpinner;
             docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
