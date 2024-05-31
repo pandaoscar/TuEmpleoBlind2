@@ -120,7 +120,6 @@ public class DowloadReportActivity extends AppCompatActivity {
 
         }
 
-        OutputStream outputStream = new FileOutputStream(file);
 
         PdfWriter writer = new PdfWriter(file);
         pdfDocument = new PdfDocument(writer);
@@ -162,7 +161,7 @@ public class DowloadReportActivity extends AppCompatActivity {
 
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         table.addCell(new Cell().add(new Paragraph("Fecha")));
-        table.addCell(new Cell().add(new Paragraph(LocalDate.now().format(dateFormatter).toString())));
+        table.addCell(new Cell().add(new Paragraph(LocalDate.now().format(dateFormatter))));
 
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss a");
         table.addCell(new Cell().add(new Paragraph("Hora")));
@@ -180,8 +179,8 @@ public class DowloadReportActivity extends AppCompatActivity {
         table.addCell(new Cell().add(new Paragraph("Numero de invidentes registrados totales:")));
         table.addCell(new Cell().add(new Paragraph(invidentesReg)));
 
-        BarcodeQRCode qrCode = new BarcodeQRCode(aspirantesPost + "\n" + empleadosReg + "\n" + empleosPub + "\n" + invidentesReg + "\n" + LocalDate.now().format(dateFormatter).toString() +
-                "\n" + LocalTime.now().format(timeFormatter).toString());
+        BarcodeQRCode qrCode = new BarcodeQRCode(aspirantesPost + "\n" + empleadosReg + "\n" + empleosPub + "\n" + invidentesReg + "\n" + LocalDate.now().format(dateFormatter) +
+                "\n" + LocalTime.now().format(timeFormatter));
         PdfFormXObject qrCodeObject = qrCode.createFormXObject(ColorConstants.BLACK, pdfDocument);
         Image qrCodeImage = new Image(qrCodeObject).setWidth(80).setHorizontalAlignment(HorizontalAlignment.CENTER);
 

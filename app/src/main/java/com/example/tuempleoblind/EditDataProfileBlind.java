@@ -35,10 +35,25 @@ import java.util.Map;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class EditDataProfileBlind extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
+    private static final String FIELD_NAME = "Nombre";
+    private static final String FIELD_USERNAME = "Usuario";
+    private static final String FIELD_EMAIL = "Correo";
+    private static final String FIELD_PROFESSION = "Profesión";
+    private static final String FIELD_ADDRESS = "Dirección";
+    private static final String FIELD_PHONE = "Numero de Teléfono";
+    private static final String FIELD_ABILITIES = "abilities";
+    private static final String FIELD_LEVEL = "Nivel de ceguera";
 
-    EditText campTextName, campTextUserName, campTextEmail, campTextProfession, campTextAddress, campTextPhone, campTextAbilities;
+    EditText campTextName;
+    EditText campTextUserName;
+    EditText campTextEmail;
+    EditText campTextProfession;
+    EditText campTextAddress;
+    EditText campTextPhone;
+    EditText campTextAbilities;
     Spinner spinnerLevelBlind;
-    Button btnSave, btnCancel;
+    Button btnSave;
+    Button btnCancel;
     FirebaseFirestore mFirestore;
     private FirebaseAuth mUser;
     private static final int CODIGO_RECONOCIMIENTO_VOZ = 1;
@@ -211,14 +226,14 @@ public class EditDataProfileBlind extends AppCompatActivity implements EasyPermi
     }
     private void postUserBlind(String name, String username, String email, String profession, String address, String phone, String abilities, String level, String userID) {
         Map<String, Object> map = new HashMap<>();
-        map.put("Nombre", name);
-        map.put("Usuario", username);
-        map.put("Correo", email);
-        map.put("Profesión", profession);
-        map.put("Dirección", address);
-        map.put("Numero de Teléfono", phone);
-        map.put("abilities", abilities);
-        map.put("Nivel de ceguera", level);
+        map.put(FIELD_NAME, name);
+        map.put(FIELD_USERNAME, username);
+        map.put(FIELD_EMAIL, email);
+        map.put(FIELD_PROFESSION, profession);
+        map.put(FIELD_ADDRESS, address);
+        map.put(FIELD_PHONE, phone);
+        map.put(FIELD_ABILITIES, abilities);
+        map.put(FIELD_LEVEL, level);
 
         mFirestore.collection("UsernameBlind").document(userID)
                 .set(map)
@@ -248,14 +263,14 @@ public class EditDataProfileBlind extends AppCompatActivity implements EasyPermi
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
-                    String name = documentSnapshot.getString("Nombre");
-                    String username = documentSnapshot.getString("Usuario");
-                    String email = documentSnapshot.getString("Correo");
-                    String profession = documentSnapshot.getString("Profesión");
-                    String address = documentSnapshot.getString("Dirección");
-                    String phone = documentSnapshot.getString("Numero de Teléfono");
-                    String abilities = documentSnapshot.getString("abilities");
-                    String level = documentSnapshot.getString("Nivel de ceguera");
+                    String name = documentSnapshot.getString(FIELD_NAME);
+                    String username = documentSnapshot.getString(FIELD_USERNAME);
+                    String email = documentSnapshot.getString(FIELD_EMAIL);
+                    String profession = documentSnapshot.getString(FIELD_PROFESSION);
+                    String address = documentSnapshot.getString(FIELD_ADDRESS);
+                    String phone = documentSnapshot.getString(FIELD_PHONE);
+                    String abilities = documentSnapshot.getString(FIELD_ABILITIES);
+                    String level = documentSnapshot.getString(FIELD_LEVEL);
 
                     campTextName.setText(name);
                     campTextUserName.setText(username);
@@ -347,14 +362,14 @@ public class EditDataProfileBlind extends AppCompatActivity implements EasyPermi
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     if (documentSnapshot.exists()) {
                         // Obtener los valores del documento
-                        String emailFire = documentSnapshot.getString("Correo");
-                        String nameFire = documentSnapshot.getString("Nombre");
-                        String usernameFire = documentSnapshot.getString("Usuario");
-                        String professionFire = documentSnapshot.getString("Profesión");
-                        String addressFire = documentSnapshot.getString("Dirección");
-                        String phoneFire = documentSnapshot.getString("Numero de Teléfono");
-                        String abilitiesFire = documentSnapshot.getString("abilities");
-                        String levelFire = documentSnapshot.getString("Nivel de ceguera");
+                        String emailFire = documentSnapshot.getString(FIELD_EMAIL);
+                        String nameFire = documentSnapshot.getString(FIELD_NAME);
+                        String usernameFire = documentSnapshot.getString(FIELD_USERNAME);
+                        String professionFire = documentSnapshot.getString(FIELD_PROFESSION);
+                        String addressFire = documentSnapshot.getString(FIELD_ADDRESS);
+                        String phoneFire = documentSnapshot.getString(FIELD_PHONE);
+                        String abilitiesFire = documentSnapshot.getString(FIELD_ABILITIES);
+                        String levelFire = documentSnapshot.getString(FIELD_LEVEL);
 
                         // Verificar si hay cambios en los EditText y el Spinner
                         if (!emailEdit.equals(emailFire) || !nameEdit.equals(nameFire) ||

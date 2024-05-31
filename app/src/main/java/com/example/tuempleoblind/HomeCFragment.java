@@ -187,7 +187,7 @@ public class HomeCFragment extends Fragment implements TrabajosPublicadosAdapter
             if (resultCode == RESULT_OK && data != null) {
                 // Obtiene la lista de palabras reconocidas
                 ArrayList<String> palabrasReconocidas = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                if (palabrasReconocidas != null && palabrasReconocidas.size() > 0) {
+                if (palabrasReconocidas != null && palabrasReconocidas.isEmpty()) {
                     // Guarda la primera palabra reconocida en un String
                     String palabra = palabrasReconocidas.toString().replace("[", "").replace("]", "");
 

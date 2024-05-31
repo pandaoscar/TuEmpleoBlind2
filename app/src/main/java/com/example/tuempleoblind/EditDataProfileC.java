@@ -34,9 +34,23 @@ import java.util.ArrayList;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class EditDataProfileC extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
+    private static final String FIELD_NAME_C = "Nombre";
+    private static final String FIELD_USERNAME_C = "Usuario";
+    private static final String FIELD_EMAIL_C = "Correo Electronico";
+    private static final String FIELD_COMPANY_NAME_C = "Nombre de la compañia";
+    private static final String FIELD_COMPANY_TYPE_C = "Tipo de compañia";
+    private static final String FIELD_LOCATION_C = "Ubicación";
+    private static final String FIELD_WEB_PAGE_C = "Pagina web";
 
-    EditText campTextName, campTextUserName, campTextEmail, campTextNameCompany, campTextCompanyType, campTextLocation, campTextWebPag;
-    Button btnSave, btnCancel;
+    EditText campTextName;
+    EditText campTextUserName;
+    EditText campTextEmail;
+    EditText campTextNameCompany;
+    EditText campTextCompanyType;
+    EditText campTextLocation;
+    EditText campTextWebPag;
+    Button btnSave;
+    Button btnCancel;
     FloatingActionButton microComand;
     FirebaseFirestore mFirestore;
     private FirebaseAuth mUser;
@@ -167,7 +181,7 @@ public class EditDataProfileC extends AppCompatActivity implements EasyPermissio
             if (resultCode == RESULT_OK && data != null) {
                 // Obtiene la lista de palabras reconocidas
                 ArrayList<String> palabrasReconocidas = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                if (palabrasReconocidas != null && palabrasReconocidas.size() > 0) {
+                if (palabrasReconocidas != null && palabrasReconocidas.isEmpty()) {
                     // Guarda la primera palabra reconocida en un String
                     String palabra = palabrasReconocidas.toString().replace("[", "").replace("]", "");
                     NavigationManager.navigateToDestinationC(getApplicationContext(), palabra, getSupportFragmentManager(), null);
@@ -181,13 +195,13 @@ public class EditDataProfileC extends AppCompatActivity implements EasyPermissio
 
     private void postUsernameC(String name, String username, String email, String nameCompany, String typeCompany, String location, String webPag, String userID) {
         Map<String, Object> map = new HashMap<>();
-        map.put("Nombre", name);
-        map.put("Usuario", username);
-        map.put("Correo Electronico", email);
-        map.put("Nombre de la compañia", nameCompany);
-        map.put("Pagina web", webPag);
-        map.put("Tipo de compañia", typeCompany);
-        map.put("Ubicación", location);
+        map.put(FIELD_NAME_C, name);
+        map.put(FIELD_USERNAME_C, username);
+        map.put(FIELD_EMAIL_C, email);
+        map.put(FIELD_COMPANY_NAME_C, nameCompany);
+        map.put(FIELD_WEB_PAGE_C, webPag);
+        map.put(FIELD_COMPANY_TYPE_C, typeCompany);
+        map.put(FIELD_LOCATION_C, location);
 
         mFirestore.collection("UsernameC").document(userID)
                 .set(map)
@@ -220,13 +234,13 @@ public class EditDataProfileC extends AppCompatActivity implements EasyPermissio
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
                     // Obtener los valores del documento
-                    String email = documentSnapshot.getString("Correo Electronico");
-                    String name = documentSnapshot.getString("Nombre");
-                    String nameCompany = documentSnapshot.getString("Nombre de la compañia");
-                    String webPag = documentSnapshot.getString("Pagina web");
-                    String typeCompany = documentSnapshot.getString("Tipo de compañia");
-                    String location = documentSnapshot.getString("Ubicación");
-                    String username = documentSnapshot.getString("Usuario");
+                    String email = documentSnapshot.getString(FIELD_EMAIL_C);
+                    String name = documentSnapshot.getString(FIELD_NAME_C);
+                    String nameCompany = documentSnapshot.getString(FIELD_COMPANY_NAME_C);
+                    String webPag = documentSnapshot.getString(FIELD_WEB_PAGE_C);
+                    String typeCompany = documentSnapshot.getString(FIELD_COMPANY_TYPE_C);
+                    String location = documentSnapshot.getString(FIELD_LOCATION_C);
+                    String username = documentSnapshot.getString(FIELD_USERNAME_C);
 
                     // Establecer los valores en los EditText
                     campTextEmail.setText(email);
@@ -293,13 +307,13 @@ public class EditDataProfileC extends AppCompatActivity implements EasyPermissio
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
                     // Obtener los valores del documento
-                    String emailFire = documentSnapshot.getString("Correo Electronico");
-                    String nameFire = documentSnapshot.getString("Nombre");
-                    String nameCompanyFire = documentSnapshot.getString("Nombre de la compañia");
-                    String webPagFire = documentSnapshot.getString("Pagina web");
-                    String typeCompanyFire = documentSnapshot.getString("Tipo de compañia");
-                    String locationFire = documentSnapshot.getString("Ubicación");
-                    String usernameFire = documentSnapshot.getString("Usuario");
+                    String emailFire = documentSnapshot.getString(FIELD_EMAIL_C);
+                    String nameFire = documentSnapshot.getString(FIELD_NAME_C);
+                    String nameCompanyFire = documentSnapshot.getString(FIELD_COMPANY_NAME_C);
+                    String webPagFire = documentSnapshot.getString(FIELD_WEB_PAGE_C);
+                    String typeCompanyFire = documentSnapshot.getString(FIELD_COMPANY_TYPE_C);
+                    String locationFire = documentSnapshot.getString(FIELD_LOCATION_C);
+                    String usernameFire = documentSnapshot.getString(FIELD_USERNAME_C);
 
                     // Verificar si hay cambios en los EditText
                     if (!emailEdit.equals(emailFire) || !nameEdit.equals(nameFire) ||
