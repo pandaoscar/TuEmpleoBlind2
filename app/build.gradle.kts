@@ -59,4 +59,8 @@ dependencies {
 
     //pdf
     implementation ("com.itextpdf:itext7-core:7.1.16")
+    //Speech recognizer
+    implementation ("com.alphacephei:vosk-android:0.3.47@aar")
+    implementation ("net.java.dev.jna:jna:5.13.0@aar")
+    implementation(project(":models"))
 }

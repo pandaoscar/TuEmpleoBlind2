@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -60,6 +63,7 @@ public class EditDataProfileBlind extends AppCompatActivity implements EasyPermi
     private static final int CODIGO_RECONOCIMIENTO_VOZ = 1;
     private static final int PERMISSION_REQUEST_CODE = 123;
     FloatingActionButton microComand;
+    private BroadcastReceiver voiceCommandReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +107,8 @@ public class EditDataProfileBlind extends AppCompatActivity implements EasyPermi
         microComand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkAndRequestPermissions();
+                //checkAndRequestPermissions();
+
             }
         });
 
@@ -152,8 +157,43 @@ public class EditDataProfileBlind extends AppCompatActivity implements EasyPermi
                 finish();
             }
         });
+        voiceCommandReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String command = intent.getStringExtra("command");
+                handleVoiceCommand(command);
+            }
+        };
+        IntentFilter filter = new IntentFilter("VOICE_COMMAND");
+        registerReceiver(voiceCommandReceiver, filter);
 
     }
+    private void handleVoiceCommand(String command) {
+        System.out.println("epaaa "+command);
+        switch (command.toLowerCase()) {
+
+            case "editar primer texto":
+                campTextName.setText("Texto editado por voz");
+                break;
+            case "editar segundo texto":
+                campTextUserName.setText("Texto editado por voz");
+                break;
+            case "guardar":
+                btnSave.performClick();
+                break;
+            case "cancelar":
+                btnCancel.performClick();
+                break;
+            // Agrega más casos según tus necesidades
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(voiceCommandReceiver);
+    }
+
     private void checkAndRequestPermissions() {
         if (EasyPermissions.hasPermissions(getApplicationContext(), android.Manifest.permission.RECORD_AUDIO)) {
             // Permission already granted, perform operation
