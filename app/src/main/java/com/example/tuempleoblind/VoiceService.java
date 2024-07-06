@@ -3,11 +3,24 @@ package com.example.tuempleoblind;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
+
 import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.example.tuempleoblind.tensorflowlite.TextClassifier;
+
+import org.tensorflow.lite.Interpreter;
+import org.tensorflow.lite.support.common.FileUtil;
+import org.tensorflow.lite.support.label.Category;
 import org.vosk.LibVosk;
 import org.vosk.LogLevel;
 import org.vosk.Model;
@@ -18,7 +31,11 @@ import org.vosk.android.StorageService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
+import java.nio.MappedByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+
 
 
 public class VoiceService extends Service implements RecognitionListener {
@@ -26,17 +43,44 @@ public class VoiceService extends Service implements RecognitionListener {
     private Model model;
     private SpeechService speechService;
     private TextToSpeech tts;
+    private TextClassifier classifier;
+    private String commandNotRecognizer = null;
+    private static final int TIMEOUT_MS = 10000; // 10 segundos
+    private Handler timeoutHandler;
+    private Runnable timeoutRunnable;
+
+    private final Messenger messenger = new Messenger(new IncomingHandler());
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return messenger.getBinder();
+    }
+
+    private class IncomingHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            String response = msg.getData().getString("response");
+            handleResponseFromActivity(response);
+        }
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-
+        timeoutHandler = new Handler();
+        timeoutRunnable = new Runnable() {
+            @Override
+            public void run() {
+                onTimeout();
+            }
+        };
         LibVosk.setLogLevel(LogLevel.INFO);
-
         StorageService.unpack(this, "vosk-model-small-es-0.42", "model",
                 (model) -> {
                     this.model = model;
+
                     startListening();
+
                 },
                 (exception) -> Log.e(TAG, "Failed to unpack the model", exception)
         );
@@ -51,7 +95,7 @@ public class VoiceService extends Service implements RecognitionListener {
                 Log.e(TAG, "Initialization failed");
             }
         });
-        // Configurar UtteranceProgressListener una sola vez
+
         tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
             @Override
             public void onStart(String utteranceId) {
@@ -60,8 +104,23 @@ public class VoiceService extends Service implements RecognitionListener {
 
             @Override
             public void onDone(String utteranceId) {
-                if (speechService != null) {
-                    speechService.setPause(false); // Reanudar el servicio de reconocimiento de voz
+                if ("comando no reconocido".equals(commandNotRecognizer)){
+                    onTimeout();
+                    commandNotRecognizer = null;
+                }
+                else{
+                    if ("Activado".equals(commandNotRecognizer)){
+                        if (speechService != null) {
+                            startListening(); // Reanudar el servicio de reconocimiento de voz
+                            commandNotRecognizer = null;
+                        }
+                    }
+                    else{
+                        if ("Desactivado".equals(commandNotRecognizer)){
+                            commandNotRecognizer = null;
+                        }
+                        else startListening();
+                    }
                 }
                 Log.d(TAG, "Texto TTS reproducido completamente");
             }
@@ -79,33 +138,58 @@ public class VoiceService extends Service implements RecognitionListener {
                 Recognizer recognizer = new Recognizer(model, 16000.0f);
                 speechService = new SpeechService(recognizer, 16000.0f);
                 speechService.startListening(this);
+                resetTimeout(10000);
+                AppState.getInstance().setActiveAssistant(true);
             } catch (IOException e) {
                 Log.e(TAG, "Failed to start listening", e);
             }
         }
     }
 
-    private void handleVoiceCommand(String jsonCommand) {
-        String command = extractTextFromJson(jsonCommand); // Extraer el texto del JSON
-        Intent intent = new Intent("VOICE_COMMAND");
-        intent.putExtra("command", command);
-        sendBroadcast(intent);
-        respondToVoiceCommand(command);
+    private void resetTimeout(int time) {
+        timeoutHandler.removeCallbacks(timeoutRunnable);
+        timeoutHandler.postDelayed(timeoutRunnable, time);
     }
 
-    private void respondToVoiceCommand(String command) {
-        switch (command.toLowerCase()) {
-            case "hola":
-                speak("Hola, ¿cómo puedo ayudarte?");
-                break;
-            case "editar primer texto":
-                speak("Editando el primer texto");
-                break;
-            case "presionar botón uno":
-                speak("Presionando el botón uno");
-                break;
+    private void handleVoiceCommand(String jsonCommand) {
+        String command = extractTextFromJson(jsonCommand);
+        if (!command.isEmpty()){
+            try {
+                classifier = new TextClassifier(this);
+                String predictedCategory = classifier.classifyText(command);
+                Log.d("TextClassification", "Categoría predicha: " + predictedCategory + "  Comando: " + command);
 
+                if (predictedCategory.startsWith("accion_")){
+                    resetTimeout(100000);
+                }
+
+                Intent intent = new Intent("VOICE_COMMAND");
+                intent.putExtra("command", command);
+                intent.putExtra("predictedCategory", predictedCategory);
+                sendBroadcast(intent);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+                if (predictedCategory.equals("comando no reconocido") && !AppState.getInstance().isModoEdicionActivo()) {
+                    commandNotRecognizer = predictedCategory;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    private void handleResponseFromActivity(String response) {
+        System.out.println("Devuelto por el activity: " + response);
+        if (response.equals("Activado") || response.equals("Desactivado")){
+            if (AppState.getInstance().isActiveAssistant()){
+                startListening();
+            }
+            else{
+                onTimeout();
+            }
+            commandNotRecognizer = response;
+        }
+        speak(response);
     }
 
     private String extractTextFromJson(String json) {
@@ -119,14 +203,12 @@ public class VoiceService extends Service implements RecognitionListener {
     }
 
     private void speak(String text) {
-        if (speechService != null) {
-            speechService.setPause(true); // Pausar el servicio de reconocimiento de voz
+        if (speechService != null && text != null && AppState.getInstance().isActiveAssistant()) {
+            speechService.stop(); // Pausar el servicio de reconocimiento de voz
         }
 
-        // Llamar a tts.speak con el identificador de utteranceId
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "uniqueId");
     }
-
 
     @Override
     public void onDestroy() {
@@ -141,12 +223,6 @@ public class VoiceService extends Service implements RecognitionListener {
         }
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
     @Override
     public void onResult(String hypothesis) {
         handleVoiceCommand(hypothesis);
@@ -159,7 +235,7 @@ public class VoiceService extends Service implements RecognitionListener {
 
     @Override
     public void onPartialResult(String hypothesis) {
-        // Puedes manejar resultados parciales si es necesario
+
     }
 
     @Override
@@ -169,6 +245,10 @@ public class VoiceService extends Service implements RecognitionListener {
 
     @Override
     public void onTimeout() {
-        // Manejar el tiempo de espera si es necesario
+        Log.i(TAG, "No se detectó entrada de voz o comando no reconocido en 10 segundos, pausando reconocimiento.");
+        if (speechService != null) {
+            speechService.stop();
+        }
+        AppState.getInstance().setActiveAssistant(false);
     }
 }

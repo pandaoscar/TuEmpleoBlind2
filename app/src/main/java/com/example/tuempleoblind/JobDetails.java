@@ -1,5 +1,7 @@
 package com.example.tuempleoblind;
 
+import static com.example.tuempleoblind.NavigationManager.extractAfterUnderscore;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,6 +13,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -20,14 +23,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JobDetails extends AppCompatActivity {
+public class JobDetails extends AppCompatActivity implements VoiceCommandController.ActivityCallback{
     private static final String NUMERO_DE_ASPIRANTES_POSTULADOS = "numeroDeAspirantesPostulados";
     private static final String NUMERO_DE_ASPIRANTES_POSTULADOS_TOTALES = "numeroDeAspirantesPostuladosTotales";
     private static final String COLLECTION_REPORTE = "Reporte";
     private static final String DOCUMENT_TOTALES = "Totales";
     private FirebaseFirestore mFirestore;
     private FirebaseAuth mAuth;
-
+    private VoiceCommandController controller;
+    FloatingActionButton microComand;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +104,23 @@ public class JobDetails extends AppCompatActivity {
         jobDetailRamp.setText(booleanRamp);
         jobDetailElevator.setText(booleanElevator);
 
+        microComand = findViewById(R.id.floatingButtonComands);
+
+        microComand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (AppState.getInstance().isActiveAssistant()){
+                    AppState.getInstance().setActiveAssistant(false);
+                    controller.sendResponseToService("Desactivado");
+                }
+                else{
+                    AppState.getInstance().setActiveAssistant(true);
+                    controller.sendResponseToService("Activado");
+                }
+
+            }
+        });
+
         Button buttonBackToAllJobs=findViewById(R.id.buttonBackToAllJobs);
         buttonBackToAllJobs.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,5 +185,27 @@ public class JobDetails extends AppCompatActivity {
         });
         Utilidad.incrementarMensual(mFirestore,COLLECTION_REPORTE,NUMERO_DE_ASPIRANTES_POSTULADOS);
         Utilidad.incrementarTotal(mFirestore,COLLECTION_REPORTE,DOCUMENT_TOTALES,NUMERO_DE_ASPIRANTES_POSTULADOS_TOTALES);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        controller.unregisterActivityCallback(this);
+    }
+    @Override
+    public void onVoiceCommandReceived(String command, String predictedCategory) {
+        if (predictedCategory.startsWith("navegacion_")) {
+            String destino = extractAfterUnderscore(predictedCategory);
+            String respuesta = "Cambiando a " + destino;
+            controller.sendResponseToService(respuesta);
+            NavigationManager.navigateToDestinationBlind(this, destino, getSupportFragmentManager(), null);
+        } else if (predictedCategory.startsWith("accion_")) {
+            String accion = extractAfterUnderscore(predictedCategory);
+            // Primero navegar a la actividad correcta si es necesario
+            AppState.getInstance().setModoEdicionActivo(true);
+            NavigationManager.navigateToDestinationBlind(this, accion, getSupportFragmentManager(), null);
+        } else {
+            String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+            controller.sendResponseToService(respuesta);
+        }
     }
 }

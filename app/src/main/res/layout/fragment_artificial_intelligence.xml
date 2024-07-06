@@ -62,8 +62,10 @@
             android:background="@drawable/btn_blue"
             android:textColor="@color/white"
             android:textSize="18dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:onClick="onSaveClicked"/>
 
     </LinearLayout>
+    <include layout="@layout/base_flotante" />
 
 </FrameLayout>

@@ -2,6 +2,8 @@ package com.example.tuempleoblind;
 
 import static android.app.Activity.RESULT_OK;
 
+import static com.example.tuempleoblind.NavigationManager.extractAfterUnderscore;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -31,7 +33,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  * Use the {@link ConfigBlindFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ConfigBlindFragment extends Fragment implements EasyPermissions.PermissionCallbacks{
+public class ConfigBlindFragment extends Fragment implements VoiceCommandController.ActivityCallback{
 
     // Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -44,6 +46,7 @@ public class ConfigBlindFragment extends Fragment implements EasyPermissions.Per
     private static final int CODIGO_RECONOCIMIENTO_VOZ = 1;
     private static final int PERMISSION_REQUEST_CODE = 123;
     FloatingActionButton microComand;
+    private VoiceCommandController controller;
 
     public ConfigBlindFragment() {
         // Required empty public constructor
@@ -96,85 +99,48 @@ public class ConfigBlindFragment extends Fragment implements EasyPermissions.Per
         webViewFirstTime.setWebChromeClient(new WebChromeClient());
 
         microComand = view.findViewById(R.id.floatingButtonComands);
+
+        controller = VoiceCommandController.getInstance(getActivity());
+        controller.registerActivityCallback(this);
+
+
         microComand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (AppState.getInstance().isActiveAssistant()){
+                    AppState.getInstance().setActiveAssistant(false);
+                    controller.sendResponseToService("Desactivado");
+                }
+                else{
+                    AppState.getInstance().setActiveAssistant(true);
+                    controller.sendResponseToService("Activado");
+                }
 
-                checkAndRequestPermissions();
             }
         });
 
         return view;
     }
-    private void checkAndRequestPermissions() {
-        if (EasyPermissions.hasPermissions(requireContext(), android.Manifest.permission.RECORD_AUDIO)) {
-            // Permission already granted, perform operation
-            Toast.makeText(requireContext(), "Permission already granted", Toast.LENGTH_SHORT).show();
-            iniciarReconocimientoVoz();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        controller.unregisterActivityCallback(this);
+    }
+    @Override
+    public void onVoiceCommandReceived(String command, String predictedCategory) {
+        if (predictedCategory.startsWith("navegacion_")) {
+            String destino = extractAfterUnderscore(predictedCategory);
+            String respuesta = "Cambiando a " + destino;
+            controller.sendResponseToService(respuesta);
+            NavigationManager.navigateToDestinationBlind(getContext(), destino, getActivity().getSupportFragmentManager(), this);
+        } else if (predictedCategory.startsWith("accion_")) {
+            String accion = extractAfterUnderscore(predictedCategory);
+            // Primero navegar a la actividad correcta si es necesario
+            AppState.getInstance().setModoEdicionActivo(true);
+            NavigationManager.navigateToDestinationBlind(getContext(), accion, getActivity().getSupportFragmentManager(), this);
         } else {
-            // Request permissions
-            EasyPermissions.requestPermissions(this, "Porfavor acepta los permisos del microfono", PERMISSION_REQUEST_CODE, Manifest.permission.RECORD_AUDIO);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        // Forward results to EasyPermissions
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                Toast.makeText(requireContext(), "Permission granted", Toast.LENGTH_SHORT).show();
-            } else {
-                // Permission is denied
-                Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
-    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        // Permission granted, handle accordingly
-        Toast.makeText(getContext(), "Permission granted", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-        // Permission denied, handle accordingly
-        Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
-    }
-
-
-    private void iniciarReconocimientoVoz() {
-        // Crea un Intent para el reconocimiento de voz
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        // Configura el idioma para el reconocimiento (puedes cambiarlo según tus necesidades)
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        // Configura un mensaje para el usuario
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Di algo...");
-        // Inicia la actividad de reconocimiento de voz y espera los resultados
-        startActivityForResult(intent, CODIGO_RECONOCIMIENTO_VOZ);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == CODIGO_RECONOCIMIENTO_VOZ) {
-            if (resultCode == RESULT_OK && data != null) {
-                // Obtiene la lista de palabras reconocidas
-                ArrayList<String> palabrasReconocidas = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                if (palabrasReconocidas != null && palabrasReconocidas.isEmpty()) {
-                    // Guarda la primera palabra reconocida en un String
-                    String palabra = palabrasReconocidas.toString().replace("[", "").replace("]", "");
-
-                    NavigationManager.navigateToDestinationBlind(getContext(), palabra, getActivity().getSupportFragmentManager(), this);
-                }
-            } else {
-                // Mensaje de error si el reconocimiento de voz no fue exitoso
-                Toast.makeText(requireActivity(), "Error en el reconocimiento de voz", Toast.LENGTH_SHORT).show();
-            }
+            String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+            controller.sendResponseToService(respuesta);
         }
     }
 }

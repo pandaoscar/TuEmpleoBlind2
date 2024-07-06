@@ -20,12 +20,15 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import pub.devrel.easypermissions.EasyPermissions;
+import android.Manifest;
+
 public class MainActivity extends AppCompatActivity {
 
     Button btnFindJob;
     Button btnFindHire;
     Button btnLogIn;
-
+    private static final int PERMISSION_REQUEST_CODE = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         startService(new Intent(this, NewJobPublishedNotification.class));
-        startService(new Intent(this, VoiceService.class));
 
         // Verificar si el usuario ya está autenticado
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -132,6 +134,9 @@ public class MainActivity extends AppCompatActivity {
             });
 
         }
+        else{
+            checkAndRequestPermissions();
+        }
     }
 
 
@@ -153,5 +158,15 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+    private void checkAndRequestPermissions() {
+        if (EasyPermissions.hasPermissions(getApplicationContext(), android.Manifest.permission.RECORD_AUDIO)) {
+            // Permission already granted, perform operation
+            Toast.makeText(getApplicationContext(), "Permission already granted", Toast.LENGTH_SHORT).show();
+            startService(new Intent(this, VoiceService.class));
+        } else {
+            // Request permissions
+            EasyPermissions.requestPermissions(this, "Porfavor acepta los permisos del microfono", PERMISSION_REQUEST_CODE, Manifest.permission.RECORD_AUDIO);
+        }
     }
 }

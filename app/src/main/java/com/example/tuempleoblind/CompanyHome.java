@@ -5,13 +5,19 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.tuempleoblind.databinding.ActivityCompanyHomeBinding;
 
+import pub.devrel.easypermissions.EasyPermissions;
+
 public class CompanyHome extends AppCompatActivity {
     private ActivityCompanyHomeBinding binding;
+    private static final int PERMISSION_REQUEST_CODE = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +51,23 @@ public class CompanyHome extends AppCompatActivity {
             }
             return true;
         });
+        checkAndRequestPermissions();
     }
     private void replaceFragment (Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.layoutConstraint, fragment);
         fragmentTransaction.commit();
+    }
+    private void checkAndRequestPermissions() {
+        if (EasyPermissions.hasPermissions(getApplicationContext(), android.Manifest.permission.RECORD_AUDIO)) {
+            // Permission already granted, perform operation
+            Toast.makeText(getApplicationContext(), "Escuchando...", Toast.LENGTH_SHORT).show();
+            startService(new Intent(this, VoiceService.class));
+        } else {
+            // Request permissions
+            EasyPermissions.requestPermissions(this, "Porfavor acepta los permisos del microfono", PERMISSION_REQUEST_CODE, Manifest.permission.RECORD_AUDIO);
+        }
     }
 
 }

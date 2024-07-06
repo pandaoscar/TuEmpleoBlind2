@@ -1,5 +1,7 @@
 package com.example.tuempleoblind;
 
+import static com.example.tuempleoblind.NavigationManager.extractAfterUnderscore;
+
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,10 +21,11 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 
-public class ComputerVision extends AppCompatActivity {
+public class ComputerVision extends AppCompatActivity implements VoiceCommandController.ActivityCallback {
 
     private SurfaceView surfaceView;
     private TextView textView;
@@ -29,6 +33,8 @@ public class ComputerVision extends AppCompatActivity {
     private static final int PERMISSION =100;
     private Handler handler;
     private boolean isProcessing = false;
+    private VoiceCommandController controller;
+    FloatingActionButton microComand;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,8 +43,35 @@ public class ComputerVision extends AppCompatActivity {
         surfaceView=findViewById(R.id.camera);
         textView=findViewById(R.id.textC);
         handler = new Handler();
+
+        controller = VoiceCommandController.getInstance(this);
+        controller.registerActivityCallback(this);
+
+        microComand = findViewById(R.id.floatingButtonComands);
+
+        microComand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (AppState.getInstance().isActiveAssistant()){
+                    AppState.getInstance().setActiveAssistant(false);
+                    controller.sendResponseToService("Desactivado");
+                }
+                else{
+                    AppState.getInstance().setActiveAssistant(true);
+                    controller.sendResponseToService("Activado");
+                }
+
+            }
+        });
+
         startCameraSource();
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        controller.unregisterActivityCallback(this);
     }
 
     private void startCameraSource(){
@@ -116,6 +149,24 @@ public class ComputerVision extends AppCompatActivity {
 
                 }
             });
+        }
+    }
+
+    @Override
+    public void onVoiceCommandReceived(String command, String predictedCategory) {
+        if (predictedCategory.startsWith("navegacion_")) {
+            String destino = extractAfterUnderscore(predictedCategory);
+            String respuesta = "Cambiando a " + destino;
+            controller.sendResponseToService(respuesta);
+            NavigationManager.navigateToDestinationBlind(this, destino, getSupportFragmentManager(), null);
+        } else if (predictedCategory.startsWith("accion_")) {
+            String accion = extractAfterUnderscore(predictedCategory);
+            // Primero navegar a la actividad correcta si es necesario
+            AppState.getInstance().setModoEdicionActivo(true);
+            NavigationManager.navigateToDestinationBlind(this, accion, getSupportFragmentManager(), null);
+        } else {
+            String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+            controller.sendResponseToService(respuesta);
         }
     }
 }

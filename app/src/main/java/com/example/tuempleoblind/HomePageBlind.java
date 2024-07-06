@@ -9,15 +9,21 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.tuempleoblind.databinding.ActivityHomePageBlindBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import pub.devrel.easypermissions.EasyPermissions;
+import android.Manifest;
+
 public class HomePageBlind extends AppCompatActivity {
 
     private ActivityHomePageBlindBinding binding;
+    private static final int PERMISSION_REQUEST_CODE = 123;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,11 +60,22 @@ public class HomePageBlind extends AppCompatActivity {
             return true;
 
         });
+        checkAndRequestPermissions();
     }
     private void replaceFragment (Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.layoutConstraintBlind, fragment);
         fragmentTransaction.commit();
+    }
+    private void checkAndRequestPermissions() {
+        if (EasyPermissions.hasPermissions(getApplicationContext(), android.Manifest.permission.RECORD_AUDIO)) {
+            // Permission already granted, perform operation
+            Toast.makeText(getApplicationContext(), "Permission already granted", Toast.LENGTH_SHORT).show();
+            startService(new Intent(this, VoiceService.class));
+        } else {
+            // Request permissions
+            EasyPermissions.requestPermissions(this, "Porfavor acepta los permisos del microfono", PERMISSION_REQUEST_CODE, Manifest.permission.RECORD_AUDIO);
+        }
     }
 }
