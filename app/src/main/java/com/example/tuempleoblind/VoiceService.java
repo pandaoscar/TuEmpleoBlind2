@@ -3,6 +3,7 @@ package com.example.tuempleoblind;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -10,17 +11,11 @@ import android.os.Messenger;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.EditText;
 
-import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.tuempleoblind.tensorflowlite.TextClassifier;
 
-import org.tensorflow.lite.Interpreter;
-import org.tensorflow.lite.support.common.FileUtil;
-import org.tensorflow.lite.support.label.Category;
 import org.vosk.LibVosk;
 import org.vosk.LogLevel;
 import org.vosk.Model;
@@ -31,9 +26,6 @@ import org.vosk.android.StorageService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
-import java.nio.MappedByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 
@@ -48,6 +40,7 @@ public class VoiceService extends Service implements RecognitionListener {
     private static final int TIMEOUT_MS = 10000; // 10 segundos
     private Handler timeoutHandler;
     private Runnable timeoutRunnable;
+    private String roleUser = null;
 
     private final Messenger messenger = new Messenger(new IncomingHandler());
 
@@ -59,8 +52,40 @@ public class VoiceService extends Service implements RecognitionListener {
     private class IncomingHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
-            String response = msg.getData().getString("response");
-            handleResponseFromActivity(response);
+            Bundle data = msg.getData();
+            String role = data.getString("role");
+            String response = data.getString("response");
+
+            System.out.println("holaaa " + role);
+
+
+            if (response != null) {
+                handleResponseFromActivity(response);
+            }
+
+            if (role != null) {
+                try {
+                    getRole(role);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void getRole(String rol) throws Exception {
+        // Cargar el modelo en función del rol del usuario
+        if(rol.equals("userBlind")){
+            classifier = new TextClassifier(this, "model.tflite", "maxlen.txt", "category_mapping.json", "word_index.json");
+        }
+        else{
+            if (rol.equals("userCompany")){
+                classifier = new TextClassifier(this, "model_company.tflite", "maxlen.txt", "category_mapping.json", "word_index.json");
+            }
+            else{
+                Log.e("Rol validacion", "No se supo cual era el rol");
+            }
+
         }
     }
 
@@ -105,7 +130,7 @@ public class VoiceService extends Service implements RecognitionListener {
             @Override
             public void onDone(String utteranceId) {
                 if ("comando no reconocido".equals(commandNotRecognizer)){
-                    onTimeout();
+                    resetTimeout(0);
                     commandNotRecognizer = null;
                 }
                 else{
@@ -155,12 +180,15 @@ public class VoiceService extends Service implements RecognitionListener {
         String command = extractTextFromJson(jsonCommand);
         if (!command.isEmpty()){
             try {
-                classifier = new TextClassifier(this);
                 String predictedCategory = classifier.classifyText(command);
                 Log.d("TextClassification", "Categoría predicha: " + predictedCategory + "  Comando: " + command);
 
                 if (predictedCategory.startsWith("accion_")){
                     resetTimeout(100000);
+                }
+
+                if (predictedCategory.equals("comando no reconocido") && !AppState.getInstance().isModoEdicionActivo()) {
+                    commandNotRecognizer = predictedCategory;
                 }
 
                 Intent intent = new Intent("VOICE_COMMAND");
@@ -169,9 +197,7 @@ public class VoiceService extends Service implements RecognitionListener {
                 sendBroadcast(intent);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
-                if (predictedCategory.equals("comando no reconocido") && !AppState.getInstance().isModoEdicionActivo()) {
-                    commandNotRecognizer = predictedCategory;
-                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -185,7 +211,7 @@ public class VoiceService extends Service implements RecognitionListener {
                 startListening();
             }
             else{
-                onTimeout();
+                resetTimeout(1);
             }
             commandNotRecognizer = response;
         }

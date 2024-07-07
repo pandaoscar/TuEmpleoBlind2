@@ -95,6 +95,7 @@ public class HomeBlindFragment extends Fragment implements JobsAvailableAdapter.
 
         controller = VoiceCommandController.getInstance(getActivity());
         controller.registerActivityCallback(this);
+        controller.sendRoleUser("userBlind");
         microComand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

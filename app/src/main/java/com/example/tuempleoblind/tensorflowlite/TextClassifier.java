@@ -20,12 +20,42 @@ public class TextClassifier {
     private Map<Integer, String> categoryMapping;
     private Map<String, Integer> wordIndex;
     private int maxlen;
+    private String name_category_mapping;
+    private String name_word_index;
+    private String name_maxlen;
 
-    public TextClassifier(Context context) throws Exception {
-        tflite = new Interpreter(loadModelFile(context, "model.tflite"));
+    public TextClassifier(Context context, String model, String file, String s, String s1) throws Exception {
+        this.name_category_mapping = s;
+        this.name_word_index = s1;
+        this.name_maxlen = file;
+        tflite = new Interpreter(loadModelFile(context, model));
         categoryMapping = loadCategoryMapping(context);
         wordIndex = loadWordIndex(context);
-        maxlen = loadMaxlen(context);
+        this.maxlen = loadMaxlen(context);
+    }
+
+    public void setName_category_mapping(String name_category_mapping) {
+        this.name_category_mapping = name_category_mapping;
+    }
+
+    public void setName_word_index(String name_word_index) {
+        this.name_word_index = name_word_index;
+    }
+
+    public void setName_maxlen(String name_maxlen) {
+        this.name_maxlen = name_maxlen;
+    }
+
+    public String getName_category_mapping() {
+        return name_category_mapping;
+    }
+
+    public String getName_word_index() {
+        return name_word_index;
+    }
+
+    public String getName_maxlen() {
+        return name_maxlen;
     }
 
     private MappedByteBuffer loadModelFile(Context context, String modelPath) throws Exception {
@@ -40,7 +70,7 @@ public class TextClassifier {
     private Map<Integer, String> loadCategoryMapping(Context context) throws Exception {
         Map<Integer, String> mapping = new HashMap<>();
         AssetManager assetManager = context.getAssets();
-        InputStream inputStream = assetManager.open("category_mapping.json");
+        InputStream inputStream = assetManager.open(getName_category_mapping());
         int size = inputStream.available();
         byte[] buffer = new byte[size];
         inputStream.read(buffer);
@@ -60,7 +90,7 @@ public class TextClassifier {
     private Map<String, Integer> loadWordIndex(Context context) throws Exception {
         Map<String, Integer> wordIndex = new HashMap<>();
         AssetManager assetManager = context.getAssets();
-        InputStream inputStream = assetManager.open("word_index.json");
+        InputStream inputStream = assetManager.open(getName_word_index());
         int size = inputStream.available();
         byte[] buffer = new byte[size];
         inputStream.read(buffer);
@@ -80,7 +110,7 @@ public class TextClassifier {
     private int loadMaxlen(Context context) throws Exception {
         // Cargar maxlen desde un archivo en assets
         AssetManager assetManager = context.getAssets();
-        InputStream inputStream = assetManager.open("maxlen.txt");
+        InputStream inputStream = assetManager.open(getName_maxlen());
         int size = inputStream.available();
         byte[] buffer = new byte[size];
         inputStream.read(buffer);

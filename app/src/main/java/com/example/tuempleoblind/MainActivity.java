@@ -23,17 +23,21 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import pub.devrel.easypermissions.EasyPermissions;
 import android.Manifest;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements VoiceCommandController.ActivityCallback {
 
     Button btnFindJob;
     Button btnFindHire;
     Button btnLogIn;
     private static final int PERMISSION_REQUEST_CODE = 123;
+    private VoiceCommandController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        controller = VoiceCommandController.getInstance(this);
+        controller.registerActivityCallback(this);
 
         btnFindJob = findViewById(R.id.buttonFindJob);
         btnFindHire = findViewById(R.id.buttonFindHire);
@@ -83,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         startService(new Intent(this, NewJobPublishedNotification.class));
-
+        startService(new Intent(this, VoiceService.class));
         // Verificar si el usuario ya está autenticado
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -101,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         DocumentSnapshot documentBlind = task.getResult();
                         if (documentBlind.exists()) {
+                            controller.sendRoleUser("userBlind");
                             // El usuario pertenece a la colección UsernameBlind
                             startActivity(new Intent(getApplicationContext(), HomePageBlind.class));
                             finish(); // Finalizar la actividad de inicio de sesión
@@ -163,10 +168,15 @@ public class MainActivity extends AppCompatActivity {
         if (EasyPermissions.hasPermissions(getApplicationContext(), android.Manifest.permission.RECORD_AUDIO)) {
             // Permission already granted, perform operation
             Toast.makeText(getApplicationContext(), "Permission already granted", Toast.LENGTH_SHORT).show();
-            startService(new Intent(this, VoiceService.class));
+
         } else {
             // Request permissions
             EasyPermissions.requestPermissions(this, "Porfavor acepta los permisos del microfono", PERMISSION_REQUEST_CODE, Manifest.permission.RECORD_AUDIO);
         }
+    }
+
+    @Override
+    public void onVoiceCommandReceived(String command, String predictedCategory) {
+
     }
 }

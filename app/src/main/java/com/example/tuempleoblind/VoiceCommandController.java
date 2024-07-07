@@ -65,11 +65,19 @@ public class VoiceCommandController {
     };
 
     public void sendResponseToService(String response) {
+        sendMessageToService("response", response);
+    }
+
+    public void sendRoleUser(String role) {
+        sendMessageToService("role", role);
+    }
+
+    private void sendMessageToService(String key, String value) {
         if (isBound) {
             try {
                 Message msg = Message.obtain(null, 0);
                 Bundle bundle = new Bundle();
-                bundle.putString("response", response);
+                bundle.putString(key, value);
                 msg.setData(bundle);
                 serviceMessenger.send(msg);
             } catch (RemoteException e) {
