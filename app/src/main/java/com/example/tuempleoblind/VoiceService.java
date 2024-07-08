@@ -79,7 +79,7 @@ public class VoiceService extends Service implements RecognitionListener {
         }
         else{
             if (rol.equals("userCompany")){
-                classifier = new TextClassifier(this, "model_company.tflite", "maxlen.txt", "category_mapping.json", "word_index.json");
+                classifier = new TextClassifier(this, "model_company.tflite", "maxlen_company.txt", "category_mapping_company.json", "word_index_company.json");
             }
             else{
                 Log.e("Rol validacion", "No se supo cual era el rol");

@@ -21,17 +21,15 @@ public class NavigationManager extends AppCompatActivity {
         Log.d("TAG", "Clase nombre " + context.getClass().getSimpleName());
         if (!context.getClass().getSimpleName().equals("CompanyHome")){
             Intent intent = new Intent(context, CompanyHome.class);
-
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Esto limpiará la pila de actividades y creará una nueva tarea
             intent.putExtra("keyword", keyword);
             context.startActivity(intent);
 
         }else{
-            if (ifNavigation(keyword, "perfil") ){
-                Log.d("TAG", "ProfileCFragment ID: " + R.id.profileCFragment);
-                replaceFragmentC(new ProfileCFragment(), fragmentManager);
+            if (ifNavigation(keyword, "cerrar sesion descargar reporte") ){
+                replaceFragmentBlind(new ProfileCFragment(), fragmentManager);
             }else{
-                if (ifNavigation(keyword, "normativa") && !fragmentActual.getClass().getSimpleName().equalsIgnoreCase("ConfigCFragment")){
+                if (ifNavigation(keyword, "ver leyes") && !fragmentActual.getClass().getSimpleName().equalsIgnoreCase("ConfigCFragment")){
                     Log.d("TAG", "ProfileCFragment ID: " + R.id.profileCFragment);
                     replaceFragmentC(new ConfigCFragment(), fragmentManager);
                 }else{
@@ -39,11 +37,11 @@ public class NavigationManager extends AppCompatActivity {
                         Intent intent = new Intent(context, CompanyHome.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Esto limpiará la pila de actividades y creará una nueva tarea
                         context.startActivity(intent);
-                    } else if (ifNavigation(keyword, "nuevo trabajo")||(ifNavigation(keyword, "nuevo empleo") )&& !context.getClass().getSimpleName().equalsIgnoreCase("NewJob")) {
+                    } else if (ifNavigation(keyword, "crear empleo")||(ifNavigation(keyword, "nuevo empleo") )&& !context.getClass().getSimpleName().equalsIgnoreCase("NewJob")) {
                         Intent intent = new Intent(context, NewJob.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
-                    } else if (ifNavigation(keyword, "editar datos") && !context.getClass().getSimpleName().equals("EditDataProfileC")){
+                    } else if (ifNavigation(keyword, "editar datos empresa") && !context.getClass().getSimpleName().equals("EditDataProfileC")){
                         Intent intent = new Intent(context, EditDataProfileC.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
@@ -51,7 +49,7 @@ public class NavigationManager extends AppCompatActivity {
                         Intent intent = new Intent(context, PoliticalSecurityActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
-                    } else if (ifNavigation(keyword, "acerca de") && !context.getClass().getSimpleName().equals("AboutActivity")) {
+                    } else if (ifNavigation(keyword, "informacion aplicacion") && !context.getClass().getSimpleName().equals("AboutActivity")) {
                         Intent intent = new Intent(context, AboutActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
