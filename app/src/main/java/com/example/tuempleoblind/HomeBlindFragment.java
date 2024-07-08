@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.tuempleoblind.adapter.JobsAvailableAdapter;
 import com.example.tuempleoblind.model.JobsAvailable;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -37,6 +39,8 @@ public class HomeBlindFragment extends Fragment implements JobsAvailableAdapter.
     FirebaseFirestore mFirestore;
     FloatingActionButton microComand;
     private VoiceCommandController controller;
+    private LottieAnimationView robotAnimation;
+    private ImageView background;
 
     // Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -85,6 +89,8 @@ public class HomeBlindFragment extends Fragment implements JobsAvailableAdapter.
         View view = inflater.inflate(R.layout.fragment_home_blind, container, false);
         mRecicle=view.findViewById(R.id.AllJobs);
         microComand = view.findViewById(R.id.floatingButtonComands);
+        robotAnimation=view.findViewById(R.id.robot_animation);
+        background=view.findViewById(R.id.backBlack);
         mRecicle.setLayoutManager(new LinearLayoutManager(getActivity()));
         Query query=mFirestore.collection("TrabajosPublicados");
         FirestoreRecyclerOptions<JobsAvailable>  firestoreRecyclerOptions= new FirestoreRecyclerOptions.Builder<JobsAvailable>().setQuery(query,JobsAvailable.class).build();
@@ -92,10 +98,10 @@ public class HomeBlindFragment extends Fragment implements JobsAvailableAdapter.
         mAdapter.notifyDataSetChanged();
         mRecicle.setAdapter(mAdapter);
         mAdapter.setOnViewMoreClickListener(this);
+        System.out.println("estoy en homeFragment");
 
         controller = VoiceCommandController.getInstance(getActivity());
         controller.registerActivityCallback(this);
-        controller.sendRoleUser("userBlind");
         microComand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,12 +113,25 @@ public class HomeBlindFragment extends Fragment implements JobsAvailableAdapter.
                     AppState.getInstance().setActiveAssistant(true);
                     controller.sendResponseToService("Activado");
                 }
+                updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
 
             }
         });
 
         // Inflate the layout for this fragment
+        updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
         return view;
+    }
+    private void updateRobotAnimationVisibility(boolean isActive){
+        if (isActive) {
+            background.setVisibility(View.VISIBLE);
+            robotAnimation.setVisibility(View.VISIBLE);
+            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
+        } else {
+            background.setVisibility(View.INVISIBLE);
+            robotAnimation.setVisibility(View.INVISIBLE);
+            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
+        }
     }
 
     @Override
@@ -174,8 +193,13 @@ public class HomeBlindFragment extends Fragment implements JobsAvailableAdapter.
                 AppState.getInstance().setModoEdicionActivo(true);
                 NavigationManager.navigateToDestinationBlind(getContext(), accion, getActivity().getSupportFragmentManager(), this);
             } else {
-                String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
-                controller.sendResponseToService(respuesta);
+                if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
+                    updateRobotAnimationVisibility(false);
+                }else{
+                    String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+                    controller.sendResponseToService(respuesta);
+                    updateRobotAnimationVisibility(false);}
+
             }
         }
     }

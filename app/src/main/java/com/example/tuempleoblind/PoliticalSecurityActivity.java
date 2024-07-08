@@ -15,8 +15,10 @@ import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,6 +37,8 @@ public class PoliticalSecurityActivity extends AppCompatActivity implements Voic
     private static final int CODIGO_RECONOCIMIENTO_VOZ = 1;
     private static final int PERMISSION_REQUEST_CODE = 123;
     private VoiceCommandController controller;
+    private ImageView background;
+    private LottieAnimationView robotAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,8 @@ public class PoliticalSecurityActivity extends AppCompatActivity implements Voic
         setContentView(R.layout.activity_political_security);
         btnclose=findViewById(R.id.buttonCloseSecurity);
         microComand = findViewById(R.id.floatingButtonComands);
+        background=findViewById(R.id.backBlack);
+        robotAnimation=findViewById(R.id.robot_animation);
 
         controller = VoiceCommandController.getInstance(this);
         controller.registerActivityCallback(this);
@@ -57,7 +63,7 @@ public class PoliticalSecurityActivity extends AppCompatActivity implements Voic
                     AppState.getInstance().setActiveAssistant(true);
                     controller.sendResponseToService("Activado");
                 }
-
+                updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
             }
         });
         btnclose.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +75,18 @@ public class PoliticalSecurityActivity extends AppCompatActivity implements Voic
         if (AppState.getInstance().isModoEdicionActivo()){
             String response = "¿Quieres que te lea?";
             controller.sendResponseToService(response);
+        }
+        updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
+    }
+    private void updateRobotAnimationVisibility(boolean isActive){
+        if (isActive) {
+            background.setVisibility(View.VISIBLE);
+            robotAnimation.setVisibility(View.VISIBLE);
+            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
+        } else {
+            background.setVisibility(View.INVISIBLE);
+            robotAnimation.setVisibility(View.INVISIBLE);
+            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
         }
     }
     @Override
@@ -141,8 +159,12 @@ public class PoliticalSecurityActivity extends AppCompatActivity implements Voic
             AppState.getInstance().setModoEdicionActivo(true);
             isCompanyOrBlind(accion);
         } else {
-            String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
-            controller.sendResponseToService(respuesta);
+            if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
+                updateRobotAnimationVisibility(false);
+            }else{
+                String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+                controller.sendResponseToService(respuesta);
+                updateRobotAnimationVisibility(false);}
         }
     }
 }

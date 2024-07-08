@@ -88,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements VoiceCommandContr
         super.onStart();
         startService(new Intent(this, NewJobPublishedNotification.class));
         startService(new Intent(this, VoiceService.class));
+        System.out.println("ya prendi el servicio");
+        //AppState.getInstance().setActiveAssistant(true);
         // Verificar si el usuario ya está autenticado
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {

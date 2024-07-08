@@ -37,7 +37,6 @@ public class VoiceService extends Service implements RecognitionListener {
     private TextToSpeech tts;
     private TextClassifier classifier;
     private String commandNotRecognizer = null;
-    private static final int TIMEOUT_MS = 10000; // 10 segundos
     private Handler timeoutHandler;
     private Runnable timeoutRunnable;
     private String roleUser = null;
@@ -92,11 +91,25 @@ public class VoiceService extends Service implements RecognitionListener {
     @Override
     public void onCreate() {
         super.onCreate();
+        AppState.getInstance().setActiveAssistant(true);
         timeoutHandler = new Handler();
         timeoutRunnable = new Runnable() {
             @Override
             public void run() {
                 onTimeout();
+                //validamos que comando desactivado no se haya mandado por el boton
+                if (!"Desactivado".equals(commandNotRecognizer)){
+                    speak("Desactivado");
+                    commandNotRecognizer = "Desactivado";
+                }
+                if (!AppState.getInstance().isModoEdicionActivo()){
+                    Intent intent = new Intent("VOICE_COMMAND");
+                    intent.putExtra("command", "4p4g4d0_4ut0m4t1c0");
+                    intent.putExtra("predictedCategory", "4p4g4d0_10s3gund0s");
+                    sendBroadcast(intent);
+                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                }
+
             }
         };
         LibVosk.setLogLevel(LogLevel.INFO);
@@ -163,8 +176,9 @@ public class VoiceService extends Service implements RecognitionListener {
                 Recognizer recognizer = new Recognizer(model, 16000.0f);
                 speechService = new SpeechService(recognizer, 16000.0f);
                 speechService.startListening(this);
-                resetTimeout(10000);
+                resetTimeout(20000);
                 AppState.getInstance().setActiveAssistant(true);
+                System.out.println("ya actualicé el estado del asistente");
             } catch (IOException e) {
                 Log.e(TAG, "Failed to start listening", e);
             }
@@ -187,9 +201,13 @@ public class VoiceService extends Service implements RecognitionListener {
                     resetTimeout(100000);
                 }
 
+
+
                 if (predictedCategory.equals("comando no reconocido") && !AppState.getInstance().isModoEdicionActivo()) {
                     commandNotRecognizer = predictedCategory;
+
                 }
+
 
                 Intent intent = new Intent("VOICE_COMMAND");
                 intent.putExtra("command", command);

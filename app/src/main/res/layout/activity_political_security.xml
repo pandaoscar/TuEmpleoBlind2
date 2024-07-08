@@ -351,6 +351,26 @@
         </LinearLayout>
 
     </ScrollView>
+    <ImageView
+        android:id="@+id/backBlack"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:alpha="0.72"
+        android:scaleType="centerCrop"
+        android:src="@drawable/backgroudblack" />
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/robot_animation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center"
+        android:layout_margin="10dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/constraintLayout2"
+        app:layout_constraintStart_toEndOf="@+id/constraintLayout2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/robot_circle_animation" />
     <include layout="@layout/base_flotante" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

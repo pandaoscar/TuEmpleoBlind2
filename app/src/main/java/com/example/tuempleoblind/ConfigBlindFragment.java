@@ -18,8 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.j2objc.annotations.Weak;
 
@@ -39,6 +41,9 @@ public class ConfigBlindFragment extends Fragment implements VoiceCommandControl
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private LottieAnimationView robotAnimation;
+    private ImageView background;
 
     // Rename and change types of parameters
     private String mParam1;
@@ -102,7 +107,8 @@ public class ConfigBlindFragment extends Fragment implements VoiceCommandControl
 
         controller = VoiceCommandController.getInstance(getActivity());
         controller.registerActivityCallback(this);
-
+        robotAnimation=view.findViewById(R.id.robot_animation);
+        background=view.findViewById(R.id.backBlack);
 
         microComand.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,11 +121,22 @@ public class ConfigBlindFragment extends Fragment implements VoiceCommandControl
                     AppState.getInstance().setActiveAssistant(true);
                     controller.sendResponseToService("Activado");
                 }
-
+                updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
             }
         });
-
+        updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
         return view;
+    }
+    private void updateRobotAnimationVisibility(boolean isActive){
+        if (isActive) {
+            background.setVisibility(View.VISIBLE);
+            robotAnimation.setVisibility(View.VISIBLE);
+            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
+        } else {
+            background.setVisibility(View.INVISIBLE);
+            robotAnimation.setVisibility(View.INVISIBLE);
+            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
+        }
     }
     @Override
     public void onDestroy() {
@@ -139,8 +156,12 @@ public class ConfigBlindFragment extends Fragment implements VoiceCommandControl
             AppState.getInstance().setModoEdicionActivo(true);
             NavigationManager.navigateToDestinationBlind(getContext(), accion, getActivity().getSupportFragmentManager(), this);
         } else {
-            String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
-            controller.sendResponseToService(respuesta);
+            if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
+                updateRobotAnimationVisibility(false);
+            }else{
+                String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+                controller.sendResponseToService(respuesta);
+                updateRobotAnimationVisibility(false);}
         }
     }
 }

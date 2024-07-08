@@ -18,8 +18,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -39,6 +41,8 @@ public class ProfileBlindFragment extends Fragment implements VoiceCommandContro
     Button btnabout;
     Button btnSecurity;
     FloatingActionButton microComand;
+    private LottieAnimationView robotAnimation;
+    private ImageView background;
     private VoiceCommandController controller;
     private static final int CODIGO_RECONOCIMIENTO_VOZ = 1;
     private static final int PERMISSION_REQUEST_CODE = 123;
@@ -93,7 +97,8 @@ public class ProfileBlindFragment extends Fragment implements VoiceCommandContro
         btnabout=view.findViewById(R.id.buttonaboutblind);
         btnSecurity =view.findViewById(R.id.buttonsecurityblind);
         microComand = view.findViewById(R.id.floatingButtonComands);
-
+        robotAnimation=view.findViewById(R.id.robot_animation);
+        background=view.findViewById(R.id.backBlack);
         controller = VoiceCommandController.getInstance(getActivity());
         controller.registerActivityCallback(this);
 
@@ -108,6 +113,7 @@ public class ProfileBlindFragment extends Fragment implements VoiceCommandContro
                     AppState.getInstance().setActiveAssistant(true);
                     controller.sendResponseToService("Activado");
                 }
+                updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
             }
         });
         btnabout.setOnClickListener(new View.OnClickListener() {
@@ -142,8 +148,20 @@ public class ProfileBlindFragment extends Fragment implements VoiceCommandContro
             String response = "Estas seguro que quieres cerrar sesión";
             controller.sendResponseToService(response);
         }
+        updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
         // Inflate the layout for this fragment
         return view;
+    }
+    private void updateRobotAnimationVisibility(boolean isActive){
+        if (isActive) {
+            background.setVisibility(View.VISIBLE);
+            robotAnimation.setVisibility(View.VISIBLE);
+            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
+        } else {
+            background.setVisibility(View.INVISIBLE);
+            robotAnimation.setVisibility(View.INVISIBLE);
+            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
+        }
     }
 
     private void dataProfile() {
@@ -200,9 +218,13 @@ public class ProfileBlindFragment extends Fragment implements VoiceCommandContro
                 AppState.getInstance().setModoEdicionActivo(true);
                 NavigationManager.navigateToDestinationBlind(getContext(), accion, getActivity().getSupportFragmentManager(), this);
             } else {
-                String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
-                controller.sendResponseToService(respuesta);
-            }
+                if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
+                updateRobotAnimationVisibility(false);
+                }else{
+                    String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+                    controller.sendResponseToService(respuesta);
+                    updateRobotAnimationVisibility(false);}
+                }
         }
     }
 }

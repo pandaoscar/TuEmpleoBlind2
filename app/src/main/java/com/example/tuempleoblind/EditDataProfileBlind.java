@@ -15,9 +15,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -40,6 +42,8 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
     private static final String FIELD_PHONE = "Numero de Teléfono";
     private static final String FIELD_ABILITIES = "abilities";
     private static final String FIELD_LEVEL = "Nivel de ceguera";
+    private ImageView background;
+    private LottieAnimationView robotAnimation;
 
     EditText campTextName;
     EditText campTextUserName;
@@ -79,6 +83,9 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
         campTextAbilities = findViewById(R.id.editTextAbilitiesEditDataBlind);
         spinnerLevelBlind = findViewById(R.id.spinnerCategoryLevelEditDataBlind);
 
+        background=findViewById(R.id.backBlack);
+        robotAnimation=findViewById(R.id.robot_animation);
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.list_level_blind, R.layout.style_spinner);
         adapter.setDropDownViewResource(R.layout.style_spinner);
         spinnerLevelBlind.setAdapter(adapter);
@@ -114,6 +121,7 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
                     AppState.getInstance().setActiveAssistant(true);
                     controller.sendResponseToService("Activado");
                 }
+                updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
 
             }
         });
@@ -166,6 +174,18 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
         if (AppState.getInstance().isModoEdicionActivo()){
             String response = "¿Cúal de tus datos quieres cambiar?";
             controller.sendResponseToService(response);
+        }
+        updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
+    }
+    private void updateRobotAnimationVisibility(boolean isActive){
+        if (isActive) {
+            background.setVisibility(View.VISIBLE);
+            robotAnimation.setVisibility(View.VISIBLE);
+            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
+        } else {
+            background.setVisibility(View.INVISIBLE);
+            robotAnimation.setVisibility(View.INVISIBLE);
+            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
         }
     }
 
@@ -396,8 +416,12 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
                 NavigationManager.navigateToDestinationBlind(this, accion, getSupportFragmentManager(), null);
                 //entrarModoAccion(accion, command);
             } else {
-                String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
-                controller.sendResponseToService(respuesta);
+                if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
+                    updateRobotAnimationVisibility(false);
+                }else{
+                    String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+                    controller.sendResponseToService(respuesta);
+                    updateRobotAnimationVisibility(false);}
             }
         }
     }
