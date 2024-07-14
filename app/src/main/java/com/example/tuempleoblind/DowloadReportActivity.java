@@ -1,5 +1,7 @@
 package com.example.tuempleoblind;
 
+import static com.example.tuempleoblind.NavigationManager.extractAfterUnderscore;
+
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -19,6 +21,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,9 +31,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.itextpdf.barcodes.BarcodeQRCode;
@@ -58,7 +63,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class DowloadReportActivity extends AppCompatActivity {
+public class DowloadReportActivity extends AppCompatActivity implements  VoiceCommandController.ActivityCallback{
 
     private TextView mText;
     private Button mButtonEmailUser;
@@ -68,6 +73,10 @@ public class DowloadReportActivity extends AppCompatActivity {
     private Document document;
     private String fileName;
     private Uri pdfUri;
+    FloatingActionButton microComand;
+    private LottieAnimationView robotAnimation;
+    private ImageView background;
+    private VoiceCommandController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +87,27 @@ public class DowloadReportActivity extends AppCompatActivity {
         mButtonEmailUser = findViewById(R.id.buttonDownloadPdf);
 
         mFirestore = FirebaseFirestore.getInstance();
+
+        microComand = findViewById(R.id.floatingButtonComands);
+        robotAnimation=findViewById(R.id.robot_animation);
+        background=findViewById(R.id.backBlack);
+        controller = VoiceCommandController.getInstance(this);
+        controller.registerActivityCallback(this);
+
+        microComand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (AppState.getInstance().isActiveAssistant()){
+                    AppState.getInstance().setActiveAssistant(false);
+                    controller.sendResponseToService("Desactivado");
+                }
+                else{
+                    AppState.getInstance().setActiveAssistant(true);
+                    controller.sendResponseToService("Activado");
+                }
+                updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
+            }
+        });
 
         mButtonEmailUser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +122,29 @@ public class DowloadReportActivity extends AppCompatActivity {
 
         // Create notification channel for Android O and above
         createNotificationChannel();
+
+        if (AppState.getInstance().isModoEdicionActivo()){
+            String response = "Estas seguro que quieres ";
+            controller.sendResponseToService(response);
+        }
+    }
+
+    private void updateRobotAnimationVisibility(boolean isActive){
+        if (isActive) {
+            background.setVisibility(View.VISIBLE);
+            robotAnimation.setVisibility(View.VISIBLE);
+            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
+        } else {
+            background.setVisibility(View.INVISIBLE);
+            robotAnimation.setVisibility(View.INVISIBLE);
+            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        controller.unregisterActivityCallback(this);
     }
 
     private void createPdf() throws FileNotFoundException {
@@ -291,4 +344,40 @@ public class DowloadReportActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onVoiceCommandReceived(String command, String predictedCategory) {
+        if (AppState.getInstance().isModoEdicionActivo()) {
+            if (command.contains("si") || command.contains("se")) {
+                String response = "Descargando resportes";
+                controller.sendResponseToService(response);
+                AppState.getInstance().setModoEdicionActivo(false);
+                mButtonEmailUser.performClick();
+            } else if (command.contains("no")) {
+                String response = "Cancelando";
+                controller.sendResponseToService(response);
+                AppState.getInstance().setModoEdicionActivo(false);
+            } else {
+                String response = "¿Te gustaria descargar reportes?";
+                controller.sendResponseToService(response);
+            }
+        } else {
+            if (predictedCategory.startsWith("navegacion_")) {
+                String destino = extractAfterUnderscore(predictedCategory);
+                String respuesta = "Cambiando a " + destino;
+                controller.sendResponseToService(respuesta);
+                NavigationManager.navigateToDestinationBlind(this, destino, getSupportFragmentManager(), null);
+            } else if (predictedCategory.startsWith("accion_")) {
+                String accion = extractAfterUnderscore(predictedCategory);
+                AppState.getInstance().setModoEdicionActivo(true);
+                NavigationManager.navigateToDestinationBlind(this, accion, getSupportFragmentManager(), null);
+            } else {
+                if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
+                    updateRobotAnimationVisibility(false);
+                }else{
+                    String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+                    controller.sendResponseToService(respuesta);
+                    updateRobotAnimationVisibility(false);}
+            }
+        }
+    }
 }

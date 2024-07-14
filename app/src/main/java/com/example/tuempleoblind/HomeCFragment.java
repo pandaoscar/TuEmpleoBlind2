@@ -2,6 +2,8 @@ package com.example.tuempleoblind;
 
 import static android.app.Activity.RESULT_OK;
 
+import static com.example.tuempleoblind.NavigationManager.extractAfterUnderscore;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,9 +20,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.Manifest;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.tuempleoblind.adapter.TrabajosPublicadosAdapter;
 import com.example.tuempleoblind.model.TrabajosPublicados;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -40,7 +44,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  * Use the {@link HomeCFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeCFragment extends Fragment implements TrabajosPublicadosAdapter.OnViewPostulatesClickListener {
+public class HomeCFragment extends Fragment implements TrabajosPublicadosAdapter.OnViewPostulatesClickListener, VoiceCommandController.ActivityCallback {
     Button newJob;
     FloatingActionButton microComand;
     RecyclerView cRecycleView;
@@ -57,6 +61,10 @@ public class HomeCFragment extends Fragment implements TrabajosPublicadosAdapter
     // Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private VoiceCommandController controller;
+    private LottieAnimationView robotAnimation;
+    private ImageView background;
 
     public HomeCFragment() {
         // Required empty public constructor
@@ -101,6 +109,8 @@ public class HomeCFragment extends Fragment implements TrabajosPublicadosAdapter
         cRecycleView= view.findViewById(R.id.recycleViewJobsOfCompany);
         cRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
         FirebaseUser currentUser= FirebaseAuth.getInstance().getCurrentUser();
+        robotAnimation=view.findViewById(R.id.robot_animation);
+        background=view.findViewById(R.id.backBlack);
         String currentUserId = currentUser.getUid();
         Query query = cFirestore.collection("TrabajosPublicados").whereEqualTo("companyPublishId", currentUserId);
         FirestoreRecyclerOptions<TrabajosPublicados> firestoreRecyclerOptions= new FirestoreRecyclerOptions.Builder<TrabajosPublicados>().setQuery(query,TrabajosPublicados.class).build();
@@ -108,11 +118,21 @@ public class HomeCFragment extends Fragment implements TrabajosPublicadosAdapter
         mAdapter.notifyDataSetChanged();
         cRecycleView.setAdapter(mAdapter);
         mAdapter.setOnViewPostulatesClick(this);
+
+        controller = VoiceCommandController.getInstance(getActivity());
+        controller.registerActivityCallback(this);
         microComand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                checkAndRequestPermissions();
+                if (AppState.getInstance().isActiveAssistant()){
+                    AppState.getInstance().setActiveAssistant(false);
+                    controller.sendResponseToService("Desactivado");
+                }
+                else{
+                    AppState.getInstance().setActiveAssistant(true);
+                    controller.sendResponseToService("Activado");
+                }
+                updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
             }
         });
 
@@ -125,85 +145,37 @@ public class HomeCFragment extends Fragment implements TrabajosPublicadosAdapter
                 startActivity(intent);
             }
         });
+
+        // Inflate the layout for this fragment
+        updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
+
         return view;
     }
 
-    private void checkAndRequestPermissions() {
-        if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.RECORD_AUDIO)) {
-            // Permission already granted, perform operation
-            Toast.makeText(requireContext(), "Permission already granted", Toast.LENGTH_SHORT).show();
-            iniciarReconocimientoVoz();
+    private void updateRobotAnimationVisibility(boolean isActive){
+        if (isActive) {
+            background.setVisibility(View.VISIBLE);
+            robotAnimation.setVisibility(View.VISIBLE);
+            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
         } else {
-            // Request permissions
-            EasyPermissions.requestPermissions(this, "Porfavor acepta los permisos del microfono", PERMISSION_REQUEST_CODE, Manifest.permission.RECORD_AUDIO);
+            background.setVisibility(View.INVISIBLE);
+            robotAnimation.setVisibility(View.INVISIBLE);
+            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        // Forward results to EasyPermissions
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                Toast.makeText(requireContext(), "Permission granted", Toast.LENGTH_SHORT).show();
-            } else {
-                // Permission is denied
-                Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
-    public void onPermissionsGranted(int requestCode, @NonNull String[] perms) {
-        // Permission granted, handle accordingly
-        Toast.makeText(requireContext(), "Permission granted", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, @NonNull String[] perms) {
-        // Permission denied, handle accordingly
-        Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show();
-    }
-
-
-    private void iniciarReconocimientoVoz() {
-        // Crea un Intent para el reconocimiento de voz
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        // Configura el idioma para el reconocimiento (puedes cambiarlo según tus necesidades)
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        // Configura un mensaje para el usuario
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Di algo...");
-        // Inicia la actividad de reconocimiento de voz y espera los resultados
-        startActivityForResult(intent, CODIGO_RECONOCIMIENTO_VOZ);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == CODIGO_RECONOCIMIENTO_VOZ) {
-            if (resultCode == RESULT_OK && data != null) {
-                // Obtiene la lista de palabras reconocidas
-                ArrayList<String> palabrasReconocidas = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                if (palabrasReconocidas != null && palabrasReconocidas.isEmpty()) {
-                    // Guarda la primera palabra reconocida en un String
-                    String palabra = palabrasReconocidas.toString().replace("[", "").replace("]", "");
-
-                    NavigationManager.navigateToDestinationC(getContext(), palabra, getActivity().getSupportFragmentManager(), this);
-                }
-            } else {
-                // Mensaje de error si el reconocimiento de voz no fue exitoso
-                Toast.makeText(requireActivity(), "Error en el reconocimiento de voz", Toast.LENGTH_SHORT).show();
-            }
-        }
+    public void onDestroy() {
+        super.onDestroy();
+        controller.unregisterActivityCallback(this);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         mAdapter.startListening();
+
+        controller.sendRoleUser("userCompany");
     }
 
     @Override
@@ -218,6 +190,16 @@ public class HomeCFragment extends Fragment implements TrabajosPublicadosAdapter
     }
 
     @Override
+    public void onPermissionsGranted(int requestCode, @NonNull String[] perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull String[] perms) {
+
+    }
+
+    @Override
     public void onViewPostulatesClick(int position) {
         DocumentSnapshot snapshot= mAdapter.getSnapshots().getSnapshot(position);
         String jobId = snapshot.getId();
@@ -228,4 +210,29 @@ public class HomeCFragment extends Fragment implements TrabajosPublicadosAdapter
     }
 
 
+    @Override
+    public void onVoiceCommandReceived(String command, String predictedCategory) {
+        if (AppState.getInstance().isModoEdicionActivo()) {
+            //por hacer
+        } else {
+            if (predictedCategory.startsWith("navegacion_")) {
+                String destino = extractAfterUnderscore(predictedCategory);
+                String respuesta = "Cambiando a " + destino;
+                controller.sendResponseToService(respuesta);
+                NavigationManager.navigateToDestinationC(getContext(), destino, getActivity().getSupportFragmentManager(), this);
+            } else if (predictedCategory.startsWith("accion_")) {
+                String accion = extractAfterUnderscore(predictedCategory);
+                AppState.getInstance().setModoEdicionActivo(true);
+                NavigationManager.navigateToDestinationC(getContext(), accion, getActivity().getSupportFragmentManager(), this);
+            } else {
+                if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
+                    updateRobotAnimationVisibility(false);
+                }else{
+                    String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+                    controller.sendResponseToService(respuesta);
+                    updateRobotAnimationVisibility(false);}
+
+            }
+        }
+    }
 }

@@ -2,21 +2,32 @@ package com.example.tuempleoblind;
 
 import static android.app.PendingIntent.getActivity;
 
+import static com.example.tuempleoblind.NavigationManager.eliminarTildes;
+import static com.example.tuempleoblind.NavigationManager.extractAfterUnderscore;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.Manifest;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.example.tuempleoblind.tensorflowlite.TextClassifier;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,14 +37,16 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ArrayList;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class EditDataProfileC extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
+public class EditDataProfileC extends AppCompatActivity implements VoiceCommandController.ActivityCallback {
     private static final String FIELD_COLLECTION_C="UsernameC";
     private static final String FIELD_NAME_C = "Nombre";
     private static final String FIELD_USERNAME_C = "Usuario";
@@ -53,10 +66,17 @@ public class EditDataProfileC extends AppCompatActivity implements EasyPermissio
     Button btnSave;
     Button btnCancel;
     FloatingActionButton microComand;
+    private VoiceCommandController controller;
+    private LottieAnimationView robotAnimation;
+    private ImageView background;
     FirebaseFirestore mFirestore;
     private FirebaseAuth mUser;
-    private static final int CODIGO_RECONOCIMIENTO_VOZ = 1;
-    private static final int PERMISSION_REQUEST_CODE = 123;
+    private String campToEdit = null;
+    private EditText campTextToEdit;
+    private String newValue = null;
+    private String oldValue = null;
+    private SpeechRecognizer speechRecognizer;
+    private static final int REQUEST_CODE_SPEECH_INPUT = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,10 +106,23 @@ public class EditDataProfileC extends AppCompatActivity implements EasyPermissio
         btnSave.setTextColor(getResources().getColor(R.color.litle_color));
         obtenerValoresFirestore();
 
+        background=findViewById(R.id.backBlack);
+        robotAnimation=findViewById(R.id.robot_animation);
+        controller = VoiceCommandController.getInstance(this);
+        controller.registerActivityCallback(this);
+
         microComand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkAndRequestPermissions();
+                if (AppState.getInstance().isActiveAssistant()){
+                    AppState.getInstance().setActiveAssistant(false);
+                    controller.sendResponseToService("Desactivado");
+                }
+                else{
+                    AppState.getInstance().setActiveAssistant(true);
+                    controller.sendResponseToService("Activado");
+                }
+                updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
             }
         });
 
@@ -120,80 +153,81 @@ public class EditDataProfileC extends AppCompatActivity implements EasyPermissio
             }
         });
 
-    }
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        speechRecognizer.setRecognitionListener(new RecognitionListener() {
+            @Override
+            public void onReadyForSpeech(Bundle params) {}
 
-    private void checkAndRequestPermissions() {
-        if (EasyPermissions.hasPermissions(getApplicationContext(), Manifest.permission.RECORD_AUDIO)) {
-            // Permission already granted, perform operation
-            Toast.makeText(getApplicationContext(), "Permission already granted", Toast.LENGTH_SHORT).show();
-            iniciarReconocimientoVoz();
-        } else {
-            // Request permissions
-            EasyPermissions.requestPermissions(this, "Porfavor acepta los permisos del microfono", PERMISSION_REQUEST_CODE, Manifest.permission.RECORD_AUDIO);
-        }
-    }
+            @Override
+            public void onBeginningOfSpeech() {}
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        // Forward results to EasyPermissions
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                Toast.makeText(getApplicationContext(), "Permission granted", Toast.LENGTH_SHORT).show();
-            } else {
-                // Permission is denied
-                Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+            @Override
+            public void onRmsChanged(float rmsdB) {}
+
+            @Override
+            public void onBufferReceived(byte[] buffer) {}
+
+            @Override
+            public void onEndOfSpeech() {}
+
+            @Override
+            public void onError(int error) {
+                helpGoogle();
             }
-        }
-    }
 
-    @Override
-    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        // Permission granted, handle accordingly
-        Toast.makeText(getApplicationContext(), "Permission granted", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-        // Permission denied, handle accordingly
-        Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
-    }
-
-
-
-    private void iniciarReconocimientoVoz() {
-        // Crea un Intent para el reconocimiento de voz
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        // Configura el idioma para el reconocimiento (puedes cambiarlo según tus necesidades)
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        // Configura un mensaje para el usuario
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Di algo...");
-        // Inicia la actividad de reconocimiento de voz y espera los resultados
-        startActivityForResult(intent, CODIGO_RECONOCIMIENTO_VOZ);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == CODIGO_RECONOCIMIENTO_VOZ) {
-            if (resultCode == RESULT_OK && data != null) {
-                // Obtiene la lista de palabras reconocidas
-                ArrayList<String> palabrasReconocidas = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                if (palabrasReconocidas != null && palabrasReconocidas.isEmpty()) {
-                    // Guarda la primera palabra reconocida en un String
+            @Override
+            public void onResults(Bundle results) {
+                System.out.println("holaaaaaaaaa aaa");
+                ArrayList<String> palabrasReconocidas = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                if (palabrasReconocidas != null && !palabrasReconocidas.isEmpty()) {
                     String palabra = palabrasReconocidas.toString().replace("[", "").replace("]", "");
-                    NavigationManager.navigateToDestinationC(getApplicationContext(), palabra, getSupportFragmentManager(), null);
+                    String[] pal = palabra.split(" ");
+                    palabra = String.join("", pal);
+                    palabra = palabra.toLowerCase();
+                    System.out.println("holaaaaaaaaa aaa" + "valor recibido "+palabra);
+                    AppState.getInstance().setHelpGoogleActive(false);
+                    onVoiceCommandReceived(palabra, "accion");
+                    AppState.getInstance().setModoEdicionActivo(true);
+                    AppState.getInstance().setActiveAssistant(true);
+                    updateRobotAnimationVisibility(true);
                 }
-            } else {
-                // Mensaje de error si el reconocimiento de voz no fue exitoso
-                Toast.makeText(getApplicationContext(), "Error en el reconocimiento de comandos", Toast.LENGTH_SHORT).show();
             }
+
+            @Override
+            public void onPartialResults(Bundle partialResults) {}
+
+            @Override
+            public void onEvent(int eventType, Bundle params) {}
+        });
+
+
+        if (AppState.getInstance().isModoEdicionActivo()){
+            String response = "¿Cúal de tus datos quieres cambiar?";
+            controller.sendResponseToService(response);
+        }
+        updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
+    }
+
+    private void updateRobotAnimationVisibility(boolean isActive){
+        if (isActive) {
+            background.setVisibility(View.VISIBLE);
+            robotAnimation.setVisibility(View.VISIBLE);
+            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
+        } else {
+            background.setVisibility(View.INVISIBLE);
+            robotAnimation.setVisibility(View.INVISIBLE);
+            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        controller.unregisterActivityCallback(this);
+        if (speechRecognizer != null) {
+            speechRecognizer.destroy();
+        }
+    }
     private void postUsernameC(String name, String username, String email, String nameCompany, String typeCompany, String location, String webPag, String userID) {
         Map<String, Object> map = new HashMap<>();
         map.put(FIELD_NAME_C, name);
@@ -225,7 +259,6 @@ public class EditDataProfileC extends AppCompatActivity implements EasyPermissio
                     }
                 });
     }
-
     private void obtenerValoresFirestore() {
         // Obtener el documento deseado de Firestore
         FirebaseUser user = mUser.getCurrentUser();
@@ -271,7 +304,6 @@ public class EditDataProfileC extends AppCompatActivity implements EasyPermissio
             }
         });
     }
-
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -341,4 +373,168 @@ public class EditDataProfileC extends AppCompatActivity implements EasyPermissio
         });
     }
 
+    @Override
+    public void onVoiceCommandReceived(String command, String predictedCategory) {
+        if (AppState.getInstance().isModoEdicionActivo()) {
+            command = command.toLowerCase();
+            command = eliminarTildes(command);
+            //TextClassifier precide = new TextClassifier("", );
+            //String aux = precide.prediccion("nombre de la compañia");
+            if ((command.contains("nombre") || command.contains("usuario") || command.contains("correo") || (command.contains("nombre") && command.contains("empresa")) || (command.contains("tipo") && command.contains("empresa")) || (command.contains("ubicacion") && command.contains("empresa")) || command.contains("pagina")) && campToEdit == null){
+                campToEdit = command;
+
+                String respuesta = "¿Cual es el nuevo valor?";
+                controller.sendResponseToService(respuesta);
+
+                if (command.contains("correo") || command.contains("pagina")){
+                    AppState.getInstance().setActiveAssistant(false);
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            helpGoogle();
+                        }
+                    }, 1900);
+                }
+            }
+            else{
+                if (campToEdit != null){
+                    if (newValue != null && (command.contains("si") || command.contains("se"))){
+                        String response = "Editando";
+                        controller.sendResponseToService(response);
+                        campTextToEdit.setText(newValue);
+                        AppState.getInstance().setModoEdicionActivo(false);
+                        btnSave.performClick();
+                    } else if (newValue != null && command.contains("no")) {
+                        String respuesta = "Entonces, ¿Cual es el nuevo valor?";
+                        controller.sendResponseToService(respuesta);
+                        newValue = null;
+                        if (campToEdit.contains("correo") || campToEdit.contains("pagina")){
+                            AppState.getInstance().setActiveAssistant(false);
+                            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    helpGoogle();
+                                }
+                            }, 2200);
+                        }
+                    }
+                    else{
+                        if (newValue == null){
+                            editValue(command);
+                        } else controller.sendResponseToService("¿Estas de acuerdo con el nuevo valor? " + newValue);
+                    }
+                }
+                else{
+                    String response = "¿Cúal de tus datos quieres cambiar?";
+                    controller.sendResponseToService(response);
+                }
+            }
+
+        } else {
+            if (predictedCategory.startsWith("navegacion_")) {
+                String destino = extractAfterUnderscore(predictedCategory);
+                String respuesta = "Cambiando a " + destino;
+                controller.sendResponseToService(respuesta);
+                NavigationManager.navigateToDestinationC(this, destino, getSupportFragmentManager(), null);
+            } else if (predictedCategory.startsWith("accion_")) {
+                String accion = extractAfterUnderscore(predictedCategory);
+                AppState.getInstance().setModoEdicionActivo(true);
+                NavigationManager.navigateToDestinationC(this, accion, getSupportFragmentManager(), null);
+            } else {
+                if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
+                    updateRobotAnimationVisibility(false);
+                }else{
+                    String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+                    controller.sendResponseToService(respuesta);
+                    updateRobotAnimationVisibility(false);}
+            }
+        }
+    }
+    private void editValue(String newVal) {
+        String respuesta = null;
+        // Variable de control para el switch
+        String control = "";
+
+        if (campToEdit.contains("nombre") && campToEdit.contains("empresa")) {
+            control = "NOMBRE EMPRESA";
+        } else if (campToEdit.contains("ubicacion") && campToEdit.contains("empresa")) {
+            control = "UBICACION EMPRESA";
+        } else if (campToEdit.contains("tipo") && campToEdit.contains("empresa")) {
+            control = "TIPO EMPRESA";
+        } else if (campToEdit.contains("pagina")) {
+            control = "PAGINA";
+        } else if (campToEdit.contains("nombre")) {
+            control = "NOMBRE";
+        } else if (campToEdit.contains("correo")) {
+            control = "CORREO";
+        } else if (campToEdit.contains("usuario")) {
+            control = "USUARIO";
+        }
+
+            switch (control) {
+            case "NOMBRE":
+                newValue = newVal;
+                oldValue = campTextName.getText().toString();
+                campTextToEdit = campTextName;
+                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
+                controller.sendResponseToService(respuesta);
+
+                break;
+            case "CORREO":
+                newValue = newVal;
+                oldValue = campTextEmail.getText().toString();
+                campTextToEdit = campTextEmail;
+                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
+                controller.sendResponseToService(respuesta);
+                break;
+            case "USUARIO":
+                newValue = newVal;
+                oldValue = campTextUserName.getText().toString();
+                campTextToEdit = campTextUserName;
+                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
+                controller.sendResponseToService(respuesta);
+                break;
+            case "NOMBRE EMPRESA":
+                newValue = newVal;
+                oldValue = campTextNameCompany.getText().toString();
+                campTextToEdit = campTextNameCompany;
+                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
+                controller.sendResponseToService(respuesta);
+                break;
+            case "UBICACION EMPRESA":
+                newValue = newVal;
+                oldValue = campTextLocation.getText().toString();
+                campTextToEdit = campTextLocation;
+                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
+                controller.sendResponseToService(respuesta);
+                break;
+            case "TIPO EMPRESA":
+                newValue = newVal;
+                oldValue = campTextCompanyType.getText().toString();
+                campTextToEdit = campTextCompanyType;
+                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
+                controller.sendResponseToService(respuesta);
+                break;
+            case "PAGINA":
+                newValue = newVal;
+                oldValue = campTextWebPag.getText().toString();
+                campTextToEdit = campTextWebPag;
+                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
+                controller.sendResponseToService(respuesta);
+                break;
+        }
+    }
+    private void helpGoogle() {
+        AppState.getInstance().setHelpGoogleActive(true);
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Habla algo...");
+
+        try {
+            speechRecognizer.startListening(intent);
+        } catch (Exception e) {
+            Toast.makeText(this, "Tu dispositivo no soporta el reconocimiento de voz", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

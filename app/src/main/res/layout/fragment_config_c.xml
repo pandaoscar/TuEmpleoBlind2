@@ -126,6 +126,24 @@
         </LinearLayout>
 
     </ScrollView>
+    <ImageView
+        android:id="@+id/backBlack"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:alpha="0.72"
+        android:scaleType="centerCrop"
+        android:src="@drawable/backgroudblack" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/robot_animation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:lottie_loop="true"
+        android:layout_gravity="top|center"
+        android:layout_margin="10dp"
+        android:visibility="invisible"
+        app:lottie_rawRes="@raw/robot_circle_animation" />
 
     <include layout="@layout/base_flotante" />
 

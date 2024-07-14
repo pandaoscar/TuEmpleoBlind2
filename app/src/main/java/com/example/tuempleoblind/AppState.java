@@ -4,6 +4,7 @@ public class AppState {
     private static AppState instance;
     private boolean modoEdicionActivo;
     private boolean isActiveAssistant;
+    private boolean isHelpGoogleActive;
 
     private AppState() {
         // Constructor privado para prevenir instanciación
@@ -30,6 +31,14 @@ public class AppState {
 
     public void setActiveAssistant(boolean activeAssistant) {
         this.isActiveAssistant = activeAssistant;
+    }
+
+    public boolean isHelpGoogleActive() {
+        return isHelpGoogleActive;
+    }
+
+    public void setHelpGoogleActive(boolean helpGoogleActive) {
+        isHelpGoogleActive = helpGoogleActive;
     }
 }
 

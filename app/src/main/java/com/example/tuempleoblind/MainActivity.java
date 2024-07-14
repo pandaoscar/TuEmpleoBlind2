@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements VoiceCommandContr
         super.onStart();
         startService(new Intent(this, NewJobPublishedNotification.class));
         startService(new Intent(this, VoiceService.class));
+        controller.sendRoleUser(null);
         System.out.println("ya prendi el servicio");
         //AppState.getInstance().setActiveAssistant(true);
         // Verificar si el usuario ya está autenticado
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements VoiceCommandContr
                     if (task.isSuccessful()) {
                         DocumentSnapshot documentBlind = task.getResult();
                         if (documentBlind.exists()) {
-                            controller.sendRoleUser("userBlind");
+
                             // El usuario pertenece a la colección UsernameBlind
                             startActivity(new Intent(getApplicationContext(), HomePageBlind.class));
                             finish(); // Finalizar la actividad de inicio de sesión
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements VoiceCommandContr
                                         DocumentSnapshot documentC = task.getResult();
                                         if (documentC.exists()) {
                                             // El usuario pertenece a la colección UsernameC
+
                                             startActivity(new Intent(getApplicationContext(), CompanyHome.class));
                                             finish(); // Finalizar la actividad de inicio de sesión
                                         } else {

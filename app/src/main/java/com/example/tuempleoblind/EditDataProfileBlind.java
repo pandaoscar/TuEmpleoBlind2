@@ -384,11 +384,13 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
             }
             else{
                 if (campToEdit != null){
-                    if (newValue != null && command.equals("si")){
+                    if (newValue != null && (command.contains("si") || command.contains("se"))){
+                        String response = "Editando";
+                        controller.sendResponseToService(response);
                         campTextToEdit.setText(newValue);
                         AppState.getInstance().setModoEdicionActivo(false);
                         btnSave.performClick();
-                    } else if (newValue != null && command.equals("no")) {
+                    } else if (newValue != null && command.contains("no")) {
                         String respuesta = "Entonces, ¿Cual es el nuevo valor?";
                         controller.sendResponseToService(respuesta);
                         newValue = null;

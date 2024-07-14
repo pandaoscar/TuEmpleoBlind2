@@ -1,5 +1,7 @@
 package com.example.tuempleoblind;
 
+import static com.example.tuempleoblind.NavigationManager.extractAfterUnderscore;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,10 +16,12 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -34,7 +38,7 @@ import java.util.Map;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class NewJob extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
+public class NewJob extends AppCompatActivity implements VoiceCommandController.ActivityCallback{
     private static final String NUMERO_DE_EMPLOS_PUBLICADOS = "numeroDeEmpleoPublicados";
     private static final String NUMERO_DE_EMPLEOS_PUBLICADOS_TOTALES = "numeroDeEmpleoPublicadosTotales";
     private static final String COLLECTION_REPORTE = "Reporte";
@@ -44,6 +48,9 @@ public class NewJob extends AppCompatActivity implements EasyPermissions.Permiss
     Button btnback;
     Button btnPublish;
     FloatingActionButton microComand;
+    private VoiceCommandController controller;
+    private LottieAnimationView robotAnimation;
+    private ImageView background;
     private static final int CODIGO_RECONOCIMIENTO_VOZ = 1;
     private static final int PERMISSION_REQUEST_CODE = 123;
     Spinner spinnerCategory;
@@ -88,10 +95,24 @@ public class NewJob extends AppCompatActivity implements EasyPermissions.Permiss
         radioButtonFalseElevator = findViewById(R.id.falseElevatorNewJobC);
         radioButtonFalseRamp = findViewById(R.id.falseRampNewJobC);
 
+        robotAnimation=findViewById(R.id.robot_animation);
+        background=findViewById(R.id.backBlack);
+
+        controller = VoiceCommandController.getInstance(this);
+        controller.registerActivityCallback(this);
+
         microComand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkAndRequestPermissions();
+                if (AppState.getInstance().isActiveAssistant()){
+                    AppState.getInstance().setActiveAssistant(false);
+                    controller.sendResponseToService("Desactivado");
+                }
+                else{
+                    AppState.getInstance().setActiveAssistant(true);
+                    controller.sendResponseToService("Activado");
+                }
+                updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
             }
         });
 
@@ -113,80 +134,26 @@ public class NewJob extends AppCompatActivity implements EasyPermissions.Permiss
         spinnerTypeJob.setAdapter(adapter2);
 
         actionPublish();
+        // Inflate the layout for this fragment
+        updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
 
     }
 
-    private void checkAndRequestPermissions() {
-        if (EasyPermissions.hasPermissions(getApplicationContext(), android.Manifest.permission.RECORD_AUDIO)) {
-            // Permission already granted, perform operation
-            Toast.makeText(getApplicationContext(), "Permission already granted", Toast.LENGTH_SHORT).show();
-            iniciarReconocimientoVoz();
+    private void updateRobotAnimationVisibility(boolean isActive){
+        if (isActive) {
+            background.setVisibility(View.VISIBLE);
+            robotAnimation.setVisibility(View.VISIBLE);
+            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
         } else {
-            // Request permissions
-            EasyPermissions.requestPermissions(this, "Porfavor acepta los permisos del microfono", PERMISSION_REQUEST_CODE, Manifest.permission.RECORD_AUDIO);
+            background.setVisibility(View.INVISIBLE);
+            robotAnimation.setVisibility(View.INVISIBLE);
+            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
         }
     }
-
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        // Forward results to EasyPermissions
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                Toast.makeText(getApplicationContext(), "Permission granted", Toast.LENGTH_SHORT).show();
-            } else {
-                // Permission is denied
-                Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
-    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        // Permission granted, handle accordingly
-        Toast.makeText(getApplicationContext(), "Permission granted", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-        // Permission denied, handle accordingly
-        Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
-    }
-
-
-
-    private void iniciarReconocimientoVoz() {
-        // Crea un Intent para el reconocimiento de voz
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        // Configura el idioma para el reconocimiento (puedes cambiarlo según tus necesidades)
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        // Configura un mensaje para el usuario
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Di algo...");
-        // Inicia la actividad de reconocimiento de voz y espera los resultados
-        startActivityForResult(intent, CODIGO_RECONOCIMIENTO_VOZ);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == CODIGO_RECONOCIMIENTO_VOZ) {
-            if (resultCode == RESULT_OK && data != null) {
-                // Obtiene la lista de palabras reconocidas
-                ArrayList<String> palabrasReconocidas = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                if (palabrasReconocidas != null && palabrasReconocidas.isEmpty()) {
-                    // Guarda la primera palabra reconocida en un String
-                    String palabra = palabrasReconocidas.toString().replace("[", "").replace("]", "");
-                    NavigationManager.navigateToDestinationC(getApplicationContext(), palabra, getSupportFragmentManager(), null);
-
-                }
-            } else {
-                // Mensaje de error si el reconocimiento de voz no fue exitoso
-                Toast.makeText(getApplicationContext(), "Error en el reconocimiento de comandos", Toast.LENGTH_SHORT).show();
-            }
-        }
+    public void onDestroy() {
+        super.onDestroy();
+        controller.unregisterActivityCallback(this);
     }
 
     private void actionPublish() {
@@ -293,5 +260,31 @@ public class NewJob extends AppCompatActivity implements EasyPermissions.Permiss
                 });
             }
         });
+    }
+
+    @Override
+    public void onVoiceCommandReceived(String command, String predictedCategory) {
+        if (AppState.getInstance().isModoEdicionActivo()) {
+            //por hacer
+        } else {
+            if (predictedCategory.startsWith("navegacion_")) {
+                String destino = extractAfterUnderscore(predictedCategory);
+                String respuesta = "Cambiando a " + destino;
+                controller.sendResponseToService(respuesta);
+                NavigationManager.navigateToDestinationC(this, destino, getSupportFragmentManager(), null);
+            } else if (predictedCategory.startsWith("accion_")) {
+                String accion = extractAfterUnderscore(predictedCategory);
+                AppState.getInstance().setModoEdicionActivo(true);
+                NavigationManager.navigateToDestinationC(this, accion, getSupportFragmentManager(), null);
+            } else {
+                if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
+                    updateRobotAnimationVisibility(false);
+                }else{
+                    String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+                    controller.sendResponseToService(respuesta);
+                    updateRobotAnimationVisibility(false);}
+
+            }
+        }
     }
 }

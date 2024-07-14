@@ -26,8 +26,8 @@ public class NavigationManager extends AppCompatActivity {
             context.startActivity(intent);
 
         }else{
-            if (ifNavigation(keyword, "cerrar sesion descargar reporte") ){
-                replaceFragmentBlind(new ProfileCFragment(), fragmentManager);
+            if (ifNavigation(keyword, "cerrar sesion") ){
+                replaceFragmentC(new ProfileCFragment(), fragmentManager);
             }else{
                 if (ifNavigation(keyword, "ver leyes") && !fragmentActual.getClass().getSimpleName().equalsIgnoreCase("ConfigCFragment")){
                     Log.d("TAG", "ProfileCFragment ID: " + R.id.profileCFragment);
@@ -35,23 +35,27 @@ public class NavigationManager extends AppCompatActivity {
                 }else{
                     if (ifNavigation(keyword, "menu principal") && !fragmentActual.getClass().getSimpleName().equalsIgnoreCase("HomeCFragment") ) {
                         Intent intent = new Intent(context, CompanyHome.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Esto limpiará la pila de actividades y creará una nueva tarea
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Esto limpiará la pila de actividades y creará una nueva tarea
                         context.startActivity(intent);
                     } else if (ifNavigation(keyword, "crear empleo")||(ifNavigation(keyword, "nuevo empleo") )&& !context.getClass().getSimpleName().equalsIgnoreCase("NewJob")) {
                         Intent intent = new Intent(context, NewJob.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         context.startActivity(intent);
                     } else if (ifNavigation(keyword, "editar datos empresa") && !context.getClass().getSimpleName().equals("EditDataProfileC")){
                         Intent intent = new Intent(context, EditDataProfileC.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         context.startActivity(intent);
                     } else if (ifNavigation(keyword, "politicas seguridad") && !context.getClass().getSimpleName().equals("PoliticalSecurityActivity")) {
                         Intent intent = new Intent(context, PoliticalSecurityActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         context.startActivity(intent);
                     } else if (ifNavigation(keyword, "informacion aplicacion") && !context.getClass().getSimpleName().equals("AboutActivity")) {
                         Intent intent = new Intent(context, AboutActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        context.startActivity(intent);
+                    } else if (ifNavigation(keyword, "descargar reporte") && !context.getClass().getSimpleName().equals("DowloadReportActivity")) {
+                        Intent intent = new Intent(context, DowloadReportActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         context.startActivity(intent);
                     }
                 }

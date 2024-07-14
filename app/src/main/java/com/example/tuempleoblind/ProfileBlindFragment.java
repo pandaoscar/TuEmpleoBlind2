@@ -194,7 +194,7 @@ public class ProfileBlindFragment extends Fragment implements VoiceCommandContro
     @Override
     public void onVoiceCommandReceived(String command, String predictedCategory) {
         if (AppState.getInstance().isModoEdicionActivo()) {
-            if (command.equalsIgnoreCase("sí")) {
+            if (command.contains("si") || command.contains("se")) {
                 String response = "Cerrando sesión";
                 controller.sendResponseToService(response);
                 AppState.getInstance().setModoEdicionActivo(false);

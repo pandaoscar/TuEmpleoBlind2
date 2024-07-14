@@ -171,6 +171,7 @@ public class HomeBlindFragment extends Fragment implements JobsAvailableAdapter.
     public void onStart() {
         super.onStart();
         mAdapter.startListening();
+        controller.sendRoleUser("userBlind");
     }
 
     @Override
