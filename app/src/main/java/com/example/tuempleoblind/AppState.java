@@ -9,6 +9,7 @@ public class AppState {
     private boolean isActiveAssistant;
     private boolean isHelpGoogleActive;
     private final List<Observer> observers = new ArrayList<>();
+    private final List<TTSObserver> ttsObservers = new ArrayList<>();
 
 
     private AppState() {
@@ -46,6 +47,19 @@ public class AppState {
     public void setHelpGoogleActive(boolean helpGoogleActive) {
         isHelpGoogleActive = helpGoogleActive;
     }
+    public void addTTSObserver(TTSObserver observer) {
+        ttsObservers.add(observer);
+    }
+
+    public void removeTTSObserver(TTSObserver observer) {
+        ttsObservers.remove(observer);
+    }
+
+    protected void notifyTTSObservers() {
+        for (TTSObserver observer : ttsObservers) {
+            observer.onTTSCompleted();
+        }
+    }
 
     public void addObserver(Observer observer) {
         observers.add(observer);
@@ -62,6 +76,9 @@ public class AppState {
     }
     public interface Observer {
         void onActiveAssistantChanged(boolean isActive);
+    }
+    public interface TTSObserver {
+        void onTTSCompleted();
     }
 
 }

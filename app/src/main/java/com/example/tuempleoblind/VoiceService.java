@@ -60,6 +60,9 @@ public class VoiceService extends Service implements RecognitionListener, AppSta
         }
         else{
             resetTimeout(0);
+            if (AppState.getInstance().isHelpGoogleActive()){
+                speechService.stop();
+            }
             System.out.println("Asistente suspendido");
         }
     }
@@ -169,6 +172,7 @@ public class VoiceService extends Service implements RecognitionListener, AppSta
                     }
                 }
                 Log.d(TAG, "Texto TTS reproducido completamente");
+                AppState.getInstance().notifyTTSObservers(); // Notifica a los observadores del TTS
             }
             @Override
             public void onError(String utteranceId) {
