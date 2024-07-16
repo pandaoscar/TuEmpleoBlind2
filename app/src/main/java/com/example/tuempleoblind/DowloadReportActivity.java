@@ -122,9 +122,10 @@ public class DowloadReportActivity extends AppCompatActivity implements  VoiceCo
 
         // Create notification channel for Android O and above
         createNotificationChannel();
+        updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
 
         if (AppState.getInstance().isModoEdicionActivo()){
-            String response = "Estas seguro que quieres ";
+            String response = "¿Estas seguro que quieres descargar reportes?";
             controller.sendResponseToService(response);
         }
     }
@@ -347,8 +348,9 @@ public class DowloadReportActivity extends AppCompatActivity implements  VoiceCo
     @Override
     public void onVoiceCommandReceived(String command, String predictedCategory) {
         if (AppState.getInstance().isModoEdicionActivo()) {
+            command = NavigationManager.eliminarTildes(command);
             if (command.contains("si") || command.contains("se")) {
-                String response = "Descargando resportes";
+                String response = "Descargando reportes";
                 controller.sendResponseToService(response);
                 AppState.getInstance().setModoEdicionActivo(false);
                 mButtonEmailUser.performClick();

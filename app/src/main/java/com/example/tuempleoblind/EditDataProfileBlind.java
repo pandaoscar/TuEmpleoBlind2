@@ -8,6 +8,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -29,7 +34,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class EditDataProfileBlind extends AppCompatActivity implements VoiceCommandController.ActivityCallback{
@@ -61,9 +68,12 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
 
     private VoiceCommandController controller;
     private EditText campTextToEdit;
+    private Spinner spinToEdit;
     private String campToEdit = null;
     private String newValue = null;
     private String oldValue = null;
+    private SpeechRecognizer speechRecognizer;
+    private int opcionSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,6 +181,54 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
                 finish();
             }
         });
+
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        speechRecognizer.setRecognitionListener(new RecognitionListener() {
+            @Override
+            public void onReadyForSpeech(Bundle params) {}
+
+            @Override
+            public void onBeginningOfSpeech() {}
+
+            @Override
+            public void onRmsChanged(float rmsdB) {}
+
+            @Override
+            public void onBufferReceived(byte[] buffer) {}
+
+            @Override
+            public void onEndOfSpeech() {}
+
+            @Override
+            public void onError(int error) {
+                helpGoogle();
+            }
+
+            @Override
+            public void onResults(Bundle results) {
+                System.out.println("holaaaaaaaaa aaa");
+                ArrayList<String> palabrasReconocidas = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                if (palabrasReconocidas != null && !palabrasReconocidas.isEmpty()) {
+                    String palabra = palabrasReconocidas.toString().replace("[", "").replace("]", "");
+                    String[] pal = palabra.split(" ");
+                    palabra = String.join("", pal);
+                    palabra = palabra.toLowerCase();
+                    System.out.println("holaaaaaaaaa aaa" + "valor recibido "+palabra);
+                    AppState.getInstance().setHelpGoogleActive(false);
+                    onVoiceCommandReceived(palabra, "accion");
+                    AppState.getInstance().setModoEdicionActivo(true);
+                    AppState.getInstance().setActiveAssistant(true);
+                    updateRobotAnimationVisibility(true);
+                }
+            }
+
+            @Override
+            public void onPartialResults(Bundle partialResults) {}
+
+            @Override
+            public void onEvent(int eventType, Bundle params) {}
+        });
+
         if (AppState.getInstance().isModoEdicionActivo()){
             String response = "¿Cúal de tus datos quieres cambiar?";
             controller.sendResponseToService(response);
@@ -193,6 +251,9 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
     protected void onDestroy() {
         super.onDestroy();
         controller.unregisterActivityCallback(this);
+        if (speechRecognizer != null) {
+            speechRecognizer.destroy();
+        }
     }
 
 
@@ -374,29 +435,54 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
         if (AppState.getInstance().isModoEdicionActivo()) {
             command = command.toLowerCase();
             command = eliminarTildes(command);
-            if ((command.contains("nombre") || command.contains("telefono") || command.contains("correo")) && campToEdit == null){
-                //manejarComandoModoAccion(command);
+            if ((command.contains("nombre") || command.contains("telefono") || command.contains("correo") || command.contains("usuario") || (command.contains("ceguera") && command.contains("nivel")) || command.contains("profesion") || command.contains("habilidades") || command.contains("ubicacion")) && campToEdit == null){
+
                 campToEdit = command;
 
                 String respuesta = "¿Cual es el nuevo valor?";
                 controller.sendResponseToService(respuesta);
 
+                if (command.contains("correo") || campToEdit.contains("telefono")){
+                    AppState.getInstance().setActiveAssistant(false);
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            helpGoogle();
+                        }
+                    }, 1900);
+                }
             }
             else{
                 if (campToEdit != null){
                     if (newValue != null && (command.contains("si") || command.contains("se"))){
                         String response = "Editando";
                         controller.sendResponseToService(response);
-                        campTextToEdit.setText(newValue);
+                        if (campTextToEdit != null){
+                            campTextToEdit.setText(newValue);
+                        }
+                        if (spinToEdit != null){
+                            spinToEdit.setSelection(opcionSpinner);
+                        }
                         AppState.getInstance().setModoEdicionActivo(false);
                         btnSave.performClick();
                     } else if (newValue != null && command.contains("no")) {
                         String respuesta = "Entonces, ¿Cual es el nuevo valor?";
                         controller.sendResponseToService(respuesta);
                         newValue = null;
+                        if (campToEdit.contains("correo") || campToEdit.contains("telefono")){
+                            AppState.getInstance().setActiveAssistant(false);
+                            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    helpGoogle();
+                                }
+                            }, 2200);
+                        }
                     }
                     else{
-                        editValue(command);
+                        if (newValue == null){
+                            editValue(command);
+                        } else controller.sendResponseToService("¿Estas de acuerdo con el nuevo valor?, dí, si, o no." + newValue);
                     }
                 }
                 else{
@@ -416,7 +502,6 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
                 // Primero navegar a la actividad correcta si es necesario
                 AppState.getInstance().setModoEdicionActivo(true);
                 NavigationManager.navigateToDestinationBlind(this, accion, getSupportFragmentManager(), null);
-                //entrarModoAccion(accion, command);
             } else {
                 if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
                     updateRobotAnimationVisibility(false);
@@ -438,6 +523,16 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
             control = "CORREO";
         } else if (campToEdit.contains("telefono")) {
             control = "TELEFONO";
+        } else if ((campToEdit.contains("ceguera") && campToEdit.contains("nivel"))) {
+            control = "CEGUERA";
+        }else if (campToEdit.contains("usuario")) {
+            control = "USUARIO";
+        }else if (campToEdit.contains("profesion")) {
+            control = "PROFESION";
+        }else if (campToEdit.contains("habilidades")) {
+            control = "HABILIDADES";
+        }else if (campToEdit.contains("ubicacion")) {
+            control = "UBICACION";
         }
 
         switch (control) {
@@ -455,6 +550,7 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
                 respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
                 controller.sendResponseToService(respuesta);
                 break;
+
             case "TELEFONO":
                 newValue = newVal;
                 oldValue = campTextPhone.getText().toString();
@@ -462,6 +558,76 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
                 respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
                 controller.sendResponseToService(respuesta);
                 break;
+            case "CEGUERA":
+                respuesta = verifyTypeSpinner(newVal);
+                oldValue = spinnerLevelBlind.getSelectedItem().toString();
+                spinToEdit = spinnerLevelBlind;
+                controller.sendResponseToService(respuesta);
+                break;
+            case "USUARIO":
+                newValue = newVal;
+                oldValue = campTextUserName.getText().toString();
+                campTextToEdit = campTextUserName;
+                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
+                controller.sendResponseToService(respuesta);
+                break;
+            case "PROFESION":
+                newValue = newVal;
+                oldValue = campTextProfession.getText().toString();
+                campTextToEdit = campTextProfession;
+                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
+                controller.sendResponseToService(respuesta);
+                break;
+            case "HABILIDADES":
+                newValue = newVal;
+                oldValue = campTextAbilities.getText().toString();
+                campTextToEdit = campTextAbilities;
+                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
+                controller.sendResponseToService(respuesta);
+                break;
+            case "UBICACION":
+                newValue = newVal;
+                oldValue = campTextAddress.getText().toString();
+                campTextToEdit = campTextAddress;
+                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
+                controller.sendResponseToService(respuesta);
+                break;
         }
     }
+    private String verifyTypeSpinner(String command) {
+        if (command.contains("uno") || command.contains("baja") || command.contains("vision")){
+            newValue = "Baja Visión";
+            opcionSpinner = 1;
+            return "¿Estas seguro? Colocaras Baja Visión, dí, si, o no.";
+        } else if (command.contains("dos") || command.contains("parcial")) {
+            newValue = "Ceguera Parcial";
+            opcionSpinner = 2;
+            return "¿Estas seguro? Colocaras Ceguera Parcial, dí, si, o no.";
+        } else if (command.contains("tres") || command.contains("legal")) {
+            newValue = "Ceguera Legal";
+            opcionSpinner = 3;
+            return "¿Estas seguro? Colocaras Ceguera Legal, dí, si, o no.";
+        } else if (command.contains("cuatro") || command.contains("total")) {
+            newValue = "Ceguera Total";
+            opcionSpinner = 4;
+            return "¿Estas seguro? Colocaras Ceguera Total, dí, si, o no.";
+        } else {
+            newValue = null;
+            return "No entendí, prueba de nuevo ";
+        }
+    }
+    private void helpGoogle() {
+        AppState.getInstance().setHelpGoogleActive(true);
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Habla algo...");
+
+        try {
+            speechRecognizer.startListening(intent);
+        } catch (Exception e) {
+            Toast.makeText(this, "Tu dispositivo no soporta el reconocimiento de voz", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

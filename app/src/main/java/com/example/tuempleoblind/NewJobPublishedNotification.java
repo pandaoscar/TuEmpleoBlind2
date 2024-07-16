@@ -103,7 +103,6 @@ public class NewJobPublishedNotification extends Service {
                                     break;
                                 }
                             }
-
                     }
                 }
             }

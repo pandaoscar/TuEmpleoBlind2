@@ -105,7 +105,7 @@ public class ArtificialIntelligence extends Fragment implements VoiceCommandCont
             }
         });
         if (AppState.getInstance().isModoEdicionActivo()){
-            String response = "Estas seguro que quieres abrir el OCR, di si o no.";
+            String response = "Estas seguro que quieres abrir el OCR, di, si, o no.";
             controller.sendResponseToService(response);
         }
         updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
@@ -140,7 +140,7 @@ public class ArtificialIntelligence extends Fragment implements VoiceCommandCont
                 controller.sendResponseToService(response);
                 AppState.getInstance().setModoEdicionActivo(false);
             } else {
-                String response = "Estas seguro que quieres abrir el OCR, di si o no.";
+                String response = "Estas seguro que quieres abrir el OCR, di, si, o no.";
                 controller.sendResponseToService(response);
             }
         } else {

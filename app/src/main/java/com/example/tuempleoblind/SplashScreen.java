@@ -17,12 +17,19 @@ public class SplashScreen extends AppCompatActivity {
     TextView txAnimation3;
     RelativeLayout animationTop;
     RelativeLayout animationBottom;
+    private VoiceCommandController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+        controller = VoiceCommandController.getInstance(this);
+        //controller.registerActivityCallback(this);
+        startService(new Intent(this, NewJobPublishedNotification.class));
+        startService(new Intent(this, VoiceService.class));
 
+
+        controller.sendRoleUser("unLogin");
         lottie=findViewById(R.id.lottie);
         lottie.animate().rotation(360).setDuration(500).setStartDelay(900)
                 .withEndAction(() -> lottie.animate().translationY(-2000).setDuration(500).setStartDelay(500));

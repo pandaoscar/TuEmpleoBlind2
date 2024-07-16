@@ -72,10 +72,7 @@ public class PoliticalSecurityActivity extends AppCompatActivity implements Voic
                 finish();
             }
         });
-        if (AppState.getInstance().isModoEdicionActivo()){
-            String response = "¿Quieres que te lea?";
-            controller.sendResponseToService(response);
-        }
+        AppState.getInstance().setModoEdicionActivo(false);
         updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
     }
     private void updateRobotAnimationVisibility(boolean isActive){
@@ -145,7 +142,7 @@ public class PoliticalSecurityActivity extends AppCompatActivity implements Voic
                 controller.sendResponseToService(response);
                 AppState.getInstance().setModoEdicionActivo(false);
             } else {
-                String response = "¿Quieres que te lea?";
+                String response = "¿Quieres que te lea?, dí, si, o no.";
                 controller.sendResponseToService(response);
             }
         } else if (predictedCategory.startsWith("navegacion_")) {

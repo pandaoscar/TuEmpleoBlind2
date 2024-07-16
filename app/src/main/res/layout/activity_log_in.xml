@@ -8,8 +8,9 @@
     android:background="@color/mistyRose">
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,10 +57,10 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:background="@drawable/ic_illustration_blind1"
+                    android:importantForAccessibility="no"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView2"
-                    android:importantForAccessibility="no" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
                 <EditText
                     android:id="@+id/editTextEmailLogIn"
@@ -105,15 +106,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/btn_next"
-                android:textSize="18sp"
-                android:text="@string/log_in"
-                android:textColor="@color/orange"
-                android:textStyle="bold"
                 android:paddingEnd="90dp"
+                android:text="@string/log_in"
                 android:textAlignment="viewEnd"
+                android:textColor="@color/orange"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView3"
                 tools:ignore="RtlSymmetry" />
@@ -124,12 +125,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/btn_back"
-                android:textColor="@color/lapis_lazuli"
+                android:paddingStart="90dp"
                 android:text="@string/back"
+                android:textAlignment="textStart"
+                android:textColor="@color/lapis_lazuli"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:paddingStart="90dp"
-                android:textAlignment="textStart"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView3"
                 tools:ignore="RtlSymmetry" />
@@ -137,5 +138,35 @@
 
         </LinearLayout>
     </ScrollView>
+    <ImageView
+        android:id="@+id/backBlack"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:alpha="0.72"
+        android:scaleType="centerCrop"
+        android:src="@drawable/backgroudblack" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/robot_animation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:lottie_loop="true"
+        android:layout_gravity="top|center"
+        android:layout_margin="10dp"
+        android:visibility="invisible"
+        app:lottie_rawRes="@raw/robot_circle_animation"
+        tools:ignore="MissingConstraints" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="-40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include layout="@layout/base_flotante" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

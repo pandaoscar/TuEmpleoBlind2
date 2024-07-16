@@ -2,18 +2,25 @@ package com.example.tuempleoblind;
 
 
 
+import static com.example.tuempleoblind.NavigationManager.extractAfterUnderscore;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -30,6 +37,9 @@ public class MainActivity extends AppCompatActivity implements VoiceCommandContr
     Button btnLogIn;
     private static final int PERMISSION_REQUEST_CODE = 123;
     private VoiceCommandController controller;
+    private LottieAnimationView robotAnimation;
+    private ImageView background;
+    FloatingActionButton microComand;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +48,55 @@ public class MainActivity extends AppCompatActivity implements VoiceCommandContr
 
         controller = VoiceCommandController.getInstance(this);
         controller.registerActivityCallback(this);
+        microComand = findViewById(R.id.floatingButtonComands);
+
+        robotAnimation=findViewById(R.id.robot_animation);
+        background=findViewById(R.id.backBlack);
+        controller.sendRoleUser(null);
+
+        microComand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (AppState.getInstance().isActiveAssistant()){
+                    AppState.getInstance().setActiveAssistant(false);
+                    controller.sendResponseToService("Desactivado");
+                }
+                else{
+                    AppState.getInstance().setActiveAssistant(true);
+                    controller.sendResponseToService("Activado");
+                }
+                updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
+            }
+        });
+        updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
 
         btnFindJob = findViewById(R.id.buttonFindJob);
         btnFindHire = findViewById(R.id.buttonFindHire);
         btnLogIn = findViewById(R.id.buttonLogIn);
+
+
+
         login();
         hire();
         job();
+
+        controller.sendRoleUser("unLogin");
+    }
+    private void updateRobotAnimationVisibility(boolean isActive){
+        if (isActive) {
+            background.setVisibility(View.VISIBLE);
+            robotAnimation.setVisibility(View.VISIBLE);
+            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
+        } else {
+            background.setVisibility(View.INVISIBLE);
+            robotAnimation.setVisibility(View.INVISIBLE);
+            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
+        }
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        controller.unregisterActivityCallback(this);
     }
     public void activarTalkback(View view){
         try {
@@ -89,8 +141,6 @@ public class MainActivity extends AppCompatActivity implements VoiceCommandContr
         startService(new Intent(this, NewJobPublishedNotification.class));
         startService(new Intent(this, VoiceService.class));
         controller.sendRoleUser(null);
-        System.out.println("ya prendi el servicio");
-        //AppState.getInstance().setActiveAssistant(true);
         // Verificar si el usuario ya está autenticado
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -181,6 +231,17 @@ public class MainActivity extends AppCompatActivity implements VoiceCommandContr
 
     @Override
     public void onVoiceCommandReceived(String command, String predictedCategory) {
-
+         if (predictedCategory.startsWith("accion_")) {
+                String accion = extractAfterUnderscore(predictedCategory);
+                AppState.getInstance().setModoEdicionActivo(true);
+                NavigationManager.navigateToDestinationUnLogin(this, accion, getSupportFragmentManager(), null);
+        } else {
+            if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
+                updateRobotAnimationVisibility(false);
+            }else{
+                String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+                controller.sendResponseToService(respuesta);
+                updateRobotAnimationVisibility(false);}
+        }
     }
 }

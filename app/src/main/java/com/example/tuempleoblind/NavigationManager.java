@@ -102,6 +102,25 @@ public class NavigationManager extends AppCompatActivity {
             }
         }
     }
+    public static void navigateToDestinationUnLogin(Context context, String keyword, FragmentManager fragmentManager, Fragment fragmentActual) {
+        if (ifNavigation(keyword, "iniciar sesion") && !context.getClass().getSimpleName().equals("LogIn")){
+            Intent intent = new Intent(context, LogIn.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            context.startActivity(intent);
+        } else if (ifNavigation(keyword, "menu home") && !context.getClass().getSimpleName().equals("MainActivity")) {
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            context.startActivity(intent);
+        } else if (ifNavigation(keyword, "registro empresa") && !context.getClass().getSimpleName().equals("SignUpC")) {
+            Intent intent = new Intent(context, SignUpC.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            context.startActivity(intent);
+        } else if (ifNavigation(keyword, "registro blind") && !context.getClass().getSimpleName().equals("SignUpBlind")) {
+            Intent intent = new Intent(context, SignUpBlind.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            context.startActivity(intent);
+        }
+    }
 
     private static void replaceFragmentC(Fragment fragment, FragmentManager fragmentManager) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

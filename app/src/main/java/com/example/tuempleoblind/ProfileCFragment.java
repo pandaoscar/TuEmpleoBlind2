@@ -122,7 +122,7 @@ public class ProfileCFragment extends Fragment implements VoiceCommandController
         });
 
         if (AppState.getInstance().isModoEdicionActivo()){
-            String response = "Estas seguro que quieres cerrar sesión";
+            String response = "Estas seguro que quieres cerrar sesión, dí, si, o no.";
             controller.sendResponseToService(response);
         }
         updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
@@ -181,7 +181,7 @@ public class ProfileCFragment extends Fragment implements VoiceCommandController
     @Override
     public void onVoiceCommandReceived(String command, String predictedCategory) {
         if (AppState.getInstance().isModoEdicionActivo()) {
-            if (command.contains("si") || command.contains("se")) {
+            if (NavigationManager.eliminarTildes(command).contains("si") || command.contains("se")) {
                 String response = "Cerrando sesión";
                 controller.sendResponseToService(response);
                 AppState.getInstance().setModoEdicionActivo(false);
@@ -191,7 +191,7 @@ public class ProfileCFragment extends Fragment implements VoiceCommandController
                 controller.sendResponseToService(response);
                 AppState.getInstance().setModoEdicionActivo(false);
             } else {
-                String response = "Estás seguro que quieres cerrar sesión";
+                String response = "Estás seguro que quieres cerrar sesión, dí, si, o no.";
                 controller.sendResponseToService(response);
             }
         } else {

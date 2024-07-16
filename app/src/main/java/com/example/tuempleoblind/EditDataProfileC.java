@@ -76,7 +76,6 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
     private String newValue = null;
     private String oldValue = null;
     private SpeechRecognizer speechRecognizer;
-    private static final int REQUEST_CODE_SPEECH_INPUT = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -421,7 +420,7 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
                     else{
                         if (newValue == null){
                             editValue(command);
-                        } else controller.sendResponseToService("¿Estas de acuerdo con el nuevo valor? " + newValue);
+                        } else controller.sendResponseToService("¿Estas de acuerdo con el nuevo valor?, dí, si, o no." + newValue);
                     }
                 }
                 else{
@@ -476,7 +475,7 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
                 newValue = newVal;
                 oldValue = campTextName.getText().toString();
                 campTextToEdit = campTextName;
-                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
+                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue + ", dí, si, o no.";
                 controller.sendResponseToService(respuesta);
 
                 break;
@@ -484,42 +483,42 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
                 newValue = newVal;
                 oldValue = campTextEmail.getText().toString();
                 campTextToEdit = campTextEmail;
-                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
+                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue + ", dí, si, o no.";
                 controller.sendResponseToService(respuesta);
                 break;
             case "USUARIO":
                 newValue = newVal;
                 oldValue = campTextUserName.getText().toString();
                 campTextToEdit = campTextUserName;
-                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
+                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue + ", dí, si, o no.";
                 controller.sendResponseToService(respuesta);
                 break;
             case "NOMBRE EMPRESA":
                 newValue = newVal;
                 oldValue = campTextNameCompany.getText().toString();
                 campTextToEdit = campTextNameCompany;
-                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
+                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue + ", dí, si, o no.";
                 controller.sendResponseToService(respuesta);
                 break;
             case "UBICACION EMPRESA":
                 newValue = newVal;
                 oldValue = campTextLocation.getText().toString();
                 campTextToEdit = campTextLocation;
-                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
+                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue + ", dí, si, o no.";
                 controller.sendResponseToService(respuesta);
                 break;
             case "TIPO EMPRESA":
                 newValue = newVal;
                 oldValue = campTextCompanyType.getText().toString();
                 campTextToEdit = campTextCompanyType;
-                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
+                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue + ", dí, si, o no.";
                 controller.sendResponseToService(respuesta);
                 break;
             case "PAGINA":
                 newValue = newVal;
                 oldValue = campTextWebPag.getText().toString();
                 campTextToEdit = campTextWebPag;
-                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue;
+                respuesta = "¿Estas seguro del nuevo valor? cambiaras "+ oldValue + " por " + newValue + ", dí, si, o no.";
                 controller.sendResponseToService(respuesta);
                 break;
         }

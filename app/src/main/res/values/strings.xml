@@ -163,11 +163,15 @@
     <string name="law1_descop">Colombia adopta mediante Ley 1346 de 2009 la Convención de Naciones Unidas promulgada por la Asamblea de Naciones Unidas el 13 de diciembre de 2006, la cual reafirma la responsabilidad del Estado de establecer mecanismos y sistemas de garantía del ejercicio de los derechos de las personas con discapacidad, sin discriminación por motivo de su condición. El artículo 27º establece que los Estados Partes reconocen el derecho de las personas con discapacidad las personas con discapacidad a trabajar, en igualdad de condiciones con los demás.</string>
     <string name="law2_descop">Por el cual se establecen incentivos en los procesos de contratación a las empresas que tengan vinculadas personas con discapacidad. En los procesos de licitación publica y concurso de méritos, para incentivar el sistema de preferencias a favor de las personas con discapacidad, las entidades estatales deberán otorgar el (1 %) del total de los puntos establecidos en el pliego de condiciones, a los proponentes que acrediten la vinculación de trabajadores con discapacidad en su planta de personal.</string>
     <string name="law3_descop">Por el cual se crea el Consejo para la Inclusión de la Discapacidad y se dictan disposiciones relacionadas con su funcionamiento” y cuyo objeto es coordinar las acciones que el sector privado adelante para coadyuvar al ejercicio de los derechos y la inclusión social, laboral y productiva de las personas con discapacidad, orientadas al desarrollo de las capacidades a través de la formación para el trabajo, la producción y el empleo de las personas con discapacidad, sus familias y cuidadores.</string>
+    <string name="spinner_form_blind_assistant">Nivel de ceguera, elige: Opcion 1: Baja Visión. Opcion 2: Ceguera Parcial. Opcion 3: Ceguera Legal. Opcion 4: Ceguera Total.</string>
+
     <string-array name="list_level_blind">
+        <item>null</item>
         <item>Baja Visión</item>
         <item>Ceguera Parcial</item>
         <item>Ceguera Legal</item>
         <item>Ceguera Total</item>
+
     </string-array>
     <string-array name="lista_typo_empleo">
         <item>Tiempo Completo</item>

@@ -30,7 +30,7 @@ import java.util.Locale;
 
 
 
-public class VoiceService extends Service implements RecognitionListener {
+public class VoiceService extends Service implements RecognitionListener, AppState.Observer {
     private static final String TAG = "VoiceCommandService";
     private Model model;
     private SpeechService speechService;
@@ -40,12 +40,28 @@ public class VoiceService extends Service implements RecognitionListener {
     private Handler timeoutHandler;
     private Runnable timeoutRunnable;
     private String roleUser = null;
+    private boolean modoSuspendido = false;
 
     private final Messenger messenger = new Messenger(new IncomingHandler());
 
     @Override
     public IBinder onBind(Intent intent) {
         return messenger.getBinder();
+    }
+
+    @Override
+    public void onActiveAssistantChanged(boolean isActive) {
+        if (isActive){
+            if (speechService != null){
+                speechService.stop();
+            }
+            startListening();
+            System.out.println("Asistente activado");
+        }
+        else{
+            resetTimeout(0);
+            System.out.println("Asistente suspendido");
+        }
     }
 
     private class IncomingHandler extends Handler {
@@ -55,11 +71,10 @@ public class VoiceService extends Service implements RecognitionListener {
             String role = data.getString("role");
             String response = data.getString("response");
 
-
+            System.out.println("holaaaa "+ role);
             if (response != null) {
                 handleResponseFromActivity(response);
             }
-
             if (role != null) {
                 try {
                     getRole(role);
@@ -78,17 +93,16 @@ public class VoiceService extends Service implements RecognitionListener {
         else{
             if (rol.equals("userCompany")){
                 classifier = new TextClassifier(this, "model_company.tflite", "maxlen_company.txt", "category_mapping_company.json", "word_index_company.json");
+            } else if (rol.equals("unLogin")) {
+                classifier = new TextClassifier(this, "model_unlogin.tflite", "maxlen_unlogin.txt", "category_mapping_unlogin.json", "word_index_unlogin.json");
             }
-            else{
-                Log.e("Rol validacion", "No se supo cual era el rol");
-            }
-
         }
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        AppState.getInstance().addObserver(this);
         AppState.getInstance().setActiveAssistant(true);
         timeoutHandler = new Handler();
         timeoutRunnable = new Runnable() {
@@ -96,7 +110,8 @@ public class VoiceService extends Service implements RecognitionListener {
             public void run() {
                 onTimeout();
                 //validamos que comando desactivado no se haya mandado por el boton
-                if (!"Desactivado".equals(auxCommand)){
+                if (!"Desactivado".equals(auxCommand) && !AppState.getInstance().isModoEdicionActivo()){
+                    AppState.getInstance().setActiveAssistant(false);
                     speak("Desactivado");
                     auxCommand = "Desactivado";
                 }
@@ -114,9 +129,7 @@ public class VoiceService extends Service implements RecognitionListener {
         StorageService.unpack(this, "vosk-model-small-es-0.42", "model",
                 (model) -> {
                     this.model = model;
-
                     startListening();
-
                 },
                 (exception) -> Log.e(TAG, "Failed to unpack the model", exception)
         );
@@ -145,18 +158,14 @@ public class VoiceService extends Service implements RecognitionListener {
             @Override
             public void onDone(String utteranceId) {
                 if ("comando no reconocido".equals(auxCommand)) {
-                    resetTimeout(0);
+                    AppState.getInstance().setActiveAssistant(false);
                     auxCommand = null;
                 } else {
-                    if ("Activado".equals(auxCommand)) {
-                        if (speechService != null) {
-                            startListening(); // Reanudar el servicio de reconocimiento de voz
-                            auxCommand = null;
-                        }
-                    } else {
-                        if ("Desactivado".equals(auxCommand)) {
-                            auxCommand = null;
-                        } else startListening();
+                    if ("Desactivado".equals(auxCommand)) {
+                        auxCommand = null;
+                        speechService.setPause(false);
+                    } else if (!AppState.getInstance().isHelpGoogleActive()){
+                        startListening();
                     }
                 }
                 Log.d(TAG, "Texto TTS reproducido completamente");
@@ -168,7 +177,6 @@ public class VoiceService extends Service implements RecognitionListener {
         });
     }
 
-
     private void startListening() {
         if (model != null) {
             try {
@@ -176,6 +184,7 @@ public class VoiceService extends Service implements RecognitionListener {
                 speechService = new SpeechService(recognizer, 16000.0f);
                 speechService.startListening(this);
                 resetTimeout(20000);
+                modoSuspendido = false;
                 //AppState.getInstance().setActiveAssistant(true);
                 System.out.println("ya actualicé el estado del asistente");
             } catch (IOException e) {
@@ -191,6 +200,11 @@ public class VoiceService extends Service implements RecognitionListener {
 
     private void handleVoiceCommand(String jsonCommand) {
         String command = extractTextFromJson(jsonCommand);
+        if (command.contains("apagar asistente")){
+            AppState.getInstance().setActiveAssistant(false);
+            handleResponseFromActivity("Desactivado");
+        }
+
         if (!command.isEmpty() && AppState.getInstance().isActiveAssistant()){
             try {
                 String predictedCategory = classifier.classifyText(command);
@@ -202,7 +216,6 @@ public class VoiceService extends Service implements RecognitionListener {
 
                 if (predictedCategory.equals("comando no reconocido") && !AppState.getInstance().isModoEdicionActivo()) {
                     auxCommand = predictedCategory;
-
                 }
 
 
@@ -218,25 +231,18 @@ public class VoiceService extends Service implements RecognitionListener {
             }
         } else if (AppState.getInstance().isHelpGoogleActive()) {
             resetTimeout(100000);
+        } else if (command.contains("encender asistente")){
+            AppState.getInstance().setActiveAssistant(true);
+            speak("Activado");
         }
     }
 
     private void handleResponseFromActivity(String response) {
         System.out.println("Devuelto por el activity: " + response);
         if (response.equals("Activado") || response.equals("Desactivado")){
-            if (AppState.getInstance().isActiveAssistant()){
-                startListening();
-            }
-            else{
-                resetTimeout(1);
-            }
             auxCommand = response;
         }
-        /*if (!response.equals("3NC3ND3R_S1L3NC1O_PL34S3") && !response.equals("4P464R_S1L3NC1O_PL34S3")){
-
-        }*/
         speak(response);
-
     }
 
     private String extractTextFromJson(String json) {
@@ -251,7 +257,7 @@ public class VoiceService extends Service implements RecognitionListener {
 
     private void speak(String text) {
         if (speechService != null) {
-            speechService.stop(); // Pausar el servicio de reconocimiento de voz
+            speechService.setPause(true); // Pausar el servicio de reconocimiento de voz para que el tts hable
         }
         if (tts == null) {
             Log.e(TAG, "TTS no inicializado, inicializando nuevamente");
@@ -259,9 +265,6 @@ public class VoiceService extends Service implements RecognitionListener {
         }
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "uniqueId");
     }
-
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -274,15 +277,18 @@ public class VoiceService extends Service implements RecognitionListener {
             tts.shutdown();
             tts = null;
         }
+        AppState.getInstance().removeObserver(this);
     }
 
     @Override
     public void onResult(String hypothesis) {
+        System.out.println("Onresult " + hypothesis);
         handleVoiceCommand(hypothesis);
     }
 
     @Override
     public void onFinalResult(String hypothesis) {
+        System.out.println("finalResul "+ hypothesis);
         handleVoiceCommand(hypothesis);
     }
 
@@ -300,8 +306,8 @@ public class VoiceService extends Service implements RecognitionListener {
     public void onTimeout() {
         Log.i(TAG, "No se detectó entrada de voz o comando no reconocido en 10 segundos, pausando reconocimiento.");
         if (speechService != null) {
-            speechService.stop();
+            //speechService.stop();
+            modoSuspendido = true;
         }
-        AppState.getInstance().setActiveAssistant(false);
     }
 }
