@@ -6,8 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -149,16 +147,11 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
 
         obtainEditText();
         result = UtilCommandModel.checkComponents(editTexts, null);
-        controller.sendResponseToService("Escribe tu " + result.getEmptyEditText().getHint().toString());
 
         if (result.getEmptyEditText().getHint().toString().toLowerCase().contains("correo") || result.getEmptyEditText().getHint().toString().toLowerCase().contains("contraseña")){
+            AppState.getInstance().setHelpGoogleActive(true);
             AppState.getInstance().setActiveAssistant(false);
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    helpGoogle();
-                }
-            }, 3000);
+            controller.sendResponseToService("Escribe tu " + result.getEmptyEditText().getHint().toString());
         }
     }
 
@@ -240,11 +233,11 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
                 obtainEditText();
                 result = UtilCommandModel.checkComponents(editTexts, null);
                 if (result.getEmptyEditText() != null){
-                    controller.sendResponseToService("Que valor quieres colocarle a " + result.getEmptyEditText().getHint().toString());
                     if (result.getEmptyEditText().getHint().toString().toLowerCase().contains("correo") || result.getEmptyEditText().getHint().toString().toLowerCase().contains("contraseña")){
                         AppState.getInstance().setHelpGoogleActive(true);
                         AppState.getInstance().setActiveAssistant(false);
-                    }
+                        controller.sendResponseToService("Que valor quieres colocarle a " + result.getEmptyEditText().getHint().toString());
+                    } else controller.sendResponseToService("Que valor quieres colocarle a " + result.getEmptyEditText().getHint().toString());
                 } else {
                     controller.sendResponseToService("Iniciando sesión");
                     AppState.getInstance().setModoEdicionActivo(false);
@@ -263,13 +256,15 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
                 newValue = null;
                 onVoiceCommandReceived("siguiente", "comando no reconocido");
             } else if (command.contains("no")) {
-                controller.sendResponseToService("Entonces, ¿Que valor quieres colocar?");
+
                 newValue = null;
                 if (result.getEmptyEditText() != null){
                     if (result.getEmptyEditText().getHint().toString().toLowerCase().contains("correo") || result.getEmptyEditText().getHint().toString().toLowerCase().contains("contraseña")){
                         AppState.getInstance().setHelpGoogleActive(true);
                         AppState.getInstance().setActiveAssistant(false);
+                        controller.sendResponseToService("Entonces, ¿Que valor quieres colocar?");
                     }
+                    else controller.sendResponseToService("Entonces, ¿Que valor quieres colocar?");
                 }
             } else{
                 controller.sendResponseToService("¿Quieres colocar " + newValue + "?" + ", dí, si, o no.");
