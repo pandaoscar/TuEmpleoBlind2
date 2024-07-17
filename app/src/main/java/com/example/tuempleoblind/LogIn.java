@@ -1,16 +1,21 @@
 package com.example.tuempleoblind;
 
+import static android.content.ContentValues.TAG;
 import static com.example.tuempleoblind.NavigationManager.extractAfterUnderscore;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,7 +35,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class LogIn extends AppCompatActivity implements VoiceCommandController.ActivityCallback{
-
+    public static final String ACTION_TTS_DONE = "com.example.ACTION_TTS_DONE";
     FirebaseAuth mAuth;
     EditText campTextEmail;
     EditText campTextPassword;
@@ -44,6 +49,20 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
     private String newValue = null;
     List<EditText> editTexts = new ArrayList<>();
     UtilCommandModel.ComponentResult result;
+    boolean ttsDone;
+    private BroadcastReceiver ttsDoneReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (ACTION_TTS_DONE.equals(intent.getAction())) {
+                boolean ttsDone = intent.getBooleanExtra("tts_done", false);
+                // Manejar el booleano recibido
+                if (ttsDone) {
+                    Log.d(TAG, "TTS ha terminado de reproducir.");
+                    // Realiza las acciones necesarias aquí
+                }
+            }
+        }
+    };
 
 
     @Override
@@ -54,6 +73,9 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
 
         controller = VoiceCommandController.getInstance(this);
         controller.registerActivityCallback(this);
+        // Registra el BroadcastReceiver
+        IntentFilter filter = new IntentFilter(ACTION_TTS_DONE);
+        registerReceiver(ttsDoneReceiver, filter);
         microComand = findViewById(R.id.floatingButtonComands);
 
         robotAnimation=findViewById(R.id.robot_animation);
@@ -177,6 +199,7 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
     public void onDestroy() {
         super.onDestroy();
         controller.unregisterActivityCallback(this);
+        unregisterReceiver(ttsDoneReceiver);
     }
 
     private void login(String email, String password) {
