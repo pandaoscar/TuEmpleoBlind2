@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class ActivityFormSignUpBlind extends AppCompatActivity implements VoiceCommandController.ActivityCallback {
+public class ActivityFormSignUpBlind extends AppCompatActivity implements VoiceCommandController.ActivityCallback, AppState.TTSObserver {
 
     EditText campTextProfession;
         EditText campTextAddress;
@@ -71,6 +71,7 @@ public class ActivityFormSignUpBlind extends AppCompatActivity implements VoiceC
 
         controller = VoiceCommandController.getInstance(this);
         controller.registerActivityCallback(this);
+        AppState.getInstance().addTTSObserver(this);
         microComand = findViewById(R.id.floatingButtonComands);
 
         microComand.setOnClickListener(new View.OnClickListener() {
@@ -167,6 +168,10 @@ public class ActivityFormSignUpBlind extends AppCompatActivity implements VoiceC
     public void onDestroy() {
         super.onDestroy();
         controller.unregisterActivityCallback(this);
+        if (speechRecognizer != null) {
+            speechRecognizer.destroy();
+        }
+        AppState.getInstance().removeTTSObserver(this);
     }
 
     private void actionContinue() {
@@ -214,8 +219,6 @@ public class ActivityFormSignUpBlind extends AppCompatActivity implements VoiceC
                     }
                 });
             }
-
-
         });
     }
 
@@ -229,16 +232,12 @@ public class ActivityFormSignUpBlind extends AppCompatActivity implements VoiceC
                 result = UtilCommandModel.checkComponents(editTexts, spinners);
                 if (result.getEmptyEditText() != null){
 
-                    controller.sendResponseToService("Que valor quieres colocarle a " + result.getEmptyEditText().getHint());
+
                     if (result.getEmptyEditText().getHint().toString().toLowerCase().contains("telefono")){
+                        AppState.getInstance().setHelpGoogleActive(true);
                         AppState.getInstance().setActiveAssistant(false);
-                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                helpGoogle();
-                            }
-                        }, 2200);
-                    }
+                        controller.sendResponseToService("Que valor quieres colocarle a " + result.getEmptyEditText().getHint());
+                    } else controller.sendResponseToService("Que valor quieres colocarle a " + result.getEmptyEditText().getHint());
                 } else if (result.getEmptySpinner() != null) {
                     controller.sendResponseToService("Que valor quieres colocarle a " + result.getEmptySpinner().getContentDescription());
                 }
@@ -267,18 +266,14 @@ public class ActivityFormSignUpBlind extends AppCompatActivity implements VoiceC
                 newValue = null;
                 onVoiceCommandReceived("siguiente", "comando no reconocido");
             } else if (command.contains("no")) {
-                controller.sendResponseToService("Entonces, ¿Que valor quieres colocar?");
                 newValue = null;
                 if (result.getEmptyEditText() != null){
                     if (result.getEmptyEditText().getHint().toString().toLowerCase().contains("telefono")){
+                        AppState.getInstance().setHelpGoogleActive(true);
                         AppState.getInstance().setActiveAssistant(false);
-                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                helpGoogle();
-                            }
-                        }, 2200);
+                        controller.sendResponseToService("Entonces, ¿Que valor quieres colocar?");
                     }
+                    else controller.sendResponseToService("Entonces, ¿Que valor quieres colocar?");
                 }
             } else{
                 controller.sendResponseToService("¿Quieres colocar " + newValue + "?" + ", dí, si, o no.");
@@ -323,16 +318,26 @@ public class ActivityFormSignUpBlind extends AppCompatActivity implements VoiceC
         }
     }
     private void helpGoogle() {
-        AppState.getInstance().setHelpGoogleActive(true);
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Habla algo...");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Habla algo...");
 
-        try {
-            speechRecognizer.startListening(intent);
-        } catch (Exception e) {
-            Toast.makeText(this, "Tu dispositivo no soporta el reconocimiento de voz", Toast.LENGTH_SHORT).show();
+                try {
+                    speechRecognizer.startListening(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+    @Override
+    public void onTTSCompleted() {
+        if (AppState.getInstance().isHelpGoogleActive()){
+            helpGoogle();
         }
     }
 

@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class EditDataProfileBlind extends AppCompatActivity implements VoiceCommandController.ActivityCallback{
+public class EditDataProfileBlind extends AppCompatActivity implements VoiceCommandController.ActivityCallback, AppState.TTSObserver{
     private static final String FIELD_COLLECTION="UsernameBlind";
     private static final String FIELD_NAME = "Nombre";
     private static final String FIELD_USERNAME = "Usuario";
@@ -118,6 +118,7 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
 
         controller = VoiceCommandController.getInstance(this);
         controller.registerActivityCallback(this);
+        AppState.getInstance().addTTSObserver(this);
         obtenerValoresFirestore();
 
         microComand.setOnClickListener(new View.OnClickListener() {
@@ -254,6 +255,7 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
         if (speechRecognizer != null) {
             speechRecognizer.destroy();
         }
+        AppState.getInstance().removeTTSObserver(this);
     }
 
 
@@ -440,17 +442,13 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
                 campToEdit = command;
 
                 String respuesta = "¿Cual es el nuevo valor?";
-                controller.sendResponseToService(respuesta);
+
 
                 if (command.contains("correo") || campToEdit.contains("telefono")){
+                    AppState.getInstance().setHelpGoogleActive(true);
                     AppState.getInstance().setActiveAssistant(false);
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            helpGoogle();
-                        }
-                    }, 1900);
-                }
+                    controller.sendResponseToService(respuesta);
+                } else controller.sendResponseToService(respuesta);
             }
             else{
                 if (campToEdit != null){
@@ -467,17 +465,12 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
                         btnSave.performClick();
                     } else if (newValue != null && command.contains("no")) {
                         String respuesta = "Entonces, ¿Cual es el nuevo valor?";
-                        controller.sendResponseToService(respuesta);
                         newValue = null;
                         if (campToEdit.contains("correo") || campToEdit.contains("telefono")){
+                            AppState.getInstance().setHelpGoogleActive(true);
                             AppState.getInstance().setActiveAssistant(false);
-                            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    helpGoogle();
-                                }
-                            }, 2200);
-                        }
+                            controller.sendResponseToService(respuesta);
+                        } else controller.sendResponseToService(respuesta);
                     }
                     else{
                         if (newValue == null){
@@ -630,4 +623,8 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
         }
     }
 
+    @Override
+    public void onTTSCompleted() {
+
+    }
 }
