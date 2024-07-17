@@ -244,6 +244,7 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
             }
         }
         else {
+            //
             if (predictedCategory.startsWith("accion_")) {
                 String accion = extractAfterUnderscore(predictedCategory);
                 AppState.getInstance().setModoEdicionActivo(true);
