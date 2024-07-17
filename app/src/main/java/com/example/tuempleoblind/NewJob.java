@@ -156,6 +156,15 @@ public class NewJob extends AppCompatActivity implements VoiceCommandController.
         controller.unregisterActivityCallback(this);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, CompanyHome.class);
+        startActivity(intent);
+        finish();
+    }
+
+
     private void actionPublish() {
         btnPublish.setOnClickListener(new View.OnClickListener() {
             @Override

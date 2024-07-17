@@ -255,6 +255,13 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
             speechRecognizer.destroy();
         }
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, HomePageBlind.class);
+        startActivity(intent);
+        finish();
+    }
 
 
     private void postUserBlind(String name, String username, String email, String profession, String address, String phone, String abilities, String level, String userID) {

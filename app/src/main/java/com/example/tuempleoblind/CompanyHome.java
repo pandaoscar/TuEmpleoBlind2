@@ -53,12 +53,28 @@ public class CompanyHome extends AppCompatActivity {
         });
         checkAndRequestPermissions();
     }
-    private void replaceFragment (Fragment fragment) {
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        // Verificar si hay fragmentos en el BackStack
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            // Asegurarse de que se muestre HomeCFragment después de limpiar el BackStack
+            replaceFragment(new HomeCFragment());
+        } else {
+            super.onBackPressed(); // Comportamiento predeterminado si no hay fragmentos en el BackStack
+        }
+    }
+
+
+    private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.layoutConstraint, fragment);
+        fragmentTransaction.addToBackStack(null); // Agregar transacción al BackStack
         fragmentTransaction.commit();
     }
+
     private void checkAndRequestPermissions() {
         if (EasyPermissions.hasPermissions(getApplicationContext(), android.Manifest.permission.RECORD_AUDIO)) {
             // Permission already granted, perform operation

@@ -91,6 +91,13 @@ public class AboutActivity extends AppCompatActivity implements VoiceCommandCont
         super.onDestroy();
         controller.unregisterActivityCallback(this);
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, CompanyHome.class);
+        startActivity(intent);
+        finish();
+    }
 
     public void isCompanyOrBlind(String palabra){
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();

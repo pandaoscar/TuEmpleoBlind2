@@ -227,6 +227,13 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
             speechRecognizer.destroy();
         }
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, CompanyHome.class);
+        startActivity(intent);
+        finish();
+    }
     private void postUsernameC(String name, String username, String email, String nameCompany, String typeCompany, String location, String webPag, String userID) {
         Map<String, Object> map = new HashMap<>();
         map.put(FIELD_NAME_C, name);

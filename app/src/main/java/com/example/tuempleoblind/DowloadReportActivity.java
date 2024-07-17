@@ -147,6 +147,13 @@ public class DowloadReportActivity extends AppCompatActivity implements  VoiceCo
         super.onDestroy();
         controller.unregisterActivityCallback(this);
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, CompanyHome.class);
+        startActivity(intent);
+        finish();
+    }
 
     private void createPdf() throws FileNotFoundException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
