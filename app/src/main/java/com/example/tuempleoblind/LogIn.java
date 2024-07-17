@@ -228,6 +228,7 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
         startActivity(new Intent(getApplicationContext(), homePageClass));
         finish();
     }
+    //
 
     @Override
     public void onVoiceCommandReceived(String command, String predictedCategory) {
