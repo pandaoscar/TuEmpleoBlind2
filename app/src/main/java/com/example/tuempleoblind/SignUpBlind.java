@@ -6,9 +6,15 @@ import static com.example.tuempleoblind.NavigationManager.extractAfterUnderscore
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -46,7 +52,7 @@ import java.util.Map;
 
 import io.grpc.okhttp.internal.Util;
 
-public class SignUpBlind extends AppCompatActivity implements VoiceCommandController.ActivityCallback{
+public class SignUpBlind extends AppCompatActivity implements VoiceCommandController.ActivityCallback, AppState.TTSObserver{
     private static final String NUMERO_DE_INVIDENTES_REGISTRADOS = "numeroDeInvidentesRegistrados";
     private static final String NUMERO_DE_INVIDENTES_REGISTRADOS_TOTALES = "numeroDeInvidentesRegistradosTotales";
     private static final String COLLECTION_REPORTE = "Reporte";
@@ -64,10 +70,20 @@ public class SignUpBlind extends AppCompatActivity implements VoiceCommandContro
     private LottieAnimationView robotAnimation;
     private ImageView background;
     FloatingActionButton microComand;
-    private SpeechRecognizer speechRecognizer;
     private String newValue = null;
     List<EditText> editTexts = new ArrayList<>();
     UtilCommandModel.ComponentResult result;
+    private BroadcastReceiver speechRecognitionResultsReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            System.out.println("Estoy en broadcast");
+            if (intent != null && "SpeechRecognitionResults".equals(intent.getAction())) {
+                String recognizedText = intent.getStringExtra("recognizedText");
+                onVoiceCommandReceived(recognizedText, "accion");
+            }
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +94,9 @@ public class SignUpBlind extends AppCompatActivity implements VoiceCommandContro
 
         controller = VoiceCommandController.getInstance(this);
         controller.registerActivityCallback(this);
+
+        AppState.getInstance().addTTSObserver(this);
+        LocalBroadcastManager.getInstance(this).registerReceiver(speechRecognitionResultsReceiver, new IntentFilter("SpeechRecognitionResults"));
         microComand = findViewById(R.id.floatingButtonComands);
 
         robotAnimation=findViewById(R.id.robot_animation);
@@ -105,52 +124,6 @@ public class SignUpBlind extends AppCompatActivity implements VoiceCommandContro
         campTextEmail = findViewById(R.id.editTextUserEmailSignUpBlind);
         campTextPassword1 = findViewById(R.id.editTextPasswordSignUpBlind1);
         campTextPassword2 = findViewById(R.id.editTextPasswordSignUpBlind2);
-
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-        speechRecognizer.setRecognitionListener(new RecognitionListener() {
-            @Override
-            public void onReadyForSpeech(Bundle params) {}
-
-            @Override
-            public void onBeginningOfSpeech() {}
-
-            @Override
-            public void onRmsChanged(float rmsdB) {}
-
-            @Override
-            public void onBufferReceived(byte[] buffer) {}
-
-            @Override
-            public void onEndOfSpeech() {}
-
-            @Override
-            public void onError(int error) {
-                helpGoogle();
-            }
-
-            @Override
-            public void onResults(Bundle results) {
-                ArrayList<String> palabrasReconocidas = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                if (palabrasReconocidas != null && !palabrasReconocidas.isEmpty()) {
-                    String palabra = palabrasReconocidas.toString().replace("[", "").replace("]", "");
-                    String[] pal = palabra.split(" ");
-                    palabra = String.join("", pal);
-                    palabra = palabra.toLowerCase();
-                    palabra = NavigationManager.eliminarTildes(palabra);
-                    AppState.getInstance().setHelpGoogleActive(false);
-                    onVoiceCommandReceived(palabra, "accion");
-                    AppState.getInstance().setModoEdicionActivo(true);
-                    AppState.getInstance().setActiveAssistant(true);
-                    updateRobotAnimationVisibility(true);
-                }
-            }
-
-            @Override
-            public void onPartialResults(Bundle partialResults) {}
-
-            @Override
-            public void onEvent(int eventType, Bundle params) {}
-        });
 
         controller.sendRoleUser("unLogin");
 
@@ -181,12 +154,18 @@ public class SignUpBlind extends AppCompatActivity implements VoiceCommandContro
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
+                                            if (AppState.getInstance().isActiveAssistant()){
+                                                controller.sendResponseToService("Porfavor, llena los siguientes datos");
+                                            }
                                             // Registro exitoso, obtener el ID único del usuario
                                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                             String userID = user.getUid();
                                             // Guardar datos adicionales del usuario en Firestore
                                             postUsernameBlind(name, username, email, userID);
                                         } else {
+                                            if (AppState.getInstance().isActiveAssistant()){
+                                                controller.sendResponseToService("No se completo correctamente, intenta de nuevo");
+                                            }
                                             Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     }
@@ -219,6 +198,8 @@ public class SignUpBlind extends AppCompatActivity implements VoiceCommandContro
     public void onDestroy() {
         super.onDestroy();
         controller.unregisterActivityCallback(this);
+        AppState.getInstance().removeTTSObserver(this);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(speechRecognitionResultsReceiver);
     }
 
     private void postUsernameBlind(String name, String username, String email, String userID) {
@@ -260,18 +241,12 @@ public class SignUpBlind extends AppCompatActivity implements VoiceCommandContro
                 result = UtilCommandModel.checkComponents(editTexts, null);
                 if (result.getEmptyEditText() != null){
 
-                    controller.sendResponseToService("Que valor quieres colocarle a " + result.getEmptyEditText().getHint().toString());
                     if (result.getEmptyEditText().getHint().toString().toLowerCase().contains("correo") || result.getEmptyEditText().getHint().toString().toLowerCase().contains("contraseña")){
+                        AppState.getInstance().setHelpGoogleActive(true);
                         AppState.getInstance().setActiveAssistant(false);
-                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                helpGoogle();
-                            }
-                        }, 3000);
-                    }
+                        controller.sendResponseToService("Que valor quieres colocarle a " + result.getEmptyEditText().getHint().toString());
+                    } else controller.sendResponseToService("Que valor quieres colocarle a " + result.getEmptyEditText().getHint().toString());
                 } else {
-                    controller.sendResponseToService("Porfavor, llena los siguientes datos");
                     btnContinue.performClick();
                 }
 
@@ -287,18 +262,13 @@ public class SignUpBlind extends AppCompatActivity implements VoiceCommandContro
                 newValue = null;
                 onVoiceCommandReceived("siguiente", "comando no reconocido");
             } else if (command.contains("no")) {
-                controller.sendResponseToService("Entonces, ¿Que valor quieres colocar?");
                 newValue = null;
                 if (result.getEmptyEditText() != null){
                     if (result.getEmptyEditText().getHint().toString().toLowerCase().contains("correo") || result.getEmptyEditText().getHint().toString().toLowerCase().contains("contraseña")){
+                        AppState.getInstance().setHelpGoogleActive(true);
                         AppState.getInstance().setActiveAssistant(false);
-                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                helpGoogle();
-                            }
-                        }, 2300);
-                    }
+                        controller.sendResponseToService("Entonces, ¿Que valor quieres colocar?");
+                    } else controller.sendResponseToService("Entonces, ¿Que valor quieres colocar?");
                 }
             } else{
                 controller.sendResponseToService("¿Quieres colocar " + newValue + "?" + ", dí, si, o no.");
@@ -320,16 +290,14 @@ public class SignUpBlind extends AppCompatActivity implements VoiceCommandContro
         }
     }
     private void helpGoogle() {
-        AppState.getInstance().setHelpGoogleActive(true);
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Habla algo...");
-
-        try {
-            speechRecognizer.startListening(intent);
-        } catch (Exception e) {
-            Toast.makeText(this, "Tu dispositivo no soporta el reconocimiento de voz", Toast.LENGTH_SHORT).show();
+        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(HelpGoogleWorker.class).build();
+        WorkManager.getInstance(this).enqueue(workRequest);
+    }
+    @Override
+    public void onTTSCompleted() {
+        //TTS terminó de hablar
+        if (AppState.getInstance().isHelpGoogleActive()){
+            helpGoogle();
         }
     }
 

@@ -3,13 +3,15 @@ package com.example.tuempleoblind;
 import static com.example.tuempleoblind.NavigationManager.extractAfterUnderscore;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.speech.RecognitionListener;
-import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.view.View;
 import android.widget.Button;
@@ -27,9 +29,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-public class LogIn extends AppCompatActivity implements VoiceCommandController.ActivityCallback{
+public class LogIn extends AppCompatActivity implements VoiceCommandController.ActivityCallback, AppState.TTSObserver{
 
     FirebaseAuth mAuth;
     EditText campTextEmail;
@@ -40,11 +41,20 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
     private LottieAnimationView robotAnimation;
     private ImageView background;
     FloatingActionButton microComand;
-    private SpeechRecognizer speechRecognizer;
     private String newValue = null;
     List<EditText> editTexts = new ArrayList<>();
     UtilCommandModel.ComponentResult result;
 
+    private BroadcastReceiver speechRecognitionResultsReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            System.out.println("Estoy en broadcast");
+            if (intent != null && "SpeechRecognitionResults".equals(intent.getAction())) {
+                String recognizedText = intent.getStringExtra("recognizedText");
+                onVoiceCommandReceived(recognizedText, "accion");
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +64,8 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
 
         controller = VoiceCommandController.getInstance(this);
         controller.registerActivityCallback(this);
+        AppState.getInstance().addTTSObserver(this);
+        LocalBroadcastManager.getInstance(this).registerReceiver(speechRecognitionResultsReceiver, new IntentFilter("SpeechRecognitionResults"));
         microComand = findViewById(R.id.floatingButtonComands);
 
         robotAnimation=findViewById(R.id.robot_animation);
@@ -95,52 +107,6 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
             }
         });
 
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-        speechRecognizer.setRecognitionListener(new RecognitionListener() {
-            @Override
-            public void onReadyForSpeech(Bundle params) {}
-
-            @Override
-            public void onBeginningOfSpeech() {}
-
-            @Override
-            public void onRmsChanged(float rmsdB) {}
-
-            @Override
-            public void onBufferReceived(byte[] buffer) {}
-
-            @Override
-            public void onEndOfSpeech() {}
-
-            @Override
-            public void onError(int error) {
-                helpGoogle();
-            }
-
-            @Override
-            public void onResults(Bundle results) {
-                ArrayList<String> palabrasReconocidas = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                if (palabrasReconocidas != null && !palabrasReconocidas.isEmpty()) {
-                    String palabra = palabrasReconocidas.toString().replace("[", "").replace("]", "");
-                    String[] pal = palabra.split(" ");
-                    palabra = String.join("", pal);
-                    palabra = palabra.toLowerCase();
-                    palabra = NavigationManager.eliminarTildes(palabra);
-                    AppState.getInstance().setHelpGoogleActive(false);
-                    onVoiceCommandReceived(palabra, "accion");
-                    AppState.getInstance().setModoEdicionActivo(true);
-                    AppState.getInstance().setActiveAssistant(true);
-                    updateRobotAnimationVisibility(true);
-                }
-            }
-
-            @Override
-            public void onPartialResults(Bundle partialResults) {}
-
-            @Override
-            public void onEvent(int eventType, Bundle params) {}
-        });
-
         controller.sendRoleUser("unLogin");
 
         AppState.getInstance().setModoEdicionActivo(true);
@@ -148,16 +114,11 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
 
         obtainEditText();
         result = UtilCommandModel.checkComponents(editTexts, null);
-        controller.sendResponseToService("Escribe tu " + result.getEmptyEditText().getHint().toString());
 
         if (result.getEmptyEditText().getHint().toString().toLowerCase().contains("correo") || result.getEmptyEditText().getHint().toString().toLowerCase().contains("contraseña")){
+            AppState.getInstance().setHelpGoogleActive(true);
             AppState.getInstance().setActiveAssistant(false);
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    helpGoogle();
-                }
-            }, 3000);
+            controller.sendResponseToService("Escribe tu " + result.getEmptyEditText().getHint().toString());
         }
     }
 
@@ -177,6 +138,8 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
     public void onDestroy() {
         super.onDestroy();
         controller.unregisterActivityCallback(this);
+        AppState.getInstance().removeTTSObserver(this);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(speechRecognitionResultsReceiver);
     }
 
     private void login(String email, String password) {
@@ -187,9 +150,15 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
                         DocumentReference docRefUsernameBlind = db.collection("UsernameBlind").document(user.getUid());
                         DocumentReference docRefUsernameC = db.collection("UsernameC").document(user.getUid());
+                        if (AppState.getInstance().isActiveAssistant()){
+                            controller.sendResponseToService("Iniciando sesión");
+                        }
                         checkUserCollection(docRefUsernameBlind, docRefUsernameC);
                     } else {
                         Toast.makeText(getApplicationContext(), "Inicio de sesión fallido.", Toast.LENGTH_SHORT).show();
+                        if (AppState.getInstance().isActiveAssistant()){
+                            controller.sendResponseToService("Inicio de sesión fallido");
+                        }
                     }
                 });
     }
@@ -239,19 +208,12 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
                 obtainEditText();
                 result = UtilCommandModel.checkComponents(editTexts, null);
                 if (result.getEmptyEditText() != null){
-
-                    controller.sendResponseToService("Que valor quieres colocarle a " + result.getEmptyEditText().getHint().toString());
                     if (result.getEmptyEditText().getHint().toString().toLowerCase().contains("correo") || result.getEmptyEditText().getHint().toString().toLowerCase().contains("contraseña")){
+                        AppState.getInstance().setHelpGoogleActive(true);
                         AppState.getInstance().setActiveAssistant(false);
-                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                helpGoogle();
-                            }
-                        }, 2800);
-                    }
+                        controller.sendResponseToService("Que valor quieres colocarle a " + result.getEmptyEditText().getHint().toString());
+                    } else controller.sendResponseToService("Que valor quieres colocarle a " + result.getEmptyEditText().getHint().toString());
                 } else {
-                    controller.sendResponseToService("Iniciando sesión");
                     AppState.getInstance().setModoEdicionActivo(false);
                     btnConfirm.performClick();
                 }
@@ -268,18 +230,15 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
                 newValue = null;
                 onVoiceCommandReceived("siguiente", "comando no reconocido");
             } else if (command.contains("no")) {
-                controller.sendResponseToService("Entonces, ¿Que valor quieres colocar?");
+
                 newValue = null;
                 if (result.getEmptyEditText() != null){
                     if (result.getEmptyEditText().getHint().toString().toLowerCase().contains("correo") || result.getEmptyEditText().getHint().toString().toLowerCase().contains("contraseña")){
+                        AppState.getInstance().setHelpGoogleActive(true);
                         AppState.getInstance().setActiveAssistant(false);
-                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                helpGoogle();
-                            }
-                        }, 2300);
+                        controller.sendResponseToService("Entonces, ¿Que valor quieres colocar?");
                     }
+                    else controller.sendResponseToService("Entonces, ¿Que valor quieres colocar?");
                 }
             } else{
                 controller.sendResponseToService("¿Quieres colocar " + newValue + "?" + ", dí, si, o no.");
@@ -301,19 +260,16 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
         }
     }
     private void helpGoogle() {
-        AppState.getInstance().setHelpGoogleActive(true);
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Habla algo...");
-
-        try {
-            speechRecognizer.startListening(intent);
-        } catch (Exception e) {
-            Toast.makeText(this, "Tu dispositivo no soporta el reconocimiento de voz", Toast.LENGTH_SHORT).show();
+        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(HelpGoogleWorker.class).build();
+        WorkManager.getInstance(this).enqueue(workRequest);
+    }
+    @Override
+    public void onTTSCompleted() {
+        //TTS terminó de hablar
+        if (AppState.getInstance().isHelpGoogleActive()){
+            helpGoogle();
         }
     }
-
     public void obtainEditText(){
         editTexts.clear();
 
@@ -321,5 +277,4 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
         editTexts.add(campTextPassword);
 
     }
-
 }
