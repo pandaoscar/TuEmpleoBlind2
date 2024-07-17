@@ -8,8 +8,14 @@ import static com.example.tuempleoblind.NavigationManager.extractAfterUnderscore
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,7 +52,7 @@ import java.util.ArrayList;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class EditDataProfileC extends AppCompatActivity implements VoiceCommandController.ActivityCallback {
+public class EditDataProfileC extends AppCompatActivity implements VoiceCommandController.ActivityCallback, AppState.TTSObserver {
     private static final String FIELD_COLLECTION_C="UsernameC";
     private static final String FIELD_NAME_C = "Nombre";
     private static final String FIELD_USERNAME_C = "Usuario";
@@ -75,7 +81,16 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
     private EditText campTextToEdit;
     private String newValue = null;
     private String oldValue = null;
-    private SpeechRecognizer speechRecognizer;
+    private BroadcastReceiver speechRecognitionResultsReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            System.out.println("Estoy en broadcast");
+            if (intent != null && "SpeechRecognitionResults".equals(intent.getAction())) {
+                String recognizedText = intent.getStringExtra("recognizedText");
+                onVoiceCommandReceived(recognizedText, "accion");
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +124,8 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
         robotAnimation=findViewById(R.id.robot_animation);
         controller = VoiceCommandController.getInstance(this);
         controller.registerActivityCallback(this);
+        AppState.getInstance().addTTSObserver(this);
+        LocalBroadcastManager.getInstance(this).registerReceiver(speechRecognitionResultsReceiver, new IntentFilter("SpeechRecognitionResults"));
 
         microComand.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,54 +169,6 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
             }
         });
 
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-        speechRecognizer.setRecognitionListener(new RecognitionListener() {
-            @Override
-            public void onReadyForSpeech(Bundle params) {}
-
-            @Override
-            public void onBeginningOfSpeech() {}
-
-            @Override
-            public void onRmsChanged(float rmsdB) {}
-
-            @Override
-            public void onBufferReceived(byte[] buffer) {}
-
-            @Override
-            public void onEndOfSpeech() {}
-
-            @Override
-            public void onError(int error) {
-                helpGoogle();
-            }
-
-            @Override
-            public void onResults(Bundle results) {
-                System.out.println("holaaaaaaaaa aaa");
-                ArrayList<String> palabrasReconocidas = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                if (palabrasReconocidas != null && !palabrasReconocidas.isEmpty()) {
-                    String palabra = palabrasReconocidas.toString().replace("[", "").replace("]", "");
-                    String[] pal = palabra.split(" ");
-                    palabra = String.join("", pal);
-                    palabra = palabra.toLowerCase();
-                    System.out.println("holaaaaaaaaa aaa" + "valor recibido "+palabra);
-                    AppState.getInstance().setHelpGoogleActive(false);
-                    onVoiceCommandReceived(palabra, "accion");
-                    AppState.getInstance().setModoEdicionActivo(true);
-                    AppState.getInstance().setActiveAssistant(true);
-                    updateRobotAnimationVisibility(true);
-                }
-            }
-
-            @Override
-            public void onPartialResults(Bundle partialResults) {}
-
-            @Override
-            public void onEvent(int eventType, Bundle params) {}
-        });
-
-
         if (AppState.getInstance().isModoEdicionActivo()){
             String response = "¿Cúal de tus datos quieres cambiar?";
             controller.sendResponseToService(response);
@@ -223,9 +192,7 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
     protected void onDestroy() {
         super.onDestroy();
         controller.unregisterActivityCallback(this);
-        if (speechRecognizer != null) {
-            speechRecognizer.destroy();
-        }
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(speechRecognitionResultsReceiver);
     }
     private void postUsernameC(String name, String username, String email, String nameCompany, String typeCompany, String location, String webPag, String userID) {
         Map<String, Object> map = new HashMap<>();
@@ -242,6 +209,9 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        if (AppState.getInstance().isActiveAssistant()){
+                            controller.sendResponseToService("Editando");
+                        }
                         Toast.makeText(getApplicationContext(), "Datos del usuario guardados correctamente", Toast.LENGTH_SHORT).show();
                         // Continuar con la lógica de tu aplicación
                         Intent intent = new Intent(getApplicationContext(), CompanyHome.class);
@@ -254,6 +224,9 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        if (AppState.getInstance().isActiveAssistant()){
+                            controller.sendResponseToService("No se completo correctamente, intenta de nuevo");
+                        }
                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -383,23 +356,17 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
                 campToEdit = command;
 
                 String respuesta = "¿Cual es el nuevo valor?";
-                controller.sendResponseToService(respuesta);
+
 
                 if (command.contains("correo") || command.contains("pagina")){
+                    AppState.getInstance().setHelpGoogleActive(true);
                     AppState.getInstance().setActiveAssistant(false);
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            helpGoogle();
-                        }
-                    }, 1900);
-                }
+                    controller.sendResponseToService(respuesta);
+                } else controller.sendResponseToService(respuesta);
             }
             else{
                 if (campToEdit != null){
                     if (newValue != null && (command.contains("si") || command.contains("se"))){
-                        String response = "Editando";
-                        controller.sendResponseToService(response);
                         campTextToEdit.setText(newValue);
                         AppState.getInstance().setModoEdicionActivo(false);
                         btnSave.performClick();
@@ -408,14 +375,10 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
                         controller.sendResponseToService(respuesta);
                         newValue = null;
                         if (campToEdit.contains("correo") || campToEdit.contains("pagina")){
+                            AppState.getInstance().setHelpGoogleActive(true);
                             AppState.getInstance().setActiveAssistant(false);
-                            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    helpGoogle();
-                                }
-                            }, 2200);
-                        }
+                            controller.sendResponseToService(respuesta);
+                        } else controller.sendResponseToService(respuesta);
                     }
                     else{
                         if (newValue == null){
@@ -524,16 +487,14 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
         }
     }
     private void helpGoogle() {
-        AppState.getInstance().setHelpGoogleActive(true);
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Habla algo...");
-
-        try {
-            speechRecognizer.startListening(intent);
-        } catch (Exception e) {
-            Toast.makeText(this, "Tu dispositivo no soporta el reconocimiento de voz", Toast.LENGTH_SHORT).show();
+        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(HelpGoogleWorker.class).build();
+        WorkManager.getInstance(this).enqueue(workRequest);
+    }
+    @Override
+    public void onTTSCompleted() {
+        //TTS terminó de hablar
+        if (AppState.getInstance().isHelpGoogleActive()){
+            helpGoogle();
         }
     }
 }

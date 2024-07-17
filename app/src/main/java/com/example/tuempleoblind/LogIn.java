@@ -3,11 +3,6 @@ package com.example.tuempleoblind;
 import static com.example.tuempleoblind.NavigationManager.extractAfterUnderscore;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
@@ -17,10 +12,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.speech.RecognitionListener;
-import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.view.View;
 import android.widget.Button;
@@ -38,7 +29,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class LogIn extends AppCompatActivity implements VoiceCommandController.ActivityCallback, AppState.TTSObserver{
 
@@ -51,7 +41,6 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
     private LottieAnimationView robotAnimation;
     private ImageView background;
     FloatingActionButton microComand;
-    private SpeechRecognizer speechRecognizer;
     private String newValue = null;
     List<EditText> editTexts = new ArrayList<>();
     UtilCommandModel.ComponentResult result;
@@ -127,61 +116,10 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
         result = UtilCommandModel.checkComponents(editTexts, null);
 
         if (result.getEmptyEditText().getHint().toString().toLowerCase().contains("correo") || result.getEmptyEditText().getHint().toString().toLowerCase().contains("contraseña")){
-            speechRecognizer = null;
-            inicializatedSpeech();
             AppState.getInstance().setHelpGoogleActive(true);
             AppState.getInstance().setActiveAssistant(false);
             controller.sendResponseToService("Escribe tu " + result.getEmptyEditText().getHint().toString());
         }
-    }
-
-    private void inicializatedSpeech(){
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-        speechRecognizer.setRecognitionListener(new RecognitionListener() {
-            @Override
-            public void onReadyForSpeech(Bundle params) {}
-
-            @Override
-            public void onBeginningOfSpeech() {}
-
-            @Override
-            public void onRmsChanged(float rmsdB) {}
-
-            @Override
-            public void onBufferReceived(byte[] buffer) {}
-
-            @Override
-            public void onEndOfSpeech() {}
-
-            @Override
-            public void onError(int error) {
-                helpGoogle();
-            }
-
-            @Override
-            public void onResults(Bundle results) {
-                ArrayList<String> palabrasReconocidas = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                if (palabrasReconocidas != null && !palabrasReconocidas.isEmpty()) {
-                    String palabra = palabrasReconocidas.toString().replace("[", "").replace("]", "");
-                    String[] pal = palabra.split(" ");
-                    palabra = String.join("", pal);
-                    palabra = palabra.toLowerCase();
-                    palabra = NavigationManager.eliminarTildes(palabra);
-                    AppState.getInstance().setHelpGoogleActive(false);
-                    onVoiceCommandReceived(palabra, "accion");
-                    AppState.getInstance().setModoEdicionActivo(true);
-                    AppState.getInstance().setActiveAssistant(true);
-                    updateRobotAnimationVisibility(true);
-                    speechRecognizer.destroy();
-                }
-            }
-
-            @Override
-            public void onPartialResults(Bundle partialResults) {}
-
-            @Override
-            public void onEvent(int eventType, Bundle params) {}
-        });
     }
 
     private void updateRobotAnimationVisibility(boolean isActive){
@@ -200,9 +138,6 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
     public void onDestroy() {
         super.onDestroy();
         controller.unregisterActivityCallback(this);
-        if (speechRecognizer != null) {
-            speechRecognizer.destroy();
-        }
         AppState.getInstance().removeTTSObserver(this);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(speechRecognitionResultsReceiver);
     }
@@ -273,8 +208,6 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
                 result = UtilCommandModel.checkComponents(editTexts, null);
                 if (result.getEmptyEditText() != null){
                     if (result.getEmptyEditText().getHint().toString().toLowerCase().contains("correo") || result.getEmptyEditText().getHint().toString().toLowerCase().contains("contraseña")){
-                        speechRecognizer = null;
-                        inicializatedSpeech();
                         AppState.getInstance().setHelpGoogleActive(true);
                         AppState.getInstance().setActiveAssistant(false);
                         controller.sendResponseToService("Que valor quieres colocarle a " + result.getEmptyEditText().getHint().toString());
@@ -300,8 +233,6 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
                 newValue = null;
                 if (result.getEmptyEditText() != null){
                     if (result.getEmptyEditText().getHint().toString().toLowerCase().contains("correo") || result.getEmptyEditText().getHint().toString().toLowerCase().contains("contraseña")){
-                        speechRecognizer = null;
-                        inicializatedSpeech();
                         AppState.getInstance().setHelpGoogleActive(true);
                         AppState.getInstance().setActiveAssistant(false);
                         controller.sendResponseToService("Entonces, ¿Que valor quieres colocar?");
@@ -331,20 +262,18 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
         OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(HelpGoogleWorker.class).build();
         WorkManager.getInstance(this).enqueue(workRequest);
     }
-
+    @Override
+    public void onTTSCompleted() {
+        //TTS terminó de hablar
+        if (AppState.getInstance().isHelpGoogleActive()){
+            helpGoogle();
+        }
+    }
     public void obtainEditText(){
         editTexts.clear();
 
         editTexts.add(campTextEmail);
         editTexts.add(campTextPassword);
 
-    }
-
-    @Override
-    public void onTTSCompleted() {
-        System.out.println("Ya acabó de hablar tts");
-        if (AppState.getInstance().isHelpGoogleActive()){
-            helpGoogle();
-        }
     }
 }

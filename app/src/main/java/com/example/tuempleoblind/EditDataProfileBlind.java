@@ -5,8 +5,14 @@ import static com.example.tuempleoblind.NavigationManager.extractAfterUnderscore
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -72,8 +78,17 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
     private String campToEdit = null;
     private String newValue = null;
     private String oldValue = null;
-    private SpeechRecognizer speechRecognizer;
     private int opcionSpinner;
+    private BroadcastReceiver speechRecognitionResultsReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            System.out.println("Estoy en broadcast");
+            if (intent != null && "SpeechRecognitionResults".equals(intent.getAction())) {
+                String recognizedText = intent.getStringExtra("recognizedText");
+                onVoiceCommandReceived(recognizedText, "accion");
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +134,7 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
         controller = VoiceCommandController.getInstance(this);
         controller.registerActivityCallback(this);
         AppState.getInstance().addTTSObserver(this);
+        LocalBroadcastManager.getInstance(this).registerReceiver(speechRecognitionResultsReceiver, new IntentFilter("SpeechRecognitionResults"));
         obtenerValoresFirestore();
 
         microComand.setOnClickListener(new View.OnClickListener() {
@@ -183,53 +199,6 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
             }
         });
 
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-        speechRecognizer.setRecognitionListener(new RecognitionListener() {
-            @Override
-            public void onReadyForSpeech(Bundle params) {}
-
-            @Override
-            public void onBeginningOfSpeech() {}
-
-            @Override
-            public void onRmsChanged(float rmsdB) {}
-
-            @Override
-            public void onBufferReceived(byte[] buffer) {}
-
-            @Override
-            public void onEndOfSpeech() {}
-
-            @Override
-            public void onError(int error) {
-                helpGoogle();
-            }
-
-            @Override
-            public void onResults(Bundle results) {
-                System.out.println("holaaaaaaaaa aaa");
-                ArrayList<String> palabrasReconocidas = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                if (palabrasReconocidas != null && !palabrasReconocidas.isEmpty()) {
-                    String palabra = palabrasReconocidas.toString().replace("[", "").replace("]", "");
-                    String[] pal = palabra.split(" ");
-                    palabra = String.join("", pal);
-                    palabra = palabra.toLowerCase();
-                    System.out.println("holaaaaaaaaa aaa" + "valor recibido "+palabra);
-                    AppState.getInstance().setHelpGoogleActive(false);
-                    onVoiceCommandReceived(palabra, "accion");
-                    AppState.getInstance().setModoEdicionActivo(true);
-                    AppState.getInstance().setActiveAssistant(true);
-                    updateRobotAnimationVisibility(true);
-                }
-            }
-
-            @Override
-            public void onPartialResults(Bundle partialResults) {}
-
-            @Override
-            public void onEvent(int eventType, Bundle params) {}
-        });
-
         if (AppState.getInstance().isModoEdicionActivo()){
             String response = "¿Cúal de tus datos quieres cambiar?";
             controller.sendResponseToService(response);
@@ -252,9 +221,7 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
     protected void onDestroy() {
         super.onDestroy();
         controller.unregisterActivityCallback(this);
-        if (speechRecognizer != null) {
-            speechRecognizer.destroy();
-        }
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(speechRecognitionResultsReceiver);
         AppState.getInstance().removeTTSObserver(this);
     }
 
@@ -275,6 +242,9 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        if (AppState.getInstance().isActiveAssistant()){
+                            controller.sendResponseToService("Editando");
+                        }
                         Toast.makeText(getApplicationContext(), "Datos del usuario guardados correctamente", Toast.LENGTH_SHORT).show();
                         // Continuar con la lógica de tu aplicación
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class); // Cambia "MainActivity" por la actividad a la que quieras regresar
@@ -286,6 +256,9 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        if (AppState.getInstance().isActiveAssistant()){
+                            controller.sendResponseToService("No se completo correctamente, intenta de nuevo");
+                        }
                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -610,21 +583,15 @@ public class EditDataProfileBlind extends AppCompatActivity implements VoiceComm
         }
     }
     private void helpGoogle() {
-        AppState.getInstance().setHelpGoogleActive(true);
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Habla algo...");
-
-        try {
-            speechRecognizer.startListening(intent);
-        } catch (Exception e) {
-            Toast.makeText(this, "Tu dispositivo no soporta el reconocimiento de voz", Toast.LENGTH_SHORT).show();
-        }
+        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(HelpGoogleWorker.class).build();
+        WorkManager.getInstance(this).enqueue(workRequest);
     }
 
     @Override
     public void onTTSCompleted() {
-
+        //TTS terminó de hablar
+        if (AppState.getInstance().isHelpGoogleActive()){
+            helpGoogle();
+        }
     }
 }
