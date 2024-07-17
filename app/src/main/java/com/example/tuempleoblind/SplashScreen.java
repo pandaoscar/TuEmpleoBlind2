@@ -30,6 +30,7 @@ public class SplashScreen extends AppCompatActivity {
 
 
         controller.sendRoleUser("unLogin");
+        controller.sendGoogleAlert(null);
         lottie=findViewById(R.id.lottie);
         lottie.animate().rotation(360).setDuration(500).setStartDelay(900)
                 .withEndAction(() -> lottie.animate().translationY(-2000).setDuration(500).setStartDelay(500));

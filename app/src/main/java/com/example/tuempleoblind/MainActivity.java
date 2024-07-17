@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements VoiceCommandContr
         robotAnimation=findViewById(R.id.robot_animation);
         background=findViewById(R.id.backBlack);
         controller.sendRoleUser(null);
+        controller.sendGoogleAlert(null);
 
         microComand.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements VoiceCommandContr
         login();
         hire();
         job();
-
+        controller.sendGoogleAlert(null);
         controller.sendRoleUser("unLogin");
     }
     private void updateRobotAnimationVisibility(boolean isActive){
@@ -140,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements VoiceCommandContr
         super.onStart();
         startService(new Intent(this, NewJobPublishedNotification.class));
         startService(new Intent(this, VoiceService.class));
+        controller.sendGoogleAlert(null);
         controller.sendRoleUser(null);
         // Verificar si el usuario ya está autenticado
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();

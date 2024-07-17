@@ -70,8 +70,14 @@ public class VoiceService extends Service implements RecognitionListener, AppSta
             Bundle data = msg.getData();
             String role = data.getString("role");
             String response = data.getString("response");
-
-            System.out.println("holaaaa "+ role);
+            String alertGoogle = data.getString("google");
+            System.out.println("holaaaa "+ alertGoogle);
+            if (alertGoogle != null) {
+                if (!tts.isSpeaking()){
+                    AppState.getInstance().setHelpGoogleActive(true);
+                    speak(alertGoogle);
+                }
+            }
             if (response != null) {
                 handleResponseFromActivity(response);
             }
@@ -167,6 +173,14 @@ public class VoiceService extends Service implements RecognitionListener, AppSta
                     } else if (!AppState.getInstance().isHelpGoogleActive()){
                         startListening();
                     }
+                }
+                System.out.println("google está "+ AppState.getInstance().isHelpGoogleActive());
+                if (AppState.getInstance().isHelpGoogleActive()){
+                    System.out.println("entré");
+                    Intent intent = new Intent("BOOLEAN_COMMAND");
+                    intent.putExtra("booleanValue", true);
+                    sendBroadcast(intent);
+                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                 }
                 Log.d(TAG, "Texto TTS reproducido completamente");
             }

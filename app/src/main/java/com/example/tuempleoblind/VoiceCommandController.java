@@ -24,6 +24,7 @@ public class VoiceCommandController {
     private boolean isBound;
     private Context context;
     private List<ActivityCallback> activityCallbacks = new ArrayList<>();
+    private List<BooleanCallback> booleanCallbacks = new ArrayList<>();
 
     private VoiceCommandController(Context context) {
         this.context = context.getApplicationContext();
@@ -32,6 +33,8 @@ public class VoiceCommandController {
 
         LocalBroadcastManager.getInstance(context).registerReceiver(voiceCommandReceiver,
                 new IntentFilter("VOICE_COMMAND"));
+        LocalBroadcastManager.getInstance(context).registerReceiver(booleanCommandReceiver,
+                new IntentFilter("BOOLEAN_COMMAND"));
     }
 
     public static VoiceCommandController getInstance(Context context) {
@@ -64,8 +67,20 @@ public class VoiceCommandController {
         }
     };
 
+    private BroadcastReceiver booleanCommandReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean booleanValue = intent.getBooleanExtra("booleanValue", false);
+            notifyBooleanCallbacks(booleanValue);
+        }
+    };
+
     public void sendResponseToService(String response) {
         sendMessageToService("response", response);
+    }
+
+    public void sendGoogleAlert(String alert) {
+        sendMessageToService("google", alert);
     }
 
     public void sendRoleUser(String role) {
@@ -83,12 +98,20 @@ public class VoiceCommandController {
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
+        } else {
+            System.out.println("estoy en controller");
         }
     }
 
     private void notifyActivities(String command, String predictedCategory) {
         for (ActivityCallback callback : activityCallbacks) {
             callback.onVoiceCommandReceived(command, predictedCategory);
+        }
+    }
+
+    private void notifyBooleanCallbacks(boolean booleanValue) {
+        for (BooleanCallback callback : booleanCallbacks) {
+            callback.onBooleanCommandReceived(booleanValue);
         }
     }
 
@@ -100,15 +123,28 @@ public class VoiceCommandController {
         activityCallbacks.remove(callback);
     }
 
+    public void registerBooleanCallback(BooleanCallback callback) {
+        booleanCallbacks.add(callback);
+    }
+
+    public void unregisterBooleanCallback(BooleanCallback callback) {
+        booleanCallbacks.remove(callback);
+    }
+
     public void cleanup() {
         if (isBound) {
             context.unbindService(connection);
             isBound = false;
         }
         LocalBroadcastManager.getInstance(context).unregisterReceiver(voiceCommandReceiver);
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(booleanCommandReceiver);
     }
 
     public interface ActivityCallback {
         void onVoiceCommandReceived(String command, String predictedCategory);
+    }
+
+    public interface BooleanCallback {
+        void onBooleanCommandReceived(boolean booleanValue);
     }
 }
