@@ -6,11 +6,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -23,7 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JobDetails extends AppCompatActivity implements VoiceCommandController.ActivityCallback{
+public class JobDetails extends AppCompatActivity implements VoiceCommandController.ActivityCallback, AppState.Observer{
     private static final String NUMERO_DE_ASPIRANTES_POSTULADOS = "numeroDeAspirantesPostulados";
     private static final String NUMERO_DE_ASPIRANTES_POSTULADOS_TOTALES = "numeroDeAspirantesPostuladosTotales";
     private static final String COLLECTION_REPORTE = "Reporte";
@@ -32,6 +36,8 @@ public class JobDetails extends AppCompatActivity implements VoiceCommandControl
     private FirebaseAuth mAuth;
     private VoiceCommandController controller;
     FloatingActionButton microComand;
+    private LottieAnimationView robotAnimation;
+    private ImageView background;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +109,13 @@ public class JobDetails extends AppCompatActivity implements VoiceCommandControl
         jobDetailAbilities.setText(abilities);
         jobDetailRamp.setText(booleanRamp);
         jobDetailElevator.setText(booleanElevator);
+
+        robotAnimation=findViewById(R.id.robot_animation);
+        background=findViewById(R.id.backBlack);
+
+        controller = VoiceCommandController.getInstance(this);
+        controller.registerActivityCallback(this);
+        AppState.getInstance().addObserver(this);
 
         microComand = findViewById(R.id.floatingButtonComands);
 
@@ -183,13 +196,34 @@ public class JobDetails extends AppCompatActivity implements VoiceCommandControl
                 finish();
             }
         });
+        updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
         Utilidad.incrementarMensual(mFirestore,COLLECTION_REPORTE,NUMERO_DE_ASPIRANTES_POSTULADOS);
         Utilidad.incrementarTotal(mFirestore,COLLECTION_REPORTE,DOCUMENT_TOTALES,NUMERO_DE_ASPIRANTES_POSTULADOS_TOTALES);
+    }
+    private void updateRobotAnimationVisibility(boolean isActive){
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (isActive) {
+                    background.setVisibility(View.VISIBLE);
+                    robotAnimation.setVisibility(View.VISIBLE);
+                    robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
+                } else {
+                    background.setVisibility(View.INVISIBLE);
+                    robotAnimation.setVisibility(View.INVISIBLE);
+                    robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
+                }
+            }
+        });
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        controller.unregisterActivityCallback(this);
+        if (controller != null){
+            controller.unregisterActivityCallback(this);
+        }
+        AppState.getInstance().removeObserver(this);
     }
     @Override
     public void onVoiceCommandReceived(String command, String predictedCategory) {
@@ -207,5 +241,10 @@ public class JobDetails extends AppCompatActivity implements VoiceCommandControl
             String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
             controller.sendResponseToService(respuesta);
         }
+    }
+
+    @Override
+    public void onActiveAssistantChanged(boolean isActive) {
+
     }
 }

@@ -46,7 +46,7 @@ import java.util.ArrayList;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class EditDataProfileC extends AppCompatActivity implements VoiceCommandController.ActivityCallback {
+public class EditDataProfileC extends AppCompatActivity implements VoiceCommandController.ActivityCallback, VoiceCommandController.BooleanCallback, AppState.Observer {
     private static final String FIELD_COLLECTION_C="UsernameC";
     private static final String FIELD_NAME_C = "Nombre";
     private static final String FIELD_USERNAME_C = "Usuario";
@@ -109,6 +109,8 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
         robotAnimation=findViewById(R.id.robot_animation);
         controller = VoiceCommandController.getInstance(this);
         controller.registerActivityCallback(this);
+        controller.registerBooleanCallback(this);
+        AppState.getInstance().addObserver(this);
 
         microComand.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,24 +210,32 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
     }
 
     private void updateRobotAnimationVisibility(boolean isActive){
-        if (isActive) {
-            background.setVisibility(View.VISIBLE);
-            robotAnimation.setVisibility(View.VISIBLE);
-            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
-        } else {
-            background.setVisibility(View.INVISIBLE);
-            robotAnimation.setVisibility(View.INVISIBLE);
-            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
-        }
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (isActive) {
+                    background.setVisibility(View.VISIBLE);
+                    robotAnimation.setVisibility(View.VISIBLE);
+                    robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
+                } else {
+                    background.setVisibility(View.INVISIBLE);
+                    robotAnimation.setVisibility(View.INVISIBLE);
+                    robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
+                }
+            }
+        });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         controller.unregisterActivityCallback(this);
+        controller.unregisterBooleanCallback(this);
         if (speechRecognizer != null) {
             speechRecognizer.destroy();
         }
+        AppState.getInstance().removeObserver(this);
     }
     @Override
     public void onBackPressed() {
@@ -249,6 +259,9 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        if (AppState.getInstance().isActiveAssistant()){
+                            controller.sendResponseToService("Editando");
+                        }
                         Toast.makeText(getApplicationContext(), "Datos del usuario guardados correctamente", Toast.LENGTH_SHORT).show();
                         // Continuar con la lógica de tu aplicación
                         Intent intent = new Intent(getApplicationContext(), CompanyHome.class);
@@ -261,6 +274,9 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        if (AppState.getInstance().isActiveAssistant()){
+                            controller.sendResponseToService("No se completo correctamente, intenta de nuevo");
+                        }
                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -389,18 +405,12 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
             if ((command.contains("nombre") || command.contains("usuario") || command.contains("correo") || (command.contains("nombre") && command.contains("empresa")) || (command.contains("tipo") && command.contains("empresa")) || (command.contains("ubicacion") && command.contains("empresa")) || command.contains("pagina")) && campToEdit == null){
                 campToEdit = command;
 
-                String respuesta = "¿Cual es el nuevo valor?";
-                controller.sendResponseToService(respuesta);
+                String response = "¿Cual es el nuevo valor?";
 
                 if (command.contains("correo") || command.contains("pagina")){
                     AppState.getInstance().setActiveAssistant(false);
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            helpGoogle();
-                        }
-                    }, 1900);
-                }
+                    controller.sendGoogleAlert(response);
+                } else controller.sendResponseToService(response);
             }
             else{
                 if (campToEdit != null){
@@ -411,18 +421,12 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
                         AppState.getInstance().setModoEdicionActivo(false);
                         btnSave.performClick();
                     } else if (newValue != null && command.contains("no")) {
-                        String respuesta = "Entonces, ¿Cual es el nuevo valor?";
-                        controller.sendResponseToService(respuesta);
+                        String response = "Entonces, ¿Cual es el nuevo valor?";
                         newValue = null;
                         if (campToEdit.contains("correo") || campToEdit.contains("pagina")){
                             AppState.getInstance().setActiveAssistant(false);
-                            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    helpGoogle();
-                                }
-                            }, 2200);
-                        }
+                            controller.sendGoogleAlert(response);
+                        } else controller.sendResponseToService(response);
                     }
                     else{
                         if (newValue == null){
@@ -447,12 +451,8 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
                 AppState.getInstance().setModoEdicionActivo(true);
                 NavigationManager.navigateToDestinationC(this, accion, getSupportFragmentManager(), null);
             } else {
-                if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
-                    updateRobotAnimationVisibility(false);
-                }else{
-                    String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
-                    controller.sendResponseToService(respuesta);
-                    updateRobotAnimationVisibility(false);}
+                String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+                controller.sendResponseToService(respuesta);
             }
         }
     }
@@ -542,5 +542,17 @@ public class EditDataProfileC extends AppCompatActivity implements VoiceCommandC
         } catch (Exception e) {
             Toast.makeText(this, "Tu dispositivo no soporta el reconocimiento de voz", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onBooleanCommandReceived(boolean booleanValue) {
+        helpGoogle();
+    }
+
+    @Override
+    public void onActiveAssistantChanged(boolean isActive) {
+        if (AppState.getInstance().isModoEdicionActivo()){
+            updateRobotAnimationVisibility(true);
+        } else updateRobotAnimationVisibility(isActive);
     }
 }

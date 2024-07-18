@@ -128,7 +128,8 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/style_spiner"
                         android:layout_marginStart="12dp"
-                        android:layout_marginEnd="12dp"/>
+                        android:layout_marginEnd="12dp"
+                        android:contentDescription="@string/spinner_new_job_categori"/>
                 </LinearLayout>
 
 
@@ -166,7 +167,8 @@
                         android:id="@+id/spinnerTypeJobNewJobC"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/style_spiner" />
+                        android:background="@drawable/style_spiner"
+                        android:contentDescription="@string/spinner_new_job_type"/>
 
                 </LinearLayout>
                 </LinearLayout>
@@ -313,7 +315,8 @@
                     <RadioGroup
                         android:id="@+id/groupElevatorNewJobC"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/ofer_elevator">
 
                         <RadioButton
                             android:id="@+id/trueElevatorNewJobC"
@@ -349,7 +352,8 @@
                     <RadioGroup
                         android:id="@+id/groupRampNewJobC"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/ofer_ramp">
 
                         <RadioButton
                             android:id="@+id/trueRampNewJobC"

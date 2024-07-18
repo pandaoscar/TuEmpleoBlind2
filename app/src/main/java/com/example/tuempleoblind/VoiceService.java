@@ -121,14 +121,6 @@ public class VoiceService extends Service implements RecognitionListener, AppSta
                     speak("Desactivado");
                     auxCommand = "Desactivado";
                 }
-                if (!AppState.getInstance().isModoEdicionActivo()){
-                    Intent intent = new Intent("VOICE_COMMAND");
-                    intent.putExtra("command", "4p4g4d0_4ut0m4t1c0");
-                    intent.putExtra("predictedCategory", "4p4g4d0_10s3gund0s");
-                    sendBroadcast(intent);
-                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-                }
-
             }
         };
         LibVosk.setLogLevel(LogLevel.INFO);
@@ -142,7 +134,6 @@ public class VoiceService extends Service implements RecognitionListener, AppSta
 
         initializeTTS();
     }
-
     private void initializeTTS() {
         tts = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
@@ -214,7 +205,7 @@ public class VoiceService extends Service implements RecognitionListener, AppSta
 
     private void handleVoiceCommand(String jsonCommand) {
         String command = extractTextFromJson(jsonCommand);
-        if (command.contains("apagar asistente")){
+        if (command.contains("apagar asistente") || command.contains("a pagar asistente")){
             AppState.getInstance().setActiveAssistant(false);
             handleResponseFromActivity("Desactivado");
         }
@@ -247,6 +238,7 @@ public class VoiceService extends Service implements RecognitionListener, AppSta
             resetTimeout(100000);
         } else if (command.contains("encender asistente")){
             AppState.getInstance().setActiveAssistant(true);
+
             speak("Activado");
         }
     }

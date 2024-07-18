@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.speech.RecognizerIntent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +46,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  * Use the {@link HomeCFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeCFragment extends Fragment implements TrabajosPublicadosAdapter.OnViewPostulatesClickListener, VoiceCommandController.ActivityCallback {
+public class HomeCFragment extends Fragment implements TrabajosPublicadosAdapter.OnViewPostulatesClickListener, VoiceCommandController.ActivityCallback, AppState.Observer {
     Button newJob;
     FloatingActionButton microComand;
     RecyclerView cRecycleView;
@@ -121,6 +123,7 @@ public class HomeCFragment extends Fragment implements TrabajosPublicadosAdapter
 
         controller = VoiceCommandController.getInstance(getActivity());
         controller.registerActivityCallback(this);
+        AppState.getInstance().addObserver(this);
         microComand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,21 +156,28 @@ public class HomeCFragment extends Fragment implements TrabajosPublicadosAdapter
     }
 
     private void updateRobotAnimationVisibility(boolean isActive){
-        if (isActive) {
-            background.setVisibility(View.VISIBLE);
-            robotAnimation.setVisibility(View.VISIBLE);
-            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
-        } else {
-            background.setVisibility(View.INVISIBLE);
-            robotAnimation.setVisibility(View.INVISIBLE);
-            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
-        }
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (isActive) {
+                    background.setVisibility(View.VISIBLE);
+                    robotAnimation.setVisibility(View.VISIBLE);
+                    robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
+                } else {
+                    background.setVisibility(View.INVISIBLE);
+                    robotAnimation.setVisibility(View.INVISIBLE);
+                    robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
+                }
+            }
+        });
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         controller.unregisterActivityCallback(this);
+        AppState.getInstance().removeObserver(this);
     }
 
     @Override
@@ -225,14 +235,15 @@ public class HomeCFragment extends Fragment implements TrabajosPublicadosAdapter
                 AppState.getInstance().setModoEdicionActivo(true);
                 NavigationManager.navigateToDestinationC(getContext(), accion, getActivity().getSupportFragmentManager(), this);
             } else {
-                if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
-                    updateRobotAnimationVisibility(false);
-                }else{
-                    String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
-                    controller.sendResponseToService(respuesta);
-                    updateRobotAnimationVisibility(false);}
-
+                String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+                controller.sendResponseToService(respuesta);
             }
         }
+    }
+    @Override
+    public void onActiveAssistantChanged(boolean isActive) {
+        if (AppState.getInstance().isModoEdicionActivo()){
+            updateRobotAnimationVisibility(true);
+        } else updateRobotAnimationVisibility(isActive);
     }
 }

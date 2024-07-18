@@ -38,7 +38,7 @@ public class UtilCommandModel {
         }
         if (spinners != null) {
             for (Spinner spinner : spinners) {
-                if (spinner.getSelectedItem().toString().trim().equals("null")) {
+                if (spinner.getSelectedItem().toString().trim().equals("Selecciona una opción")) {
                     emptySpinner = spinner;
                     break;
                 }

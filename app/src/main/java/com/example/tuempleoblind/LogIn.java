@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class LogIn extends AppCompatActivity implements VoiceCommandController.ActivityCallback, VoiceCommandController.BooleanCallback{
+public class LogIn extends AppCompatActivity implements VoiceCommandController.ActivityCallback, VoiceCommandController.BooleanCallback, AppState.Observer{
     public static final String ACTION_TTS_DONE = "com.example.ACTION_TTS_DONE";
     FirebaseAuth mAuth;
     EditText campTextEmail;
@@ -61,8 +61,8 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
         controller = VoiceCommandController.getInstance(this);
         controller.registerActivityCallback(this);
         controller.registerBooleanCallback(this);
-        // Registra el BroadcastReceiver
-        IntentFilter filter = new IntentFilter(ACTION_TTS_DONE);
+        AppState.getInstance().addObserver(this);
+
         microComand = findViewById(R.id.floatingButtonComands);
 
         robotAnimation=findViewById(R.id.robot_animation);
@@ -151,16 +151,17 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
         });
 
         controller.sendRoleUser("unLogin");
-        controller.sendGoogleAlert(null);
 
-        AppState.getInstance().setModoEdicionActivo(true);
         updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
+        if (AppState.getInstance().isActiveAssistant()){
+            AppState.getInstance().setModoEdicionActivo(true);
+        } else AppState.getInstance().setModoEdicionActivo(false);
 
         obtainEditText();
         result = UtilCommandModel.checkComponents(editTexts, null);
         String response = "Escribe tu " + result.getEmptyEditText().getHint().toString();
 
-        if (result.getEmptyEditText().getHint().toString().toLowerCase().contains("correo") || result.getEmptyEditText().getHint().toString().toLowerCase().contains("contraseña")){
+        if ((result.getEmptyEditText().getHint().toString().toLowerCase().contains("correo") || result.getEmptyEditText().getHint().toString().toLowerCase().contains("contraseña")) && AppState.getInstance().isActiveAssistant()){
             AppState.getInstance().setActiveAssistant(false);
 
             controller.sendGoogleAlert(response);
@@ -168,15 +169,21 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
     }
 
     private void updateRobotAnimationVisibility(boolean isActive){
-        if (isActive) {
-            background.setVisibility(View.VISIBLE);
-            robotAnimation.setVisibility(View.VISIBLE);
-            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
-        } else {
-            background.setVisibility(View.INVISIBLE);
-            robotAnimation.setVisibility(View.INVISIBLE);
-            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
-        }
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (isActive) {
+                    background.setVisibility(View.VISIBLE);
+                    robotAnimation.setVisibility(View.VISIBLE);
+                    robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
+                } else {
+                    background.setVisibility(View.INVISIBLE);
+                    robotAnimation.setVisibility(View.INVISIBLE);
+                    robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
+                }
+            }
+        });
     }
 
     @Override
@@ -184,6 +191,7 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
         super.onDestroy();
         controller.unregisterActivityCallback(this);
         controller.unregisterBooleanCallback(this);
+        AppState.getInstance().removeObserver(this);
     }
 
     private void login(String email, String password) {
@@ -194,8 +202,14 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
                         DocumentReference docRefUsernameBlind = db.collection("UsernameBlind").document(user.getUid());
                         DocumentReference docRefUsernameC = db.collection("UsernameC").document(user.getUid());
+                        if (AppState.getInstance().isActiveAssistant()){
+                            controller.sendResponseToService("Iniciando sesión");
+                        }
                         checkUserCollection(docRefUsernameBlind, docRefUsernameC);
                     } else {
+                        if (AppState.getInstance().isActiveAssistant()){
+                            controller.sendResponseToService("Inicio de sesión fallido");
+                        }
                         Toast.makeText(getApplicationContext(), "Inicio de sesión fallido.", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -252,7 +266,6 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
                         controller.sendGoogleAlert(response);
                     } else controller.sendResponseToService(response);
                 } else {
-                    controller.sendResponseToService("Iniciando sesión");
                     AppState.getInstance().setModoEdicionActivo(false);
                     btnConfirm.performClick();
                 }
@@ -287,12 +300,8 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
                 AppState.getInstance().setModoEdicionActivo(true);
                 NavigationManager.navigateToDestinationUnLogin(this, accion, getSupportFragmentManager(), null);
             } else {
-                if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
-                    updateRobotAnimationVisibility(false);
-                }else{
-                    String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
-                    controller.sendResponseToService(respuesta);
-                    updateRobotAnimationVisibility(false);}
+                String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+                controller.sendResponseToService(respuesta);
             }
         }
     }
@@ -314,11 +323,17 @@ public class LogIn extends AppCompatActivity implements VoiceCommandController.A
 
         editTexts.add(campTextEmail);
         editTexts.add(campTextPassword);
-
     }
 
     @Override
     public void onBooleanCommandReceived(boolean booleanValue) {
         helpGoogle();
+    }
+
+    @Override
+    public void onActiveAssistantChanged(boolean isActive) {
+        if (AppState.getInstance().isModoEdicionActivo()){
+            updateRobotAnimationVisibility(true);
+        } else updateRobotAnimationVisibility(isActive);
     }
 }

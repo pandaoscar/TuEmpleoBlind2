@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +34,7 @@ import com.google.firebase.firestore.Query;
  * Use the {@link HomeBlindFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeBlindFragment extends Fragment implements JobsAvailableAdapter.OnViewMoreClickListener, VoiceCommandController.ActivityCallback{
+public class HomeBlindFragment extends Fragment implements JobsAvailableAdapter.OnViewMoreClickListener, VoiceCommandController.ActivityCallback, AppState.Observer{
 
     RecyclerView mRecicle;
     JobsAvailableAdapter mAdapter;
@@ -102,6 +104,7 @@ public class HomeBlindFragment extends Fragment implements JobsAvailableAdapter.
 
         controller = VoiceCommandController.getInstance(getActivity());
         controller.registerActivityCallback(this);
+        AppState.getInstance().addObserver(this);
         microComand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,15 +126,21 @@ public class HomeBlindFragment extends Fragment implements JobsAvailableAdapter.
         return view;
     }
     private void updateRobotAnimationVisibility(boolean isActive){
-        if (isActive) {
-            background.setVisibility(View.VISIBLE);
-            robotAnimation.setVisibility(View.VISIBLE);
-            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
-        } else {
-            background.setVisibility(View.INVISIBLE);
-            robotAnimation.setVisibility(View.INVISIBLE);
-            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
-        }
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (isActive) {
+                    background.setVisibility(View.VISIBLE);
+                    robotAnimation.setVisibility(View.VISIBLE);
+                    robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
+                } else {
+                    background.setVisibility(View.INVISIBLE);
+                    robotAnimation.setVisibility(View.INVISIBLE);
+                    robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
+                }
+            }
+        });
     }
 
     @Override
@@ -194,14 +203,17 @@ public class HomeBlindFragment extends Fragment implements JobsAvailableAdapter.
                 AppState.getInstance().setModoEdicionActivo(true);
                 NavigationManager.navigateToDestinationBlind(getContext(), accion, getActivity().getSupportFragmentManager(), this);
             } else {
-                if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
-                    updateRobotAnimationVisibility(false);
-                }else{
-                    String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
-                    controller.sendResponseToService(respuesta);
-                    updateRobotAnimationVisibility(false);}
-
+                String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+                controller.sendResponseToService(respuesta);
             }
         }
+    }
+    @Override
+    public void onActiveAssistantChanged(boolean isActive) {
+        System.out.println("editando " + AppState.getInstance().isModoEdicionActivo());
+        System.out.println("asistente activado " + AppState.getInstance().isActiveAssistant());
+        if (AppState.getInstance().isModoEdicionActivo()){
+            updateRobotAnimationVisibility(true);
+        } else updateRobotAnimationVisibility(isActive);
     }
 }

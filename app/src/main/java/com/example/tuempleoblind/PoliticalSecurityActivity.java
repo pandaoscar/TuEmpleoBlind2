@@ -11,6 +11,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.View;
@@ -31,7 +33,7 @@ import java.util.List;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class PoliticalSecurityActivity extends AppCompatActivity implements VoiceCommandController.ActivityCallback{
+public class PoliticalSecurityActivity extends AppCompatActivity implements VoiceCommandController.ActivityCallback, AppState.Observer{
     Button btnclose;
     FloatingActionButton microComand;
     private static final int CODIGO_RECONOCIMIENTO_VOZ = 1;
@@ -51,6 +53,7 @@ public class PoliticalSecurityActivity extends AppCompatActivity implements Voic
 
         controller = VoiceCommandController.getInstance(this);
         controller.registerActivityCallback(this);
+        AppState.getInstance().addObserver(this);
 
         microComand.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,20 +79,27 @@ public class PoliticalSecurityActivity extends AppCompatActivity implements Voic
         updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
     }
     private void updateRobotAnimationVisibility(boolean isActive){
-        if (isActive) {
-            background.setVisibility(View.VISIBLE);
-            robotAnimation.setVisibility(View.VISIBLE);
-            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
-        } else {
-            background.setVisibility(View.INVISIBLE);
-            robotAnimation.setVisibility(View.INVISIBLE);
-            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
-        }
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (isActive) {
+                    background.setVisibility(View.VISIBLE);
+                    robotAnimation.setVisibility(View.VISIBLE);
+                    robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
+                } else {
+                    background.setVisibility(View.INVISIBLE);
+                    robotAnimation.setVisibility(View.INVISIBLE);
+                    robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
+                }
+            }
+        });
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
         controller.unregisterActivityCallback(this);
+        AppState.getInstance().removeObserver(this);
     }
     public void isCompanyOrBlind(String palabra){
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -156,12 +166,14 @@ public class PoliticalSecurityActivity extends AppCompatActivity implements Voic
             AppState.getInstance().setModoEdicionActivo(true);
             isCompanyOrBlind(accion);
         } else {
-            if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
-                updateRobotAnimationVisibility(false);
-            }else{
-                String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
-                controller.sendResponseToService(respuesta);
-                updateRobotAnimationVisibility(false);}
+            String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+            controller.sendResponseToService(respuesta);
         }
+    }
+    @Override
+    public void onActiveAssistantChanged(boolean isActive) {
+        if (AppState.getInstance().isModoEdicionActivo()){
+            updateRobotAnimationVisibility(true);
+        } else updateRobotAnimationVisibility(isActive);
     }
 }

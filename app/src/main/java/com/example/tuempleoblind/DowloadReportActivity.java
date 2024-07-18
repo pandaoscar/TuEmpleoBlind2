@@ -18,6 +18,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
@@ -63,7 +65,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class DowloadReportActivity extends AppCompatActivity implements  VoiceCommandController.ActivityCallback{
+public class DowloadReportActivity extends AppCompatActivity implements  VoiceCommandController.ActivityCallback, AppState.Observer{
 
     private TextView mText;
     private Button mButtonEmailUser;
@@ -93,6 +95,7 @@ public class DowloadReportActivity extends AppCompatActivity implements  VoiceCo
         background=findViewById(R.id.backBlack);
         controller = VoiceCommandController.getInstance(this);
         controller.registerActivityCallback(this);
+        AppState.getInstance().addObserver(this);
 
         microComand.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,21 +134,28 @@ public class DowloadReportActivity extends AppCompatActivity implements  VoiceCo
     }
 
     private void updateRobotAnimationVisibility(boolean isActive){
-        if (isActive) {
-            background.setVisibility(View.VISIBLE);
-            robotAnimation.setVisibility(View.VISIBLE);
-            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
-        } else {
-            background.setVisibility(View.INVISIBLE);
-            robotAnimation.setVisibility(View.INVISIBLE);
-            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
-        }
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (isActive) {
+                    background.setVisibility(View.VISIBLE);
+                    robotAnimation.setVisibility(View.VISIBLE);
+                    robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
+                } else {
+                    background.setVisibility(View.INVISIBLE);
+                    robotAnimation.setVisibility(View.INVISIBLE);
+                    robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
+                }
+            }
+        });
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         controller.unregisterActivityCallback(this);
+        AppState.getInstance().removeObserver(this);
     }
     @Override
     public void onBackPressed() {
@@ -380,13 +390,15 @@ public class DowloadReportActivity extends AppCompatActivity implements  VoiceCo
                 AppState.getInstance().setModoEdicionActivo(true);
                 NavigationManager.navigateToDestinationBlind(this, accion, getSupportFragmentManager(), null);
             } else {
-                if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
-                    updateRobotAnimationVisibility(false);
-                }else{
-                    String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
-                    controller.sendResponseToService(respuesta);
-                    updateRobotAnimationVisibility(false);}
+                String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+                controller.sendResponseToService(respuesta);
             }
         }
+    }
+    @Override
+    public void onActiveAssistantChanged(boolean isActive) {
+        if (AppState.getInstance().isModoEdicionActivo()){
+            updateRobotAnimationVisibility(true);
+        } else updateRobotAnimationVisibility(isActive);
     }
 }

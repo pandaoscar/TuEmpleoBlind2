@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class SignUpC extends AppCompatActivity implements VoiceCommandController.ActivityCallback{
+public class SignUpC extends AppCompatActivity implements VoiceCommandController.ActivityCallback, VoiceCommandController.BooleanCallback, AppState.Observer{
     private static final String NUMERO_DE_EMPLEADORES_REGISTRADOS = "numeroDeEmpleadoresRegistrados";
     private static final String NUMERO_DE_EMPLEADORES_REGISTRADOS_TOTALES = "numeroDeEmpleadoresRegistradosTotales";
     private static final String COLLECTION_REPORTE = "Reporte";
@@ -66,6 +66,8 @@ public class SignUpC extends AppCompatActivity implements VoiceCommandController
 
         controller = VoiceCommandController.getInstance(this);
         controller.registerActivityCallback(this);
+        controller.registerBooleanCallback(this);
+        AppState.getInstance().addObserver(this);
         microComand = findViewById(R.id.floatingButtonComands);
 
         robotAnimation=findViewById(R.id.robot_animation);
@@ -147,6 +149,9 @@ public class SignUpC extends AppCompatActivity implements VoiceCommandController
 
         actionContinue();
         updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
+        if (AppState.getInstance().isActiveAssistant()){
+            AppState.getInstance().setModoEdicionActivo(true);
+        } else AppState.getInstance().setModoEdicionActivo(false);
 
         obtainEditText();
         result = UtilCommandModel.checkComponents(editTexts, null);
@@ -154,20 +159,28 @@ public class SignUpC extends AppCompatActivity implements VoiceCommandController
     }
 
     private void updateRobotAnimationVisibility(boolean isActive){
-        if (isActive) {
-            background.setVisibility(View.VISIBLE);
-            robotAnimation.setVisibility(View.VISIBLE);
-            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
-        } else {
-            background.setVisibility(View.INVISIBLE);
-            robotAnimation.setVisibility(View.INVISIBLE);
-            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
-        }
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (isActive) {
+                    background.setVisibility(View.VISIBLE);
+                    robotAnimation.setVisibility(View.VISIBLE);
+                    robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
+                } else {
+                    background.setVisibility(View.INVISIBLE);
+                    robotAnimation.setVisibility(View.INVISIBLE);
+                    robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
+                }
+            }
+        });
     }
     @Override
     public void onDestroy() {
         super.onDestroy();
         controller.unregisterActivityCallback(this);
+        controller.unregisterBooleanCallback(this);
+        AppState.getInstance().removeObserver(this);
     }
 
     private void actionContinue() {
@@ -203,12 +216,18 @@ public class SignUpC extends AppCompatActivity implements VoiceCommandController
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
+                                            if (AppState.getInstance().isActiveAssistant()){
+                                                controller.sendResponseToService("Porfavor, llena los siguientes datos");
+                                            }
                                             // Registro exitoso, obtener el ID único del usuario
                                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                             String userID = user.getUid();
                                             // Guardar datos adicionales del usuario en Firestore
                                             postUserNameC(name, username, email, userID);
                                         } else {
+                                            if (AppState.getInstance().isActiveAssistant()){
+                                                controller.sendResponseToService("No se completo correctamente, intenta de nuevo");
+                                            }
                                             Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                         }
 
@@ -261,19 +280,12 @@ public class SignUpC extends AppCompatActivity implements VoiceCommandController
                 obtainEditText();
                 result = UtilCommandModel.checkComponents(editTexts, null);
                 if (result.getEmptyEditText() != null){
-
-                    controller.sendResponseToService("Que valor quieres colocarle a " + result.getEmptyEditText().getHint().toString());
+                    String response = "Que valor quieres colocarle a " + result.getEmptyEditText().getHint().toString();
                     if (result.getEmptyEditText().getHint().toString().toLowerCase().contains("correo") || result.getEmptyEditText().getHint().toString().toLowerCase().contains("contraseña")){
                         AppState.getInstance().setActiveAssistant(false);
-                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                helpGoogle();
-                            }
-                        }, 2800);
-                    }
+                        controller.sendGoogleAlert(response);
+                    } else controller.sendResponseToService(response);
                 } else {
-                    controller.sendResponseToService("Porfavor, llena los siguientes datos");
                     btnContinue.performClick();
                 }
 
@@ -289,18 +301,13 @@ public class SignUpC extends AppCompatActivity implements VoiceCommandController
                 newValue = null;
                 onVoiceCommandReceived("siguiente", "comando no reconocido");
             } else if (command.contains("no")) {
-                controller.sendResponseToService("Entonces, ¿Que valor quieres colocar?");
+                String response = "Entonces, ¿Que valor quieres colocar?";
                 newValue = null;
                 if (result.getEmptyEditText() != null){
                     if (result.getEmptyEditText().getHint().toString().toLowerCase().contains("correo") || result.getEmptyEditText().getHint().toString().toLowerCase().contains("contraseña")){
                         AppState.getInstance().setActiveAssistant(false);
-                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                helpGoogle();
-                            }
-                        }, 2300);
-                    }
+                        controller.sendGoogleAlert(response);
+                    } else controller.sendResponseToService(response);
                 }
             } else{
                 controller.sendResponseToService("¿Quieres colocar " + newValue + "?" + ", dí, si, o no.");
@@ -312,12 +319,8 @@ public class SignUpC extends AppCompatActivity implements VoiceCommandController
                 AppState.getInstance().setModoEdicionActivo(true);
                 NavigationManager.navigateToDestinationUnLogin(this, accion, getSupportFragmentManager(), null);
             } else {
-                if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
-                    updateRobotAnimationVisibility(false);
-                }else{
-                    String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
-                    controller.sendResponseToService(respuesta);
-                    updateRobotAnimationVisibility(false);}
+                String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+                controller.sendResponseToService(respuesta);
             }
         }
     }
@@ -343,5 +346,16 @@ public class SignUpC extends AppCompatActivity implements VoiceCommandController
         editTexts.add(campTextEmailC);
         editTexts.add(campTextPassword1C);
         editTexts.add(campTextPassword2C);
+    }
+
+    @Override
+    public void onBooleanCommandReceived(boolean booleanValue) {
+        helpGoogle();
+    }
+    @Override
+    public void onActiveAssistantChanged(boolean isActive) {
+        if (AppState.getInstance().isModoEdicionActivo()){
+            updateRobotAnimationVisibility(true);
+        } else updateRobotAnimationVisibility(isActive);
     }
 }

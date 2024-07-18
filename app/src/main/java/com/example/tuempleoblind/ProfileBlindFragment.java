@@ -13,6 +13,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.speech.RecognizerIntent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +37,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  * Use the {@link ProfileBlindFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileBlindFragment extends Fragment implements VoiceCommandController.ActivityCallback{
+public class ProfileBlindFragment extends Fragment implements VoiceCommandController.ActivityCallback, AppState.Observer{
     Button btnExit;
     Button btnDataPerfil;
     Button btnabout;
@@ -101,6 +103,7 @@ public class ProfileBlindFragment extends Fragment implements VoiceCommandContro
         background=view.findViewById(R.id.backBlack);
         controller = VoiceCommandController.getInstance(getActivity());
         controller.registerActivityCallback(this);
+        AppState.getInstance().addObserver(this);
 
         microComand.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,15 +156,21 @@ public class ProfileBlindFragment extends Fragment implements VoiceCommandContro
         return view;
     }
     private void updateRobotAnimationVisibility(boolean isActive){
-        if (isActive) {
-            background.setVisibility(View.VISIBLE);
-            robotAnimation.setVisibility(View.VISIBLE);
-            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
-        } else {
-            background.setVisibility(View.INVISIBLE);
-            robotAnimation.setVisibility(View.INVISIBLE);
-            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
-        }
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (isActive) {
+                    background.setVisibility(View.VISIBLE);
+                    robotAnimation.setVisibility(View.VISIBLE);
+                    robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
+                } else {
+                    background.setVisibility(View.INVISIBLE);
+                    robotAnimation.setVisibility(View.INVISIBLE);
+                    robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
+                }
+            }
+        });
     }
 
     private void dataProfile() {
@@ -190,6 +199,7 @@ public class ProfileBlindFragment extends Fragment implements VoiceCommandContro
     public void onDestroy() {
         super.onDestroy();
         controller.unregisterActivityCallback(this);
+        AppState.getInstance().removeObserver(this);
     }
     @Override
     public void onVoiceCommandReceived(String command, String predictedCategory) {
@@ -218,13 +228,15 @@ public class ProfileBlindFragment extends Fragment implements VoiceCommandContro
                 AppState.getInstance().setModoEdicionActivo(true);
                 NavigationManager.navigateToDestinationBlind(getContext(), accion, getActivity().getSupportFragmentManager(), this);
             } else {
-                if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
-                updateRobotAnimationVisibility(false);
-                }else{
-                    String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
-                    controller.sendResponseToService(respuesta);
-                    updateRobotAnimationVisibility(false);}
-                }
+                String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+                controller.sendResponseToService(respuesta);
+            }
         }
+    }
+    @Override
+    public void onActiveAssistantChanged(boolean isActive) {
+        if (AppState.getInstance().isModoEdicionActivo()){
+            updateRobotAnimationVisibility(true);
+        } else updateRobotAnimationVisibility(isActive);
     }
 }

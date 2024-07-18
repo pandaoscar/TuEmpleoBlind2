@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class SignUpCForm extends AppCompatActivity implements VoiceCommandController.ActivityCallback {
+public class SignUpCForm extends AppCompatActivity implements VoiceCommandController.ActivityCallback, VoiceCommandController.BooleanCallback, AppState.Observer {
     EditText campTextNameCompany;
     EditText campTextTypeCompany;
     EditText campTextLocation;
@@ -53,6 +53,8 @@ public class SignUpCForm extends AppCompatActivity implements VoiceCommandContro
 
         controller = VoiceCommandController.getInstance(this);
         controller.registerActivityCallback(this);
+        controller.registerBooleanCallback(this);
+        AppState.getInstance().addObserver(this);
         microComand = findViewById(R.id.floatingButtonComands);
 
         microComand.setOnClickListener(new View.OnClickListener() {
@@ -131,6 +133,9 @@ public class SignUpCForm extends AppCompatActivity implements VoiceCommandContro
 
         actionContinue();
         updateRobotAnimationVisibility(AppState.getInstance().isActiveAssistant());
+        if (AppState.getInstance().isActiveAssistant()){
+            AppState.getInstance().setModoEdicionActivo(true);
+        } else AppState.getInstance().setModoEdicionActivo(false);
 
         obtainEditTextAndSpinner();
         result = UtilCommandModel.checkComponents(editTexts, null);
@@ -139,20 +144,28 @@ public class SignUpCForm extends AppCompatActivity implements VoiceCommandContro
 
     }
     private void updateRobotAnimationVisibility(boolean isActive){
-        if (isActive) {
-            background.setVisibility(View.VISIBLE);
-            robotAnimation.setVisibility(View.VISIBLE);
-            robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
-        } else {
-            background.setVisibility(View.INVISIBLE);
-            robotAnimation.setVisibility(View.INVISIBLE);
-            robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
-        }
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (isActive) {
+                    background.setVisibility(View.VISIBLE);
+                    robotAnimation.setVisibility(View.VISIBLE);
+                    robotAnimation.playAnimation(); // Para iniciar la animación si es necesario
+                } else {
+                    background.setVisibility(View.INVISIBLE);
+                    robotAnimation.setVisibility(View.INVISIBLE);
+                    robotAnimation.cancelAnimation(); // Para detener la animación si es necesario
+                }
+            }
+        });
     }
     @Override
     public void onDestroy() {
         super.onDestroy();
         controller.unregisterActivityCallback(this);
+        controller.unregisterBooleanCallback(this);
+        AppState.getInstance().removeObserver(this);
     }
 
     private void actionContinue() {
@@ -184,6 +197,9 @@ public class SignUpCForm extends AppCompatActivity implements VoiceCommandContro
                 mFirestore.collection("UsernameC").document(userID).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+                        if (AppState.getInstance().isActiveAssistant()){
+                            controller.sendResponseToService("Bienvenido");
+                        }
                         Toast.makeText(getApplicationContext(), "Datos del usuario guardados correctamente", Toast.LENGTH_SHORT).show();
                         // Continuar con la lógica de tu aplicación
                         Intent intent = new Intent(getApplicationContext(), CompanyHome.class);
@@ -192,6 +208,9 @@ public class SignUpCForm extends AppCompatActivity implements VoiceCommandContro
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        if (AppState.getInstance().isActiveAssistant()){
+                            controller.sendResponseToService("No se pudo continuar");
+                        }
                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -210,19 +229,12 @@ public class SignUpCForm extends AppCompatActivity implements VoiceCommandContro
                 obtainEditTextAndSpinner();
                 result = UtilCommandModel.checkComponents(editTexts, null);
                 if (result.getEmptyEditText() != null){
-
-                    controller.sendResponseToService("Que valor quieres colocarle a " + result.getEmptyEditText().getHint());
+                    String response = "Que valor quieres colocarle a " + result.getEmptyEditText().getHint();
                     if (result.getEmptyEditText().getHint().toString().toLowerCase().contains("pagina") || result.getEmptyEditText().getHint().toString().toLowerCase().contains("web")){
                         AppState.getInstance().setActiveAssistant(false);
-                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                helpGoogle();
-                            }
-                        }, 2900);
-                    }
+                        controller.sendGoogleAlert(response);
+                    } else controller.sendResponseToService(response);
                 } else {
-                    controller.sendResponseToService("Bienvenido");
                     AppState.getInstance().setModoEdicionActivo(false);
                     btnContinue.performClick();
                 }
@@ -239,18 +251,13 @@ public class SignUpCForm extends AppCompatActivity implements VoiceCommandContro
                 newValue = null;
                 onVoiceCommandReceived("siguiente", "comando no reconocido");
             } else if (command.contains("no")) {
-                controller.sendResponseToService("Entonces, ¿Que valor quieres colocar?");
+                String response = "Entonces, ¿Que valor quieres colocar?";
                 newValue = null;
                 if (result.getEmptyEditText() != null){
                     if (result.getEmptyEditText().getHint().toString().toLowerCase().contains("pagina") || result.getEmptyEditText().getHint().toString().toLowerCase().contains("web")){
                         AppState.getInstance().setActiveAssistant(false);
-                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                helpGoogle();
-                            }
-                        }, 2200);
-                    }
+                        controller.sendGoogleAlert(response);
+                    } else controller.sendResponseToService(response);
                 }
             } else{
                 controller.sendResponseToService("¿Quieres colocar " + newValue + "?" + ", dí, si, o no.");
@@ -262,12 +269,8 @@ public class SignUpCForm extends AppCompatActivity implements VoiceCommandContro
                 AppState.getInstance().setModoEdicionActivo(true);
                 NavigationManager.navigateToDestinationUnLogin(this, accion, getSupportFragmentManager(), null);
             } else {
-                if(command.equals("4p4g4d0_4ut0m4t1c0")&& predictedCategory.equals("4p4g4d0_10s3gund0s")){
-                    updateRobotAnimationVisibility(false);
-                }else{
-                    String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
-                    controller.sendResponseToService(respuesta);
-                    updateRobotAnimationVisibility(false);}
+                String respuesta = "No entiendo ese comando. Por favor, intenta de nuevo.";
+                controller.sendResponseToService(respuesta);
             }
         }
     }
@@ -293,5 +296,16 @@ public class SignUpCForm extends AppCompatActivity implements VoiceCommandContro
         editTexts.add(campTextTypeCompany);
         editTexts.add(campTextLocation);
         editTexts.add(campTextWebPag);
+    }
+
+    @Override
+    public void onBooleanCommandReceived(boolean booleanValue) {
+        helpGoogle();
+    }
+    @Override
+    public void onActiveAssistantChanged(boolean isActive) {
+        if (AppState.getInstance().isModoEdicionActivo()){
+            updateRobotAnimationVisibility(true);
+        } else updateRobotAnimationVisibility(isActive);
     }
 }
